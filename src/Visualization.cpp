@@ -1,7 +1,7 @@
 #include "Visualization.h"
 
 Visualization::Visualization(int window_width, int window_height)
-	: main_window(sf::VideoMode(window_width, window_height), "Ecosystem")
+	: main_window(sf::VideoMode(window_width, window_height), "Ecosystem"), gui(main_window)
 {
 }
 
@@ -27,6 +27,11 @@ void Visualization::process_window_events()
 		// Process GUI events
 		gui.handleEvent(event);
 	}
+}
+
+void Visualization::draw_ui()
+{
+	gui.draw();
 }
 
 void Visualization::display()

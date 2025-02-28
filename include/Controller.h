@@ -11,7 +11,7 @@ class Controller
 private:
 	// Components
 	Visualization visualization;
-	// UI ui;
+	UI ui;
 	// Automaton automaton;
 
 public:
@@ -25,5 +25,4 @@ private:
 	void process_events();
 	void update();
 	void render();
-	void initialize_ui();
 };

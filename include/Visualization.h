@@ -8,6 +8,7 @@ class Visualization
 private:
 	/* Attributes */
 
+
 	// Components
 	sf::RenderWindow main_window;
 	tgui::Gui gui;
@@ -20,6 +21,7 @@ public:
 	/* Public Methods */
 	void clear();
 	void process_window_events();
+	void draw_ui();
 	void display();
 
 	/* Getters */
