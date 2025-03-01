@@ -26,6 +26,7 @@ void UI::update_on_resize()
 void UI::update_fps_label(int fps)
 {
 	this->fps_label->setText("FPS: " + std::to_string(fps));
+	update_widget_positioning();
 }
 
 /* Private Methods */
