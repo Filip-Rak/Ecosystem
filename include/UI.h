@@ -29,6 +29,9 @@ private:
 	int widget_text_size_small = 14;
 	int widget_text_size_big = 18;
 
+	// Common widget references
+	tgui::Label::Ptr fps_label;
+
 public:
 	/* Constructor */
 	UI(tgui::Gui& gui);
@@ -36,6 +39,7 @@ public:
 	/* Public Methods */
 	void initialize();
 	void update_on_resize();
+	void update_fps_label(int fps);
 
 	/* Getters */
 	template<typename T>

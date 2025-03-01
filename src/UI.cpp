@@ -23,6 +23,11 @@ void UI::update_on_resize()
 	}
 }
 
+void UI::update_fps_label(int fps)
+{
+	this->fps_label->setText("FPS: " + std::to_string(fps));
+}
+
 /* Private Methods */
 void UI::initialize_menu_bar()
 {
@@ -48,7 +53,7 @@ void UI::initialize_menu_bar()
 	menu_bar->add(iteration_label);
 
 	// Add FPS label
-	auto fps_label = tgui::Label::create("FPS: 1000");
+	this->fps_label = tgui::Label::create("FPS: 1000");
 	fps_label->setTextSize(this->widget_text_size_big);
 	fps_label->setPosition(x_offset, this->widget_top_margin);
 
@@ -123,18 +128,6 @@ void UI::initialize_menu_bar()
 
 		});
 
-	srand(time(NULL));
-	fps_label->onClick([fps_label, this]
-		{
-			// Get random FPS number 2 - 200
-			int random_num = rand() % (2000 - 2 + 1);
-			random_num += 2;
-
-			fps_label->setText("FPS: " + std::to_string(random_num));
-
-			update_widget_positioning();
-		});
-
 	slow_down_button->onClick([slow_down_button, this]
 		{
 			std::cout << "UI::initialize_menu_bar(). Speed up button clicked\n";
@@ -187,12 +180,6 @@ bool UI::enable_auto_size(const tgui::Widget::Ptr& widget)
 	{
 		label->setAutoSize(true);
 		return true;
-	}
-
-	// Check if the widget is a Button
-	if (auto button = std::dynamic_pointer_cast<tgui::Button>(widget))
-	{
-		return false;
 	}
 
 	return false;
