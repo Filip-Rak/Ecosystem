@@ -29,17 +29,20 @@ private:
 	int widget_text_size_small = 14;
 	int widget_text_size_big = 18;
 
-	// Common widget references
+	// Commonly accessed references
 	tgui::Label::Ptr fps_label;
+	tgui::Label::Ptr iteration_label;
 
 public:
-	/* Constructor */
+	/* Constructor & Destructor */
 	UI(tgui::Gui& gui);
+	~UI();
 
 	/* Public Methods */
 	void initialize();
 	void update_on_resize();
 	void update_fps_label(int fps);
+	void update_iteration_label(int iteration);
 
 	/* Getters */
 	template<typename T>
@@ -49,14 +52,14 @@ public:
 		auto it = widget_map.find(name);
 		if (it == widget_map.end())
 		{
-			throw std::runtime_error("Widget with name '" + name + "' not found.");
+			std::cout << "std::shared_ptr<T> get_widget_as(const std::string& name): Widget not found!\n";
 		}
 
 		// Attempt to cast the widget to the desired type
 		auto widget = std::dynamic_pointer_cast<T>(it->second);
 		if (!widget)
 		{
-			throw std::runtime_error("Widget with name '" + name + "' is not of the requested type.");
+			std::cout << "std::shared_ptr<T> get_widget_as(const std::string& name): Dynamic cast failed!\n";
 		}
 
 		return widget;

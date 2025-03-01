@@ -1,7 +1,12 @@
 #include "UI.h"
 
-/* Constructor */
+/* Constructor & Destructor */
 UI::UI(tgui::Gui& gui): gui(gui) {}
+
+UI::~UI()
+{
+	gui.removeAllWidgets();
+}
 
 /* Public Methods */
 void UI::initialize()
@@ -29,6 +34,12 @@ void UI::update_fps_label(int fps)
 	update_widget_positioning();
 }
 
+void UI::update_iteration_label(int iteration)
+{
+	this->iteration_label->setText("Iteration: " + std::to_string(iteration));
+	update_widget_positioning();
+}
+
 /* Private Methods */
 void UI::initialize_menu_bar()
 {
@@ -45,7 +56,7 @@ void UI::initialize_menu_bar()
 	int x_offset = this->widget_horizontal_margin;
 
 	// Add iteration label
-	auto iteration_label = tgui::Label::create("Iteration: 1000");
+	this->iteration_label = tgui::Label::create("Iteration: 1000");
 	iteration_label->setTextSize(this->widget_text_size_big);
 	iteration_label->setPosition(x_offset, this->widget_top_margin);
 
@@ -107,37 +118,12 @@ void UI::initialize_menu_bar()
 	emplace_widget(reset_button, "reset_button", reset_button->getSize().x);
 	menu_bar->add(reset_button);
 
-	/// TEST
-	iteration_label->onClick([iteration_label, this] 
-		{
-			static bool first_click = true;
-
-			if (first_click)
-			{
-				iteration_label->setText("Iteration: 1");
-				first_click = false;
-			}
-			else
-			{
-				std::string text = iteration_label->getText().toStdString();
-				text += "0";
-
-				iteration_label->setText(text);
-			}
-
-			update_widget_positioning();
-
-		});
-
-	slow_down_button->onClick([slow_down_button, this]
-		{
-			std::cout << "UI::initialize_menu_bar(). Speed up button clicked\n";
-		});
-
 	// Add to GUI
 	gui.add(menu_bar);
 
+	// Reset labels
 	iteration_label->setText("Iteration: 0");
+	fps_label->setText("FPS: 60");
 	update_widget_positioning();
 }
 

@@ -19,6 +19,9 @@ private:
 	float fps_update_interval = 1.f;
 	int fps_frames_between_update = 0;
 
+	// Simulation
+	int iteration = 0;
+
 public:
 	// Constructor
 	Controller(int window_width, int window_height, int grid_width, int grid_height);

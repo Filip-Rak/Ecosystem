@@ -3,8 +3,8 @@
 Controller::Controller(int window_width, int window_height, int grid_width, int grid_height)
 	: visualization(window_width, window_height)
 {
-	initialize_ui_events();
 	ui_ptr = &visualization.get_ui();
+	initialize_ui_events();
 }
 
 void Controller::run()
@@ -73,8 +73,11 @@ void Controller::render()
 void Controller::initialize_ui_events()
 {
 	/* Get Widget References */
-	// UI ui = visualization.get_ui();
-	// auto fps_label = ui.get_widget_as<tgui::Label>("fps_label");
+	auto speed_up_button = ui_ptr->get_widget_as<tgui::Button>("speed_up_button");
 
 	/* Intialize Widget's events */
+	speed_up_button->onClick([]
+		{
+			std::cout << "Controller::initialize_ui_events()->speed_up_button->onclick()\n";
+		});
 }

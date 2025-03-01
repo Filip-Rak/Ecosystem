@@ -15,8 +15,8 @@ private:
 
 	// Components
 	sf::RenderWindow main_window;
-	UI ui;
 	tgui::Gui gui;
+	UI ui;
 
 public:
 	/* Constructor */
