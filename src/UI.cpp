@@ -1,5 +1,4 @@
 #include "UI.h"
-#include <iostream>
 
 /* Constructor */
 UI::UI(tgui::Gui& gui): gui(gui) {}
@@ -12,10 +11,10 @@ void UI::initialize()
 
 void UI::update_on_resize()
 {
+	// Extend the panel's size if scrollbar is visible
 	auto menu_bar = get_widget_as<tgui::ScrollablePanel>("menu_bar");
 	if (menu_bar->getHorizontalScrollbar()->isShown())
 	{
-		std::cout << "isShown\n";
 		menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size_with_scroll);
 	}
 	else
@@ -30,7 +29,6 @@ void UI::initialize_menu_bar()
 	// Create scrollable Panel at the top of the screen
 	auto menu_bar = tgui::ScrollablePanel::create();
 	menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size);
-	// menu_bar->setPosition(0, 0);
 	menu_bar->setAutoLayout(tgui::AutoLayout::Top);
 	
 	widget_map.emplace("menu_bar", menu_bar);
@@ -41,7 +39,7 @@ void UI::initialize_menu_bar()
 	int x_offset = this->widget_horizontal_margin;
 
 	// Add iteration label
-	auto iteration_label = tgui::Label::create("Iteration: 100000");
+	auto iteration_label = tgui::Label::create("Iteration: 1000");
 	iteration_label->setTextSize(this->widget_text_size_big);
 	iteration_label->setPosition(x_offset, this->widget_top_margin);
 
@@ -67,13 +65,41 @@ void UI::initialize_menu_bar()
 	emplace_widget(speed_label, "speed_label", speed_label->getSize().x);
 	menu_bar->add(speed_label);
 
-	auto button = tgui::Button::create("Button");
-	button->setTextSize(this->widget_text_size_small);
-	button->setPosition(x_offset, this->widget_top_margin);
+	// Slow down button
+	auto slow_down_button = tgui::Button::create("-");
+	slow_down_button->setTextSize(this->widget_text_size_small);
+	slow_down_button->setPosition(x_offset, this->widget_top_margin);
 
-	x_offset += button->getSize().x + this->widget_horizontal_margin;
-	emplace_widget(button, "button", button->getSize().x);
-	menu_bar->add(button);
+	x_offset += slow_down_button->getSize().x + this->widget_horizontal_margin;
+	emplace_widget(slow_down_button, "slow_down_button", slow_down_button->getSize().x);
+	menu_bar->add(slow_down_button);	
+	
+	// Pause / Resume button
+	auto pause_resume_button = tgui::Button::create(">");
+	pause_resume_button->setTextSize(this->widget_text_size_small);
+	pause_resume_button->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += pause_resume_button->getSize().x + this->widget_horizontal_margin;
+	emplace_widget(pause_resume_button, "pause_resume_button", pause_resume_button->getSize().x);
+	menu_bar->add(pause_resume_button);	
+	
+	// Speed up button
+	auto speed_up_button = tgui::Button::create("+");
+	speed_up_button->setTextSize(this->widget_text_size_small);
+	speed_up_button->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += speed_up_button->getSize().x + this->widget_horizontal_margin;
+	emplace_widget(speed_up_button, "speed_up_button", speed_up_button->getSize().x);
+	menu_bar->add(speed_up_button);
+
+	// Reset button
+	auto reset_button = tgui::Button::create("Reset");
+	reset_button->setTextSize(this->widget_text_size_small);
+	reset_button->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += reset_button->getSize().x + this->widget_horizontal_margin;
+	emplace_widget(reset_button, "reset_button", reset_button->getSize().x);
+	menu_bar->add(reset_button);
 
 	/// TEST
 	iteration_label->onClick([iteration_label, this] 
@@ -109,21 +135,9 @@ void UI::initialize_menu_bar()
 			update_widget_positioning();
 		});
 
-	button->onClick([button, this]
+	slow_down_button->onClick([slow_down_button, this]
 		{
-			static bool toggle = true;
-
-			if (toggle)
-			{
-				button->setText("Start");
-			}
-			else
-			{
-				button->setText("Restart");
-			}
-
-			toggle = !toggle;
-			update_widget_positioning();
+			std::cout << "UI::initialize_menu_bar(). Speed up button clicked\n";
 		});
 
 	// Add to GUI

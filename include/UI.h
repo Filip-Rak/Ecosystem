@@ -5,6 +5,7 @@
 
 // Testing
 #include <ctime>
+#include <iostream>
 
 class UI
 {
@@ -21,12 +22,12 @@ private:
 	tgui::Layout menu_bar_vertical_size = 30;
 	tgui::Layout menu_bar_vertical_size_with_scroll = 42;
 	tgui::Layout menu_bar_horizontal_size = "100%";
-	int widget_text_size_small = 12;
-	int widget_text_size_big = 18;
 	tgui::Layout widget_vertical_size = 20;
 	tgui::Layout widget_top_margin = "10%";
+
 	int widget_horizontal_margin = 10;
-	float glyph_assumed_width = 0.6f;
+	int widget_text_size_small = 14;
+	int widget_text_size_big = 18;
 
 public:
 	/* Constructor */

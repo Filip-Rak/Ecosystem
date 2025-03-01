@@ -5,11 +5,13 @@
 
 #include "UI.h"
 
+// Testing
+#include <iostream>
+
 class Visualization
 {
 private:
 	/* Attributes */
-
 
 	// Components
 	sf::RenderWindow main_window;

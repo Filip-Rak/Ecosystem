@@ -1,6 +1,5 @@
 #include "Visualization.h"
 
-#include <iostream>
 Visualization::Visualization(int window_width, int window_height)
 	: main_window(sf::VideoMode(window_width, window_height), "Ecosystem"), gui(main_window), ui(gui)
 {
