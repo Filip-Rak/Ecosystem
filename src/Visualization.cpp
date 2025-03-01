@@ -1,8 +1,10 @@
 #include "Visualization.h"
 
+#include <iostream>
 Visualization::Visualization(int window_width, int window_height)
-	: main_window(sf::VideoMode(window_width, window_height), "Ecosystem"), gui(main_window)
+	: main_window(sf::VideoMode(window_width, window_height), "Ecosystem"), gui(main_window), ui(gui)
 {
+	ui.initialize();
 }
 
 Visualization::~Visualization()
@@ -22,6 +24,10 @@ void Visualization::process_window_events()
 		if (event.type == sf::Event::Closed)
 		{
 			main_window.close();
+		}
+		else if (event.type == sf::Event::Resized)
+		{
+			ui.update_on_resize();
 		}
 
 		// Process GUI events
@@ -44,7 +50,7 @@ bool Visualization::is_window_open() const
 	return main_window.isOpen();
 }
 
-tgui::Gui& Visualization::get_gui()
+UI& Visualization::get_ui()
 {
-	return gui;
+	return ui;
 }

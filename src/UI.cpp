@@ -10,6 +10,19 @@ void UI::initialize()
 	initialize_menu_bar();
 }
 
+void UI::update_on_resize()
+{
+	auto menu_bar = get_widget_as<tgui::ScrollablePanel>("menu_bar");
+	if (!menu_bar->getHorizontalScrollbar()->isShown()) // isShown seems to be return the opposite of what it describes
+	{
+		menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size_with_scroll);
+	}
+	else
+	{
+		menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size);
+	}
+}
+
 /* Private Methods */
 void UI::initialize_menu_bar()
 {
@@ -18,6 +31,8 @@ void UI::initialize_menu_bar()
 	menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size);
 	// menu_bar->setPosition(0, 0);
 	menu_bar->setAutoLayout(tgui::AutoLayout::Top);
+	
+	widget_map.emplace("menu_bar", menu_bar);
 
 	/* Create Contents */
 

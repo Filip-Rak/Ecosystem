@@ -3,6 +3,8 @@
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 
+#include "UI.h"
+
 class Visualization
 {
 private:
@@ -11,6 +13,7 @@ private:
 
 	// Components
 	sf::RenderWindow main_window;
+	UI ui;
 	tgui::Gui gui;
 
 public:
@@ -26,5 +29,6 @@ public:
 
 	/* Getters */
 	bool is_window_open() const;
-	tgui::Gui& get_gui();
+	UI& get_ui();
+
 };

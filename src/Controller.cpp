@@ -1,10 +1,8 @@
 #include "Controller.h"
 
 Controller::Controller(int window_width, int window_height, int grid_width, int grid_height)
-	: visualization(window_width, window_height), ui(visualization.get_gui())
-{
-	ui.initialize();
-}
+	: visualization(window_width, window_height)
+{}
 
 void Controller::run()
 {

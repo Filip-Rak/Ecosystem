@@ -2,7 +2,6 @@
 
 #include "Visualization.h"
 #include "Automaton.h"
-#include "UI.h"
 
 #include <iostream>
 
@@ -11,7 +10,6 @@ class Controller
 private:
 	// Components
 	Visualization visualization;
-	UI ui;
 	// Automaton automaton;
 
 public:
