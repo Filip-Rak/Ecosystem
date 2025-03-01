@@ -21,6 +21,10 @@ void Visualization::process_window_events()
 	sf::Event event;
 	while (main_window.pollEvent(event))
 	{
+		/* Process GUI events */
+		gui.handleEvent(event);
+
+		/* Process window events */
 		if (event.type == sf::Event::Closed)
 		{
 			main_window.close();
@@ -29,9 +33,6 @@ void Visualization::process_window_events()
 		{
 			ui.update_on_resize();
 		}
-
-		// Process GUI events
-		gui.handleEvent(event);
 	}
 }
 

@@ -13,8 +13,9 @@ void UI::initialize()
 void UI::update_on_resize()
 {
 	auto menu_bar = get_widget_as<tgui::ScrollablePanel>("menu_bar");
-	if (!menu_bar->getHorizontalScrollbar()->isShown()) // isShown seems to be return the opposite of what it describes
+	if (menu_bar->getHorizontalScrollbar()->isShown())
 	{
+		std::cout << "isShown\n";
 		menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size_with_scroll);
 	}
 	else
