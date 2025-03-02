@@ -12,6 +12,7 @@ UI::~UI()
 void UI::initialize()
 {
 	initialize_menu_bar();
+	initialize_hierarchy();
 }
 
 void UI::update_on_resize()
@@ -125,6 +126,19 @@ void UI::initialize_menu_bar()
 	iteration_label->setText("Iteration: 0");
 	fps_label->setText("FPS: 60");
 	update_widget_positioning();
+}
+
+void UI::initialize_hierarchy()
+{
+	auto menu_bar = get_widget_as<tgui::ScrollablePanel>("menu_bar");
+
+	auto hierarchy = EditableTreeView::create();
+	hierarchy->setSize(this->hierarchy_x_window_share, "100%" - tgui::bindHeight(menu_bar));
+	hierarchy->setPosition("100% - width", tgui::bindBottom(menu_bar));
+
+	hierarchy->addItem({ "Cell", "Humidity: ", "Temperature: "});
+
+	gui.add(hierarchy);
 }
 
 void UI::emplace_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_length)

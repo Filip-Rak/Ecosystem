@@ -3,6 +3,8 @@
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 
+#include "EditableTreeView.h"
+
 // Testing
 #include <ctime>
 #include <iostream>
@@ -28,6 +30,10 @@ private:
 	int widget_horizontal_margin = 10;
 	int widget_text_size_small = 14;
 	int widget_text_size_big = 18;
+
+	// Hierarchy
+	tgui::Layout hierarchy_x_window_share = "15%";
+	tgui::Layout hierarchy_y_window_share = gui.getWindow()->getSize().y - menu_bar_vertical_size;
 
 	// Commonly accessed references
 	tgui::Label::Ptr fps_label;
@@ -70,6 +76,7 @@ public:
 private:
 	/* Private Methods */
 	void initialize_menu_bar();
+	void initialize_hierarchy();
 	void emplace_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_size);
 	void update_widget_positioning();
 	bool enable_auto_size(const tgui::Widget::Ptr& widget);

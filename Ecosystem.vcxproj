@@ -141,12 +141,14 @@
   <ItemGroup>
     <ClInclude Include="include\Automaton.h" />
     <ClInclude Include="include\Controller.h" />
+    <ClInclude Include="include\EditableTreeView.h" />
     <ClInclude Include="include\UI.h" />
     <ClInclude Include="include\Visualization.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Automaton.cpp" />
     <ClCompile Include="src\Controller.cpp" />
+    <ClCompile Include="src\EditableTreeview.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\UI.cpp" />
     <ClCompile Include="src\Visualization.cpp" />
