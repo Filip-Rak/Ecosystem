@@ -93,11 +93,12 @@ public:
 private:
 	/* Private Methods */
 	void initialize_menu_bar();
-	void initialize_right_bar();
+	void initialize_right_panel();
 	void initialize_cell_panel();
 	void initialize_animal_panel();
 	void initialize_genes_panel();
 	void set_scalable_text_size(tgui::Widget::Ptr, unsigned int size);
+	void update_menu_bar_height();
 	void update_scalable_text_size();
 	void emplace_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_size);
 	void update_widget_positioning();

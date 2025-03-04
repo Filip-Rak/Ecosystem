@@ -12,7 +12,7 @@ UI::~UI()
 void UI::initialize()
 {
 	initialize_menu_bar();
-	initialize_right_bar();
+	initialize_right_panel();
 	initialize_cell_panel();
 	initialize_animal_panel();
 	initialize_genes_panel();
@@ -22,17 +22,7 @@ void UI::initialize()
 
 void UI::update_on_resize()
 {
-	// Extend the panel's size if scrollbar is visible
-	auto menu_bar = get_widget_as<tgui::ScrollablePanel>("menu_bar");
-	if (menu_bar->getHorizontalScrollbar()->isShown())
-	{
-		menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size_with_scroll);
-	}
-	else
-	{
-		menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size);
-	}
-
+	update_menu_bar_height();
 	update_scalable_text_size();
 }
 
@@ -136,7 +126,7 @@ void UI::initialize_menu_bar()
 	update_widget_positioning();
 }
 
-void UI::initialize_right_bar()
+void UI::initialize_right_panel()
 {
 	/* Create Righ-Side Panel */
 	// Reference menu bar
@@ -157,6 +147,7 @@ void UI::initialize_right_bar()
 	/* Fill Right Panel with Widgets */
 	// Add a title label at the top of the right panel
 	auto title_label = tgui::Label::create(this->right_panel_title_text);
+	title_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	set_scalable_text_size(title_label, this->widget_text_size_huge);
 	title_label->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
 	vertical_layout->add(title_label, this->right_panel_title_ratio);
@@ -222,6 +213,20 @@ void UI::set_scalable_text_size(tgui::Widget::Ptr widget, unsigned int size)
 
 	// Add pair to the vector
 	this->widget_text_sizes.push_back(pair);
+}
+
+void UI::update_menu_bar_height()
+{
+	// Extend the panel's size if scrollbar is visible
+	auto menu_bar = get_widget_as<tgui::ScrollablePanel>("menu_bar");
+	if (menu_bar->getHorizontalScrollbar()->isShown())
+	{
+		menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size_with_scroll);
+	}
+	else
+	{
+		menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size);
+	}
 }
 
 void UI::update_scalable_text_size()
