@@ -12,7 +12,7 @@ UI::~UI()
 void UI::initialize()
 {
 	initialize_menu_bar();
-	initialize_hierarchy();
+	initialize_right_bar();
 }
 
 void UI::update_on_resize()
@@ -48,6 +48,7 @@ void UI::initialize_menu_bar()
 	auto menu_bar = tgui::ScrollablePanel::create();
 	menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size);
 	menu_bar->setAutoLayout(tgui::AutoLayout::Top);
+	menu_bar->getRenderer()->setBorders(this->menu_bar_borders);
 	
 	widget_map.emplace("menu_bar", menu_bar);
 
@@ -128,17 +129,76 @@ void UI::initialize_menu_bar()
 	update_widget_positioning();
 }
 
-void UI::initialize_hierarchy()
+void UI::initialize_right_bar()
 {
+	/* Create Righ-Side Panel */
+	// Reference menu bar
 	auto menu_bar = get_widget_as<tgui::ScrollablePanel>("menu_bar");
 
-	auto hierarchy = tgui::TreeView::create();
-	hierarchy->setSize(this->hierarchy_x_window_share, "100%" - tgui::bindHeight(menu_bar));
-	hierarchy->setPosition("100% - width", tgui::bindBottom(menu_bar));
+	// Create a right panel that spans the full height minus the menu bar height
+	auto right_panel = tgui::Panel::create();
+	right_panel->setSize(this->right_panel_x_window_share, "100%" - tgui::bindHeight(menu_bar));
+	right_panel->setPosition("100% - width", tgui::bindBottom(menu_bar));
+	right_panel->getRenderer()->setBorders(this->right_panel_borders);
 
-	hierarchy->addItem({ "Cell", "Humidity: ", "Temperature: "});
+	/* Add a Layout for Organizing Widgets */
+	// Create a vertical layout to manage widgets inside the right panel
+	auto vertical_layout = tgui::VerticalLayout::create();
+	vertical_layout->getRenderer()->setPadding(this->vertical_layout_padding);
+	right_panel->add(vertical_layout);
 
-	gui.add(hierarchy);
+	/* Fill Right Panel with Widgets */
+	// Add a title label at the top of the right panel
+	auto title_label = tgui::Label::create(this->right_panel_title_text);
+	title_label->setTextSize(this->widget_text_size_huge);
+	title_label->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+	vertical_layout->add(title_label, this->right_panel_title_ratio);
+
+	/* Add Tab Container with Multiple Pages */
+	// Create a tab container for organizing different sections
+	auto tab_container = tgui::TabContainer::create();
+	vertical_layout->add(tab_container);
+
+	// Add tabs and retrieve the corresponding panels
+	auto cell_panel = tab_container->addTab(this->cell_tab_name);
+	auto animal_panel = tab_container->addTab(this->animal_tab_name);
+	auto genes_panel = tab_container->addTab(this->genes_tab_name);
+
+	// Set default open tab
+	tab_container->getTabs()->select(0);
+
+	/* Populate Cell Tab with Content */
+	// Create a scrollable panel for the Cell tab
+	auto cell_panel_content = tgui::ScrollablePanel::create();
+	cell_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Blue);
+	cell_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
+	cell_panel->add(cell_panel_content);	
+	
+	/* Populate Animal Tab with Content */
+	// Create a scrollable panel for the Animal tab
+	auto animal_panel_content = tgui::ScrollablePanel::create();
+	animal_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Yellow);
+	animal_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
+	animal_panel->add(animal_panel_content);	
+	
+	/* Populate Genes Tab with Content */
+	// Create a scrollable panel for the Genes tab
+	auto genes_panel_content = tgui::ScrollablePanel::create();
+	genes_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Green);
+	genes_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
+	genes_panel->add(genes_panel_content);
+
+	/* Add Control Buttons to Vertical Layout */
+
+	// Add spacing from the layout
+	vertical_layout->addSpace(0.005f);
+
+	auto ctrl_button1 = tgui::Button::create("BIND TO MOUSE");
+	ctrl_button1->setTextSize(this->widget_text_size_big);
+	vertical_layout->add(ctrl_button1, 0.05f);
+
+	/* Add the fully configured right panel to the GUI */
+	gui.add(right_panel);
 }
 
 void UI::emplace_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_length)

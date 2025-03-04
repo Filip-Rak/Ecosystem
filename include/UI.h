@@ -18,20 +18,31 @@ private:
 	std::vector<tgui::Widget::Ptr> widget_order;
 	std::vector<tgui::Layout> minimal_lengths;
 
+	// Global properties
+	int widget_horizontal_margin = 10;
+	int widget_text_size_small = 14;
+	int widget_text_size_big = 18;
+	int widget_text_size_huge = 24;
+
 	// Menu bar
 	tgui::Layout menu_bar_vertical_size = 30;
 	tgui::Layout menu_bar_vertical_size_with_scroll = 42;
 	tgui::Layout menu_bar_horizontal_size = "100%";
 	tgui::Layout widget_vertical_size = 20;
 	tgui::Layout widget_top_margin = "10%";
+	tgui::Borders menu_bar_borders = tgui::Borders(0.f, 0.0f, 0.0f, 1.f);
 
-	int widget_horizontal_margin = 10;
-	int widget_text_size_small = 14;
-	int widget_text_size_big = 18;
+	// Right panel
+	tgui::Layout right_panel_x_window_share = "15%";
+	tgui::Padding vertical_layout_padding = { "3%", "2%", "3%", "0.5%" };
+	tgui::Borders right_panel_borders = tgui::Borders(1.f, 0.f, 1.f, 1.f);
+	tgui::Borders tab_container_content_borders = tgui::Borders(1.f, 0.f, 1.f, 1.f);
+	float right_panel_title_ratio = 0.06f;
 
-	// Hierarchy
-	tgui::Layout hierarchy_x_window_share = "15%";
-	tgui::Layout hierarchy_y_window_share = gui.getWindow()->getSize().y - menu_bar_vertical_size;
+	tgui::String right_panel_title_text = "CREATION";
+	tgui::String cell_tab_name = "Cell";
+	tgui::String animal_tab_name = "Animal";
+	tgui::String genes_tab_name = "Genes";
 
 	// Commonly accessed references
 	tgui::Label::Ptr fps_label;
@@ -74,7 +85,7 @@ public:
 private:
 	/* Private Methods */
 	void initialize_menu_bar();
-	void initialize_hierarchy();
+	void initialize_right_bar();
 	void emplace_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_size);
 	void update_widget_positioning();
 	bool enable_auto_size(const tgui::Widget::Ptr& widget);
