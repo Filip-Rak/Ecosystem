@@ -13,6 +13,11 @@ void UI::initialize()
 {
 	initialize_menu_bar();
 	initialize_right_bar();
+	initialize_cell_panel();
+	initialize_animal_panel();
+	initialize_genes_panel();
+
+	update_scalable_text_size();
 }
 
 void UI::update_on_resize()
@@ -27,6 +32,8 @@ void UI::update_on_resize()
 	{
 		menu_bar->setSize(this->menu_bar_horizontal_size, this->menu_bar_vertical_size);
 	}
+
+	update_scalable_text_size();
 }
 
 void UI::update_fps_label(int fps)
@@ -59,7 +66,7 @@ void UI::initialize_menu_bar()
 
 	// Add iteration label
 	this->iteration_label = tgui::Label::create("Iteration: 1000");
-	iteration_label->setTextSize(this->widget_text_size_big);
+	iteration_label->setTextSize(this->widget_text_size_medium);
 	iteration_label->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += iteration_label->getSize().x + this->widget_horizontal_margin;
@@ -68,7 +75,7 @@ void UI::initialize_menu_bar()
 
 	// Add FPS label
 	this->fps_label = tgui::Label::create("FPS: 1000");
-	fps_label->setTextSize(this->widget_text_size_big);
+	fps_label->setTextSize(this->widget_text_size_medium);
 	fps_label->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += fps_label->getSize().x + this->widget_horizontal_margin;
@@ -77,7 +84,7 @@ void UI::initialize_menu_bar()
 	
 	// Add Speed label
 	auto speed_label = tgui::Label::create("Speed: 120 UPS");
-	speed_label->setTextSize(this->widget_text_size_big);
+	speed_label->setTextSize(this->widget_text_size_medium);
 	speed_label->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += speed_label->getSize().x + this->widget_horizontal_margin;
@@ -150,60 +157,97 @@ void UI::initialize_right_bar()
 	/* Fill Right Panel with Widgets */
 	// Add a title label at the top of the right panel
 	auto title_label = tgui::Label::create(this->right_panel_title_text);
-	title_label->setTextSize(this->widget_text_size_huge);
+	set_scalable_text_size(title_label, this->widget_text_size_huge);
 	title_label->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
 	vertical_layout->add(title_label, this->right_panel_title_ratio);
 
 	/* Add Tab Container with Multiple Pages */
 	// Create a tab container for organizing different sections
 	auto tab_container = tgui::TabContainer::create();
+	set_scalable_text_size(tab_container->getTabs(), this->widget_text_size_small);
 	vertical_layout->add(tab_container);
 
 	// Add tabs and retrieve the corresponding panels
-	auto cell_panel = tab_container->addTab(this->cell_tab_name);
-	auto animal_panel = tab_container->addTab(this->animal_tab_name);
-	auto genes_panel = tab_container->addTab(this->genes_tab_name);
+	this->cell_panel = tab_container->addTab(this->cell_tab_name);
+	this->animal_panel = tab_container->addTab(this->animal_tab_name);
+	this->genes_panel = tab_container->addTab(this->genes_tab_name);
 
 	// Set default open tab
 	tab_container->getTabs()->select(0);
-
-	/* Populate Cell Tab with Content */
-	// Create a scrollable panel for the Cell tab
-	auto cell_panel_content = tgui::ScrollablePanel::create();
-	cell_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Blue);
-	cell_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
-	cell_panel->add(cell_panel_content);	
 	
-	/* Populate Animal Tab with Content */
-	// Create a scrollable panel for the Animal tab
-	auto animal_panel_content = tgui::ScrollablePanel::create();
-	animal_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Yellow);
-	animal_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
-	animal_panel->add(animal_panel_content);	
-	
-	/* Populate Genes Tab with Content */
-	// Create a scrollable panel for the Genes tab
-	auto genes_panel_content = tgui::ScrollablePanel::create();
-	genes_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Green);
-	genes_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
-	genes_panel->add(genes_panel_content);
-
 	/* Add Control Buttons to Vertical Layout */
 
 	// Add spacing from the layout
 	vertical_layout->addSpace(0.005f);
 
 	auto ctrl_button1 = tgui::Button::create("BIND TO MOUSE");
-	ctrl_button1->setTextSize(this->widget_text_size_big);
+	set_scalable_text_size(ctrl_button1, this->widget_text_size_big);
 	vertical_layout->add(ctrl_button1, 0.05f);
 
 	/* Add the fully configured right panel to the GUI */
 	gui.add(right_panel);
 }
 
+void UI::initialize_cell_panel()
+{
+	// Create a scrollable panel
+	auto cell_panel_content = tgui::ScrollablePanel::create();
+	cell_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Blue);
+	cell_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
+	this->cell_panel->add(cell_panel_content);
+}
+
+void UI::initialize_animal_panel()
+{
+	// Create a scrollable panel
+	auto animal_panel_content = tgui::ScrollablePanel::create();
+	animal_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Yellow);
+	animal_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
+	this->animal_panel->add(animal_panel_content);
+}
+
+void UI::initialize_genes_panel()
+{
+	// Create a scrollable panel
+	auto genes_panel_content = tgui::ScrollablePanel::create();
+	genes_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Green);
+	genes_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
+	this->genes_panel->add(genes_panel_content);
+}
+
+void UI::set_scalable_text_size(tgui::Widget::Ptr widget, unsigned int size)
+{
+	// Create a pair of widget and text size
+	std::pair <tgui::Widget::Ptr, unsigned int> pair(widget, size);
+
+	// Add pair to the vector
+	this->widget_text_sizes.push_back(pair);
+}
+
+void UI::update_scalable_text_size()
+{
+	// Estimate how much the resolution differs from the reference resolution
+	double ratio_x = (double)gui.getWindow()->getSize().x / (double)this->reference_resolution.x;
+	double ratio_y = (double)gui.getWindow()->getSize().y / (double)this->reference_resolution.y;
+	
+	// Pick axis which accomodates the least text
+	// double lowest_ratio = (ratio_x < ratio_y) ? ratio_x : ratio_y;
+	double average_ratio = (ratio_x + ratio_y) / 2.0;
+
+	// Adjust the text based on smallest axis
+	for (int i = 0; i < this->widget_text_sizes.size(); i++)
+	{
+		unsigned int reference_size = widget_text_sizes[i].second;
+		unsigned int new_size = int(double(reference_size) * average_ratio);
+
+		// Update the text
+		widget_text_sizes[i].first->setTextSize(new_size);
+	}
+}
+
 void UI::emplace_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_length)
 {
-	this->widget_order.push_back(widget);
+	this->widget_position_update_list.push_back(widget);
 	this->minimal_lengths.push_back(minimal_length);
 	this->widget_map.emplace(identifier, widget);
 }
@@ -211,26 +255,26 @@ void UI::emplace_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::
 void UI::update_widget_positioning()
 {
 	int x_offset = widget_horizontal_margin;
-	for (int i = 0; i < widget_order.size(); i++)
+	for (int i = 0; i < widget_position_update_list.size(); i++)
 	{
 		// Tell widget to recalculate it's size 
-		bool auto_sized = enable_auto_size(widget_order[i]);
+		bool auto_sized = enable_auto_size(widget_position_update_list[i]);
 
 		// Read size properties
-		float current_size = widget_order[i]->getSize().x;
+		float current_size = widget_position_update_list[i]->getSize().x;
 		float min_size = minimal_lengths[i].getValue();
-		float y_size = widget_order[i]->getSize().y;
+		float y_size = widget_position_update_list[i]->getSize().y;
 
 		// Select correct size and set it
 		float size_to_set = (auto_sized && current_size >= min_size) ? current_size : min_size;
-		widget_order[i]->setSize(size_to_set, y_size);
+		widget_position_update_list[i]->setSize(size_to_set, y_size);
 
 		// Update the widget's x position
-		float y_position = widget_order[i]->getPosition().y;
-		widget_order[i]->setPosition(x_offset, y_position);
+		float y_position = widget_position_update_list[i]->getPosition().y;
+		widget_position_update_list[i]->setPosition(x_offset, y_position);
 
 		// Update the offset
-		x_offset += widget_order[i]->getSize().x + widget_horizontal_margin;
+		x_offset += widget_position_update_list[i]->getSize().x + widget_horizontal_margin;
 	}
 }
 
