@@ -132,7 +132,7 @@ void UI::initialize_hierarchy()
 {
 	auto menu_bar = get_widget_as<tgui::ScrollablePanel>("menu_bar");
 
-	auto hierarchy = EditableTreeView::create();
+	auto hierarchy = tgui::TreeView::create();
 	hierarchy->setSize(this->hierarchy_x_window_share, "100%" - tgui::bindHeight(menu_bar));
 	hierarchy->setPosition("100% - width", tgui::bindBottom(menu_bar));
 

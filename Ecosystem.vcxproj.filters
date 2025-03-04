@@ -27,9 +27,6 @@
     <ClInclude Include="include\UI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\EditableTreeView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Automaton.cpp">
@@ -45,9 +42,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Visualization.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EditableTreeview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

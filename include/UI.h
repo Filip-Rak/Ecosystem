@@ -3,8 +3,6 @@
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 
-#include "EditableTreeView.h"
-
 // Testing
 #include <ctime>
 #include <iostream>
