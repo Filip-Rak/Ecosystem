@@ -215,11 +215,15 @@ void UI::initialize_cell_panel()
 	cell_panel_content->add(animal_list_label);
 
 	// Add list
-	auto animal_list = tgui::ListView::create();
+	auto animal_list = tgui::ListBox::create();
 	animal_list->setPosition(tgui::bindLeft(animal_list_label), tgui::bindBottom(animal_list_label));
-	set_scalable_text_size(animal_list, this->widget_text_size_big);
+	set_scalable_text_size(animal_list, this->widget_text_size_big);	// Breaks sizing for other elements!
+	animal_list->setTextSize(widget_text_size_big);	// Seems to scale automatically
 	animal_list->setWidth("90%");
-	animal_list->addItem("H103");	// Example items
+	cell_panel_content->add(animal_list);
+
+	// Add example items to list
+	animal_list->addItem("H103");
 	animal_list->addItem("P233");
 	animal_list->addItem("P204");
 	animal_list->addItem("P234");
@@ -227,8 +231,6 @@ void UI::initialize_cell_panel()
 	animal_list->addItem("H1031");
 	animal_list->addItem("P1201");
 	animal_list->addItem("H201");
-	cell_panel_content->add(animal_list);
-
 }
 
 void UI::initialize_animal_panel()
@@ -288,7 +290,7 @@ void UI::update_scalable_text_size()
 		unsigned int reference_size = widget_text_sizes[i].second;
 		unsigned int new_size = int(double(reference_size) * average_ratio);
 
-		// Update the text
+		// Update the text size
 		widget_text_sizes[i].first->setTextSize(new_size);
 	}
 }
