@@ -141,7 +141,7 @@ void UI::initialize_right_panel()
 	/* Add a Layout for Organizing Widgets */
 	// Create a vertical layout to manage widgets inside the right panel
 	auto vertical_layout = tgui::VerticalLayout::create();
-	vertical_layout->getRenderer()->setPadding(this->vertical_layout_padding);
+	vertical_layout->getRenderer()->setPadding(this->outer_vertical_layout_padding);
 	right_panel->add(vertical_layout);
 
 	/* Fill Right Panel with Widgets */
@@ -167,12 +167,12 @@ void UI::initialize_right_panel()
 	tab_container->getTabs()->select(0);
 	
 	/* Add Control Buttons to Vertical Layout */
-
 	// Add spacing from the layout
 	vertical_layout->addSpace(0.005f);
 
 	auto ctrl_button1 = tgui::Button::create("BIND TO MOUSE");
 	set_scalable_text_size(ctrl_button1, this->widget_text_size_big);
+	ctrl_button1->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	vertical_layout->add(ctrl_button1, 0.05f);
 
 	/* Add the fully configured right panel to the GUI */
@@ -181,11 +181,50 @@ void UI::initialize_right_panel()
 
 void UI::initialize_cell_panel()
 {
-	// Create a scrollable panel
+	/* Create a scrollable panel */
 	auto cell_panel_content = tgui::ScrollablePanel::create();
-	cell_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Blue);
 	cell_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
 	this->cell_panel->add(cell_panel_content);
+
+	/* Add Vertical Layout to Scrollable Panel */
+	auto vertical_layout = tgui::VerticalLayout::create();
+	vertical_layout->getRenderer()->setPadding(this->inner_vertical_layout_padding);
+	cell_panel_content->add(vertical_layout);
+
+	/* Add ID Labels to Vertical Layout */
+
+	// Create a panel to put elements next to each other
+	auto id_panel = tgui::Panel::create();
+	vertical_layout->add(id_panel);
+	
+	// Add key
+	auto id_label_key = tgui::Label::create("ID:");
+	id_label_key->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
+	set_scalable_text_size(id_label_key, this->widget_text_size_big);
+	id_panel->add(id_label_key);
+
+	// Add value
+	auto id_label_value = tgui::Label::create("N/A");
+	id_label_value->setPosition(tgui::bindRight(id_label_key), tgui::bindTop(id_label_key));
+	set_scalable_text_size(id_label_value, this->widget_text_size_big);
+	id_panel->add(id_label_value);
+
+	// Add spacer
+	// vertical_layout->addSpace(0.002);
+
+	/* Add Vegetation Label */
+
+	// Add Vegetation Panel
+	auto vege_panel = tgui::Panel::create();
+	vertical_layout->add(vege_panel);
+
+	// Add key
+	auto vege_label_key = tgui::Label::create("Vegetation");
+	vege_label_key->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
+	set_scalable_text_size(vege_label_key, this->widget_text_size_big);
+	vege_panel->add(vege_label_key);
+
+
 }
 
 void UI::initialize_animal_panel()

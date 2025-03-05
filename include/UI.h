@@ -38,7 +38,8 @@ private:
 
 	// Right panel
 	tgui::Layout right_panel_x_window_share = "15%";
-	tgui::Padding vertical_layout_padding = { "3%", "2%", "3%", "0.5%" };
+	tgui::Padding outer_vertical_layout_padding = { "3%", "2%", "3%", "0.5%" };
+	tgui::Padding inner_vertical_layout_padding = { "3%", "1%", "3%", "1%" };
 	tgui::Borders right_panel_borders = tgui::Borders(1.f, 0.f, 1.f, 1.f);
 	tgui::Borders tab_container_content_borders = tgui::Borders(1.f, 0.f, 1.f, 1.f);
 	float right_panel_title_ratio = 0.06f;
