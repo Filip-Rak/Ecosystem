@@ -60,7 +60,7 @@ void UI::initialize_menu_bar()
 	iteration_label->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += iteration_label->getSize().x + this->widget_horizontal_margin;
-	emplace_widget(iteration_label, "iteration_label", iteration_label->getSize().x);
+	map_widget(iteration_label, "iteration_label", iteration_label->getSize().x);
 	menu_bar->add(iteration_label);
 
 	// Add FPS label
@@ -69,7 +69,7 @@ void UI::initialize_menu_bar()
 	fps_label->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += fps_label->getSize().x + this->widget_horizontal_margin;
-	emplace_widget(fps_label, "fps_label", fps_label->getSize().x);
+	map_widget(fps_label, "fps_label", fps_label->getSize().x);
 	menu_bar->add(fps_label);	
 	
 	// Add Speed label
@@ -78,7 +78,7 @@ void UI::initialize_menu_bar()
 	speed_label->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += speed_label->getSize().x + this->widget_horizontal_margin;
-	emplace_widget(speed_label, "speed_label", speed_label->getSize().x);
+	map_widget(speed_label, "speed_label", speed_label->getSize().x);
 	menu_bar->add(speed_label);
 
 	// Slow down button
@@ -87,7 +87,7 @@ void UI::initialize_menu_bar()
 	slow_down_button->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += slow_down_button->getSize().x + this->widget_horizontal_margin;
-	emplace_widget(slow_down_button, "slow_down_button", slow_down_button->getSize().x);
+	map_widget(slow_down_button, "slow_down_button", slow_down_button->getSize().x);
 	menu_bar->add(slow_down_button);	
 	
 	// Pause / Resume button
@@ -96,7 +96,7 @@ void UI::initialize_menu_bar()
 	pause_resume_button->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += pause_resume_button->getSize().x + this->widget_horizontal_margin;
-	emplace_widget(pause_resume_button, "pause_resume_button", pause_resume_button->getSize().x);
+	map_widget(pause_resume_button, "pause_resume_button", pause_resume_button->getSize().x);
 	menu_bar->add(pause_resume_button);	
 	
 	// Speed up button
@@ -105,7 +105,7 @@ void UI::initialize_menu_bar()
 	speed_up_button->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += speed_up_button->getSize().x + this->widget_horizontal_margin;
-	emplace_widget(speed_up_button, "speed_up_button", speed_up_button->getSize().x);
+	map_widget(speed_up_button, "speed_up_button", speed_up_button->getSize().x);
 	menu_bar->add(speed_up_button);
 
 	// Reset button
@@ -114,7 +114,7 @@ void UI::initialize_menu_bar()
 	reset_button->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += reset_button->getSize().x + this->widget_horizontal_margin;
-	emplace_widget(reset_button, "reset_button", reset_button->getSize().x);
+	map_widget(reset_button, "reset_button", reset_button->getSize().x);
 	menu_bar->add(reset_button);
 
 	// Add to GUI
@@ -184,46 +184,50 @@ void UI::initialize_cell_panel()
 	/* Create a scrollable panel */
 	auto cell_panel_content = tgui::ScrollablePanel::create();
 	cell_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
+	cell_panel_content->getRenderer()->setPadding(this->data_panel_content_padding);
 	this->cell_panel->add(cell_panel_content);
 
-	/* Add Vertical Layout to Scrollable Panel */
-	auto vertical_layout = tgui::VerticalLayout::create();
-	vertical_layout->getRenderer()->setPadding(this->inner_vertical_layout_padding);
-	cell_panel_content->add(vertical_layout);
-
-	/* Add ID Labels to Vertical Layout */
-
-	// Create a panel to put elements next to each other
-	auto id_panel = tgui::Panel::create();
-	vertical_layout->add(id_panel);
-	
+	/* Add ID Labels to Scrollable Panel */
 	// Add key
-	auto id_label_key = tgui::Label::create("ID:");
-	id_label_key->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
-	set_scalable_text_size(id_label_key, this->widget_text_size_big);
-	id_panel->add(id_label_key);
+	auto id_key_label = tgui::Label::create("ID: ");
+	id_key_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
+	set_scalable_text_size(id_key_label, this->widget_text_size_big);
+	cell_panel_content->add(id_key_label);
 
 	// Add value
-	auto id_label_value = tgui::Label::create("N/A");
-	id_label_value->setPosition(tgui::bindRight(id_label_key), tgui::bindTop(id_label_key));
-	set_scalable_text_size(id_label_value, this->widget_text_size_big);
-	id_panel->add(id_label_value);
+	auto id_value_label = tgui::Label::create("N/A");
+	id_value_label->setPosition(tgui::bindRight(id_key_label), tgui::bindTop(id_key_label));
+	set_scalable_text_size(id_value_label, this->widget_text_size_big);
+	cell_panel_content->add(id_value_label);
+	
+	/* Add Key Labels with numerical Values */
+	auto vegetation_key = init_key_value_in_data_panel(cell_panel_content, id_key_label, "Vegetation: ");
+	auto temperature_key = init_key_value_in_data_panel(cell_panel_content, vegetation_key, "Temperature: ");
+	auto humidity_key = init_key_value_in_data_panel(cell_panel_content, temperature_key, "Humidity: ");
 
-	// Add spacer
-	// vertical_layout->addSpace(0.002);
+	/* Add Animals list */
 
-	/* Add Vegetation Label */
+	// Add label
+	auto animal_list_label = tgui::Label::create("Animals:");
+	animal_list_label->setPosition(tgui::bindLeft(humidity_key), tgui::bindBottom(humidity_key) + "4%");
+	set_scalable_text_size(animal_list_label, this->widget_text_size_big);
+	animal_list_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
+	cell_panel_content->add(animal_list_label);
 
-	// Add Vegetation Panel
-	auto vege_panel = tgui::Panel::create();
-	vertical_layout->add(vege_panel);
-
-	// Add key
-	auto vege_label_key = tgui::Label::create("Vegetation");
-	vege_label_key->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
-	set_scalable_text_size(vege_label_key, this->widget_text_size_big);
-	vege_panel->add(vege_label_key);
-
+	// Add list
+	auto animal_list = tgui::ListView::create();
+	animal_list->setPosition(tgui::bindLeft(animal_list_label), tgui::bindBottom(animal_list_label));
+	set_scalable_text_size(animal_list, this->widget_text_size_big);
+	animal_list->setWidth("90%");
+	animal_list->addItem("H103");	// Example items
+	animal_list->addItem("P233");
+	animal_list->addItem("P204");
+	animal_list->addItem("P234");
+	animal_list->addItem("P023");
+	animal_list->addItem("H1031");
+	animal_list->addItem("P1201");
+	animal_list->addItem("H201");
+	cell_panel_content->add(animal_list);
 
 }
 
@@ -289,10 +293,37 @@ void UI::update_scalable_text_size()
 	}
 }
 
-void UI::emplace_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_length)
+tgui::Widget::Ptr UI::init_key_value_in_data_panel(tgui::Panel::Ptr panel, tgui::Widget::Ptr widget_above, std::string key_label_text, std::string value_map_id, float default_value)
+{
+	// Add key
+	auto key_label = tgui::Label::create(key_label_text);
+	key_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
+	key_label->setPosition(tgui::bindLeft(widget_above), tgui::bindBottom(widget_above) + this->key_value_top_padding);
+	set_scalable_text_size(key_label, this->widget_text_size_big);
+	panel->add(key_label);
+
+	// Add value
+	auto value_input = tgui::SpinControl::create(0, 1000, 1, 2);
+	value_input->setPosition(tgui::bindRight(key_label), tgui::bindTop(key_label));
+	value_input->setSize("30%", tgui::bindHeight(key_label));
+	set_scalable_text_size(value_input, this->widget_text_size_big);
+	panel->add(value_input);
+
+	if (value_map_id != "-")
+		map_widget(value_input, value_map_id);
+
+	return key_label;
+}
+
+void UI::map_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_length)
 {
 	this->widget_position_update_list.push_back(widget);
 	this->minimal_lengths.push_back(minimal_length);
+	this->widget_map.emplace(identifier, widget);
+}
+
+void UI::map_widget(tgui::Widget::Ptr widget, std::string identifier)
+{
 	this->widget_map.emplace(identifier, widget);
 }
 
