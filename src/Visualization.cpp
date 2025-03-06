@@ -14,12 +14,15 @@ Visualization::Visualization(int window_width, int window_height, int grid_width
 	ui_view = main_window.getDefaultView();
 
 	/* Create the grid view(movable, takes only the grid area) */
+	// Get size and position properties
 	float top_offset = ui.get_menu_bar_vertical_size();
 	float available_height = window_height - top_offset;
 	float available_width = (1 - ui.get_right_panel_x_window_share()) * window_width;
 
+	// Create the view
 	grid_view = sf::View(sf::FloatRect(0, top_offset, available_width, available_height));
 	
+	/* Initialize The Automaton Grid*/
 	initialize_grid();
 }
 
@@ -29,7 +32,7 @@ Visualization::~Visualization()
 
 void Visualization::clear()
 {
-	main_window.clear(sf::Color(128, 128, 128, 0));
+	main_window.clear(sf::Color(50, 50, 150));
 }
 
 void Visualization::process_window_events()
@@ -48,17 +51,6 @@ void Visualization::process_window_events()
 		else if (event.type == sf::Event::Resized)
 		{
 			ui.update_on_resize();
-
-			// Get new window size
-			float new_width = event.size.width;
-			float new_height = event.size.height;
-
-			// Preserve zoom level when resizing
-			grid_view.setSize(zoom_factor * new_width, zoom_factor * new_height);
-			grid_view.setCenter(new_width / 2.f, new_height / 2.f);
-
-			// Apply the new zoomed view
-			main_window.setView(grid_view);
 		}
 		else if (event.type == sf::Event::MouseWheelScrolled)
 		{
@@ -97,6 +89,17 @@ UI& Visualization::get_ui()
 /* Private Methods */
 void Visualization::initialize_grid()
 {
+	// Calculate the offset required to center the grid in the view
+	float grid_pixel_width = grid_width * cell_size;
+	float grid_pixel_height = grid_height * cell_size;
+
+	float grid_view_pixel_width = grid_view.getSize().x;
+	float grid_view_pixel_height = grid_view.getSize().y;
+
+	float offset_x = (grid_view_pixel_width - grid_pixel_width) / 2.f;
+	float offset_y = (grid_view_pixel_height - grid_pixel_height) / 2.f;
+
+	// Create the vertices of the grid
 	grid_vertices.setPrimitiveType(sf::Quads);
 	grid_vertices.resize(grid_width * grid_height * 4); // 4 vertices per cell
 
