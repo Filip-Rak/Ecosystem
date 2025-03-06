@@ -182,7 +182,7 @@ void UI::initialize_right_panel()
 	set_scalable_text_size(ctrl_button2, this->widget_text_size_big - 1);
 	ctrl_button2->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	vertical_layout->add(ctrl_button2, 0.05f);
-	// ctrl_button2->setVisible(false);
+	ctrl_button2->setVisible(false);
 
 	// Add spacer
 	vertical_layout->addSpace(0.005f);
@@ -198,30 +198,22 @@ void UI::initialize_cell_panel()
 	cell_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
 	cell_panel_content->getRenderer()->setPadding(this->data_panel_content_padding);
 	this->cell_panel->add(cell_panel_content);
-
-	/* Add ID Labels to Scrollable Panel */
-	// Add key
-	auto id_key_label = tgui::Label::create("ID: ");
-	id_key_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
-	set_scalable_text_size(id_key_label, this->widget_text_size_big);
-	cell_panel_content->add(id_key_label);
-
-	// Add value
-	auto id_value_label = tgui::Label::create("N/A");
-	id_value_label->setPosition(tgui::bindRight(id_key_label), tgui::bindTop(id_key_label));
-	set_scalable_text_size(id_value_label, this->widget_text_size_big);
-	cell_panel_content->add(id_value_label);
 	
 	/* Add Key Labels with numerical Values */
-	auto vegetation_key = init_key_value_in_data_panel(cell_panel_content, id_key_label, "Vegetation: ");
-	auto temperature_key = init_key_value_in_data_panel(cell_panel_content, vegetation_key, "Temperature: ");
-	auto humidity_key = init_key_value_in_data_panel(cell_panel_content, temperature_key, "Humidity: ");
+	// Create a hook
+	tgui::Widget::Ptr hook = tgui::Panel::create();
+
+	// Create rows
+	hook = insert_key_value_row(cell_panel_content, hook, "ID: ", "cell_id_label", "N/A", ValueType::LABEL);
+	hook = insert_key_value_row(cell_panel_content, hook, "Vegetation: ");
+	hook = insert_key_value_row(cell_panel_content, hook, "Temperature: ");
+	hook = insert_key_value_row(cell_panel_content, hook, "Humidity: ");
 
 	/* Add Animals list */
 
 	// Add label
 	auto animal_list_label = tgui::Label::create("Animals:");
-	animal_list_label->setPosition(tgui::bindLeft(humidity_key), tgui::bindBottom(humidity_key) + "4%");
+	animal_list_label->setPosition(tgui::bindLeft(hook), tgui::bindBottom(hook) + "4%");
 	set_scalable_text_size(animal_list_label, this->widget_text_size_big);
 	animal_list_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	cell_panel_content->add(animal_list_label);
@@ -252,15 +244,36 @@ void UI::initialize_animal_panel()
 	animal_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
 	animal_panel_content->getRenderer()->setPadding(this->data_panel_content_padding);
 	this->animal_panel->add(animal_panel_content);
+
+	/* Add Key Labels with Value Widgets */
+	// Add hook for elements
+	tgui::Widget::Ptr hook = tgui::Panel::create();
+
+	hook = insert_key_value_row(animal_panel_content, hook, "ID: ", "animal_id_label", "N/A", ValueType::LABEL);
+	hook = insert_key_value_row(animal_panel_content, hook, "Energy: ", "energy_input");
+	hook = insert_key_value_row(animal_panel_content, hook, "Age: ");
 }
 
 void UI::initialize_genes_panel()
 {
 	// Create a scrollable panel
 	auto genes_panel_content = tgui::ScrollablePanel::create();
-	genes_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Green);
 	genes_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
+	genes_panel_content->getRenderer()->setPadding(this->data_panel_content_padding);
 	this->genes_panel->add(genes_panel_content);
+
+	/* Add Key Labels with Value Widgets */
+	// Add an empty widget as a starting hook
+	tgui::Widget::Ptr hook = tgui::Panel::create();
+	
+	// Add Key and Value widgets
+	hook = insert_key_value_row(genes_panel_content, hook, "Ideal temperature: ");
+	hook = insert_key_value_row(genes_panel_content, hook, "Ideal humidity: ");
+	hook = insert_key_value_row(genes_panel_content, hook, "Perception range: ");
+	hook = insert_key_value_row(genes_panel_content, hook, "Speed: ");
+	hook = insert_key_value_row(genes_panel_content, hook, "Food needs: ");
+	hook = insert_key_value_row(genes_panel_content, hook, "Max lifespan: ");
+	hook = insert_key_value_row(genes_panel_content, hook, "Maturity age: ");
 }
 
 void UI::set_scalable_text_size(tgui::Widget::Ptr widget, unsigned int size)
@@ -311,34 +324,52 @@ void UI::update_scalable_text_size()
 		tgui::Widget::Ptr widget = pair.first;
 		unsigned int reference_size = pair.second;
 
-		// If widget is not visible avoid setting the text size
-		if (!widget->isVisible()) 
-			continue;
-
 		// Estimate new text size and update it
 		unsigned int new_size = int(double(reference_size) * average_ratio);
 		widget->setTextSize(new_size);
 	}
 }
 
-tgui::Widget::Ptr UI::init_key_value_in_data_panel(tgui::Panel::Ptr panel, tgui::Widget::Ptr widget_above, std::string key_label_text, std::string value_map_id, float default_value)
+tgui::Widget::Ptr UI::insert_key_value_row(tgui::Panel::Ptr panel, tgui::Widget::Ptr widget_above, std::string key_label_text, std::string value_map_id, std::string default_value, ValueType value_type)
 {
-	// Add key
+	/* Create and add Key Label */
 	auto key_label = tgui::Label::create(key_label_text);
 	key_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	key_label->setPosition(tgui::bindLeft(widget_above), tgui::bindBottom(widget_above) + this->key_value_top_padding);
 	set_scalable_text_size(key_label, this->widget_text_size_big);
 	panel->add(key_label);
 
-	// Add value
-	auto value_input = tgui::SpinControl::create(0, 1000, 1, 2);
-	value_input->setPosition(tgui::bindRight(key_label), tgui::bindTop(key_label));
-	value_input->setSize("30%", tgui::bindHeight(key_label));
-	set_scalable_text_size(value_input, this->widget_text_size_big);
-	panel->add(value_input);
+	/* Create and add Value Widget */
 
+	// Create a widget and set values specific to it's type
+	tgui::Widget::Ptr value_widget;
+	if (value_type == ValueType::NUMERICAL_INPUT)
+	{
+		auto edit_box_value = tgui::EditBox::create();
+		edit_box_value->setSize("20%", tgui::bindHeight(key_label));
+		edit_box_value->setInputValidator("[+-]?[0-9]*\\.?[0-9]*");
+		edit_box_value->setText(default_value);
+
+		value_widget = edit_box_value;
+	}
+	else if (value_type == ValueType::LABEL)
+	{
+		auto label_value = tgui::Label::create();
+		label_value->setText(default_value);
+
+		value_widget = label_value;
+	}
+
+	// Set non-type specific values
+	value_widget->setPosition(tgui::bindRight(key_label), tgui::bindTop(key_label));
+	set_scalable_text_size(value_widget, this->widget_text_size_big);
+	panel->add(value_widget);
+
+	// Add value to widget map
 	if (value_map_id != "-")
-		map_widget(value_input, value_map_id);
+	{
+		map_widget(value_widget, value_map_id);
+	}
 
 	return key_label;
 }

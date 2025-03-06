@@ -37,7 +37,13 @@ private:
 	tgui::Borders menu_bar_borders = tgui::Borders(0.f, 0.0f, 0.0f, 1.f);
 
 	// Right panel
-	tgui::Layout right_panel_x_window_share = "15%";
+	enum ValueType 
+	{
+		NUMERICAL_INPUT = 1,
+		LABEL = 2,
+	};
+
+	tgui::Layout right_panel_x_window_share = "20%";
 	tgui::Padding outer_vertical_layout_padding = { "3%", "2%", "3%", "0.5%" };
 	tgui::Padding data_panel_content_padding = { "3%", "1%", "3%", "1%" };
 	tgui::Borders right_panel_borders = tgui::Borders(1.f, 0.f, 1.f, 1.f);
@@ -113,12 +119,14 @@ private:
 	* 
 	* @return: Key of the created row for next's row positioning.
 	* */
-	tgui::Widget::Ptr init_key_value_in_data_panel(
+	tgui::Widget::Ptr insert_key_value_row(
 		tgui::Panel::Ptr panel, 
 		tgui::Widget::Ptr widget_above, 
 		std::string key_label_text, 
 		std::string value_map_id = "-", 
-		float default_value = 1.f);
+		std::string default_value = "1.2",
+		ValueType value_type = ValueType::NUMERICAL_INPUT
+	);
 
 	// Scaling
 	/**
