@@ -173,13 +173,13 @@ void UI::initialize_right_panel()
 
 	// Add button1
 	auto ctrl_button1 = tgui::Button::create("BIND TO MOUSE");
-	set_scalable_text_size(ctrl_button1, this->widget_text_size_medium);
+	set_scalable_text_size(ctrl_button1, this->widget_text_size_big - 1);
 	ctrl_button1->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	vertical_layout->add(ctrl_button1, 0.05f);	
 	
 	// Add button2
 	auto ctrl_button2 = tgui::Button::create("REVERT CHANGES");
-	set_scalable_text_size(ctrl_button2, this->widget_text_size_medium);
+	set_scalable_text_size(ctrl_button2, this->widget_text_size_big - 1);
 	ctrl_button2->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	vertical_layout->add(ctrl_button2, 0.05f);
 	// ctrl_button2->setVisible(false);
