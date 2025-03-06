@@ -103,6 +103,16 @@ private:
 	void initialize_cell_panel();
 	void initialize_animal_panel();
 	void initialize_genes_panel();
+
+	/**
+	* @brief Creates label (key) and input (value) of numerical type next to it.
+	* 
+	* @param panel: widget which gets te result.
+	* @param widget_above previous row key for positioning.
+	* @param value_map_id: id with which the key will be mapped. "-" to ignore.
+	* 
+	* @return: Key of the created row for next's row positioning.
+	* */
 	tgui::Widget::Ptr init_key_value_in_data_panel(
 		tgui::Panel::Ptr panel, 
 		tgui::Widget::Ptr widget_above, 
@@ -111,6 +121,11 @@ private:
 		float default_value = 1.f);
 
 	// Scaling
+	/**
+	* @brief Adds elements to a vector for text scailing with desired text.
+	* Setting text too high may cause corruption with some elements.
+	* Seems like the total maximum size within a panel may be the issue
+	* */
 	void set_scalable_text_size(tgui::Widget::Ptr, unsigned int size);
 	void update_menu_bar_height();
 	void update_scalable_text_size();

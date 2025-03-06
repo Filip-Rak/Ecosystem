@@ -173,16 +173,16 @@ void UI::initialize_right_panel()
 
 	// Add button1
 	auto ctrl_button1 = tgui::Button::create("BIND TO MOUSE");
-	set_scalable_text_size(ctrl_button1, this->widget_text_size_big);
+	set_scalable_text_size(ctrl_button1, this->widget_text_size_medium);
 	ctrl_button1->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	vertical_layout->add(ctrl_button1, 0.05f);	
 	
 	// Add button2
 	auto ctrl_button2 = tgui::Button::create("REVERT CHANGES");
-	set_scalable_text_size(ctrl_button2, this->widget_text_size_big);
+	set_scalable_text_size(ctrl_button2, this->widget_text_size_medium);
 	ctrl_button2->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	vertical_layout->add(ctrl_button2, 0.05f);
-	ctrl_button2->setVisible(false);
+	// ctrl_button2->setVisible(false);
 
 	// Add spacer
 	vertical_layout->addSpace(0.005f);
@@ -229,7 +229,7 @@ void UI::initialize_cell_panel()
 	// Add list
 	auto animal_list = tgui::ListBox::create();
 	animal_list->setPosition(tgui::bindLeft(animal_list_label), tgui::bindBottom(animal_list_label));
-	set_scalable_text_size(animal_list, this->widget_text_size_medium);	// Breaks sizing for other elements!
+	set_scalable_text_size(animal_list, this->widget_text_size_big);	// Breaks sizing for other elements!
 	// animal_list->setTextSize(widget_text_size_medium);
 	animal_list->setWidth("90%");
 	cell_panel_content->add(animal_list);
@@ -250,6 +250,7 @@ void UI::initialize_animal_panel()
 	// Create a scrollable panel
 	auto animal_panel_content = tgui::ScrollablePanel::create();
 	animal_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
+	animal_panel_content->getRenderer()->setPadding(this->data_panel_content_padding);
 	this->animal_panel->add(animal_panel_content);
 }
 
