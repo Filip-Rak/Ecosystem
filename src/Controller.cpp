@@ -1,7 +1,7 @@
 #include "Controller.h"
 
 Controller::Controller(int window_width, int window_height, int grid_width, int grid_height)
-	: visualization(window_width, window_height)
+	: visualization(window_width, window_height, grid_width, grid_height)
 {
 	ui_ptr = &visualization.get_ui();
 	initialize_ui_events();
@@ -60,10 +60,10 @@ void Controller::render()
 	// Clear the previous frame
 	visualization.clear();
 
-	// Draw grid
-	// (...)
+	// Draw grid in dynamic grid_view
+	visualization.draw_grid();
 
-	// Draw UI
+	// Draw UI in static ui_view
 	visualization.draw_ui();
 
 	// Display the new frame

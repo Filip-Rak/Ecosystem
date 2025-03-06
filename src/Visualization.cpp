@@ -1,9 +1,26 @@
 #include "Visualization.h"
 
-Visualization::Visualization(int window_width, int window_height)
-	: main_window(sf::VideoMode(window_width, window_height), "Ecosystem"), gui(main_window), ui(gui)
+Visualization::Visualization(int window_width, int window_height, int grid_width, int grid_height)
+	: main_window(sf::VideoMode(window_width, window_height), window_title),
+	gui(main_window), 
+	ui(gui),
+	grid_width(grid_width),
+	grid_height(grid_height)
 {
+	/* Set up UI widgets */
 	ui.initialize();
+
+	/* Create the UI view(fixed, covers the entire window) */
+	ui_view = main_window.getDefaultView();
+
+	/* Create the grid view(movable, takes only the grid area) */
+	float top_offset = ui.get_menu_bar_vertical_size();
+	float available_height = window_height - top_offset;
+	float available_width = (1 - ui.get_right_panel_x_window_share()) * window_width;
+
+	grid_view = sf::View(sf::FloatRect(0, top_offset, available_width, available_height));
+	
+	initialize_grid();
 }
 
 Visualization::~Visualization()
@@ -31,12 +48,29 @@ void Visualization::process_window_events()
 		else if (event.type == sf::Event::Resized)
 		{
 			ui.update_on_resize();
+
+			// Get the new window size
+			float new_width = event.size.width;
+			float new_height = event.size.height;
+
+			// Maintain aspect ratio by adjusting grid_view
+			grid_view.setSize(new_width, new_height);
+			grid_view.setCenter(new_width / 2.f, new_height / 2.f);
+
+			main_window.setView(grid_view); // Apply the new view
 		}
 	}
 }
 
+void Visualization::draw_grid()
+{
+	main_window.setView(grid_view);
+	main_window.draw(grid_vertices);
+}
+
 void Visualization::draw_ui()
 {
+	main_window.setView(ui_view);
 	gui.draw();
 }
 
@@ -53,4 +87,37 @@ bool Visualization::is_window_open() const
 UI& Visualization::get_ui()
 {
 	return ui;
+}
+
+/* Private Methods */
+void Visualization::initialize_grid()
+{
+	grid_vertices.setPrimitiveType(sf::Quads);
+	grid_vertices.resize(grid_width * grid_height * 4); // 4 vertices per cell
+
+	for (int x = 0; x < grid_width; x++)
+	{
+		for (int y = 0; y < grid_height; y++)
+		{
+			int index = (x + y * grid_width) * 4; // 4 vertices per cell
+
+			float left = x * cell_size;
+			float top = y * cell_size;
+			float right = left + cell_size;
+			float bottom = top + cell_size;
+
+			// Define the four corners of the quad
+			grid_vertices[index].position = sf::Vector2f(left, top);
+			grid_vertices[index + 1].position = sf::Vector2f(right, top);
+			grid_vertices[index + 2].position = sf::Vector2f(right, bottom);
+			grid_vertices[index + 3].position = sf::Vector2f(left, bottom);
+
+			// Assign a checkerboard color pattern
+			sf::Color color = ((x + y) % 2 == 0) ? sf::Color(255, 255, 255) : sf::Color(0, 0, 0);
+			grid_vertices[index].color = color;
+			grid_vertices[index + 1].color = color;
+			grid_vertices[index + 2].color = color;
+			grid_vertices[index + 3].color = color;
+		}
+	}
 }

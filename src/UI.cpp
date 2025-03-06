@@ -429,3 +429,13 @@ float UI::get_menu_bar_vertical_size()
 {
 	return this->menu_bar_vertical_size.getValue();
 }
+
+float UI::get_right_panel_x_window_share()
+{
+	// Cast the value to a string
+	std::string value = this->right_panel_x_window_share.toString().toStdString();
+	
+	// Assume its a precentage value
+	double decimal_value = std::stod(value.substr(0, value.size() - 1)) / 100.0;
+	return decimal_value;
+}
