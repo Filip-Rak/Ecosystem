@@ -49,15 +49,20 @@ void Visualization::process_window_events()
 		{
 			ui.update_on_resize();
 
-			// Get the new window size
+			// Get new window size
 			float new_width = event.size.width;
 			float new_height = event.size.height;
 
-			// Maintain aspect ratio by adjusting grid_view
-			grid_view.setSize(new_width, new_height);
+			// Preserve zoom level when resizing
+			grid_view.setSize(zoom_factor * new_width, zoom_factor * new_height);
 			grid_view.setCenter(new_width / 2.f, new_height / 2.f);
 
-			main_window.setView(grid_view); // Apply the new view
+			// Apply the new zoomed view
+			main_window.setView(grid_view);
+		}
+		else if (event.type == sf::Event::MouseWheelScrolled)
+		{
+			handle_zoom(event);
 		}
 	}
 }
@@ -120,4 +125,23 @@ void Visualization::initialize_grid()
 			grid_vertices[index + 3].color = color;
 		}
 	}
+}
+
+void Visualization::handle_zoom(sf::Event event)
+{
+	if (event.mouseWheelScroll.delta > 0) // Scroll up = Zoom in
+	{
+		zoom_factor *= 1.f - this->zoom_step; // Zoom in (reduce view size)
+	}
+	else if (event.mouseWheelScroll.delta < 0) // Scroll down = Zoom out
+	{
+		zoom_factor *= 1.f + this->zoom_step; // Zoom out (increase view size)
+	}
+
+	// Clamp zoom to prevent over-zooming
+	// Inefficient, use clamp instead
+	zoom_factor = Utils::clamp(zoom_factor, zoom_min, zoom_max);
+
+	// Apply zoom to the grid view
+	grid_view.setSize(main_window.getDefaultView().getSize() * zoom_factor);
 }

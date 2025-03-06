@@ -3,7 +3,7 @@
 #include "Visualization.h"
 #include "Automaton.h"
 
-#include <iostream>
+// #include <iostream>
 
 class Controller
 {

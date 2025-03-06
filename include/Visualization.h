@@ -4,6 +4,7 @@
 #include <TGUI/TGUI.hpp>
 
 #include "UI.h"
+#include "Utils.h"
 
 // Testing
 #include <iostream>
@@ -29,6 +30,10 @@ private:
 	int grid_height;
 	sf::VertexArray grid_vertices;
 	int cell_size = 10;
+	float zoom_factor = 1.0f;
+	float zoom_step = 0.1f;
+	float zoom_min = 0.25f;
+	float zoom_max = 2.5f;
 
 public:
 	/* Constructor */
@@ -49,5 +54,5 @@ public:
 private:
 	/* Private Methods */
 	void initialize_grid();
-
+	void handle_zoom(sf::Event event);
 };

@@ -142,6 +142,7 @@
     <ClInclude Include="include\Automaton.h" />
     <ClInclude Include="include\Controller.h" />
     <ClInclude Include="include\UI.h" />
+    <ClInclude Include="include\Utils.h" />
     <ClInclude Include="include\Visualization.h" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +150,7 @@
     <ClCompile Include="src\Controller.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\UI.cpp" />
+    <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\Visualization.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
