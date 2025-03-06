@@ -22,11 +22,11 @@ private:
 
 	// Global properties
 	sf::Vector2u reference_resolution = sf::Vector2u(1920, 1001);	// Maximized window (not full screen)
-	int widget_horizontal_margin = 10;
-	int widget_text_size_small = 14;
-	int widget_text_size_medium = 18;
-	int widget_text_size_big = 20;
-	int widget_text_size_huge = 24;
+	unsigned int widget_horizontal_margin = 10;
+	unsigned int widget_text_size_small = 14;
+	unsigned int widget_text_size_medium = 18;
+	unsigned int widget_text_size_big = 20;
+	unsigned int widget_text_size_huge = 24;
 
 	// Menu bar
 	tgui::Layout menu_bar_vertical_size = 30;
@@ -96,17 +96,28 @@ public:
 
 private:
 	/* Private Methods */
+
+	// Initialization
 	void initialize_menu_bar();
 	void initialize_right_panel();
 	void initialize_cell_panel();
 	void initialize_animal_panel();
 	void initialize_genes_panel();
+	tgui::Widget::Ptr init_key_value_in_data_panel(
+		tgui::Panel::Ptr panel, 
+		tgui::Widget::Ptr widget_above, 
+		std::string key_label_text, 
+		std::string value_map_id = "-", 
+		float default_value = 1.f);
+
+	// Scaling
 	void set_scalable_text_size(tgui::Widget::Ptr, unsigned int size);
 	void update_menu_bar_height();
 	void update_scalable_text_size();
-	tgui::Widget::Ptr init_key_value_in_data_panel(tgui::Panel::Ptr panel, tgui::Widget::Ptr widget_above, std::string key_label_text, std::string value_map_id = "-", float default_value = 1.f);
-	void map_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_size);
-	void map_widget(tgui::Widget::Ptr widget, std::string identifier);
 	void update_widget_positioning();
 	bool enable_auto_size(const tgui::Widget::Ptr& widget);
+
+	// Mapping
+	void map_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_size);
+	void map_widget(tgui::Widget::Ptr widget, std::string identifier);
 };

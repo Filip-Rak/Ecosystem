@@ -167,13 +167,25 @@ void UI::initialize_right_panel()
 	tab_container->getTabs()->select(0);
 	
 	/* Add Control Buttons to Vertical Layout */
-	// Add spacing from the layout
+	
+	// Add spacer
 	vertical_layout->addSpace(0.005f);
 
+	// Add button1
 	auto ctrl_button1 = tgui::Button::create("BIND TO MOUSE");
 	set_scalable_text_size(ctrl_button1, this->widget_text_size_big);
 	ctrl_button1->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
-	vertical_layout->add(ctrl_button1, 0.05f);
+	vertical_layout->add(ctrl_button1, 0.05f);	
+	
+	// Add button2
+	auto ctrl_button2 = tgui::Button::create("REVERT CHANGES");
+	set_scalable_text_size(ctrl_button2, this->widget_text_size_big);
+	ctrl_button2->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
+	vertical_layout->add(ctrl_button2, 0.05f);
+	ctrl_button2->setVisible(false);
+
+	// Add spacer
+	vertical_layout->addSpace(0.005f);
 
 	/* Add the fully configured right panel to the GUI */
 	gui.add(right_panel);
@@ -217,8 +229,8 @@ void UI::initialize_cell_panel()
 	// Add list
 	auto animal_list = tgui::ListBox::create();
 	animal_list->setPosition(tgui::bindLeft(animal_list_label), tgui::bindBottom(animal_list_label));
-	set_scalable_text_size(animal_list, this->widget_text_size_big);	// Breaks sizing for other elements!
-	animal_list->setTextSize(widget_text_size_big);	// Seems to scale automatically
+	set_scalable_text_size(animal_list, this->widget_text_size_medium);	// Breaks sizing for other elements!
+	// animal_list->setTextSize(widget_text_size_medium);
 	animal_list->setWidth("90%");
 	cell_panel_content->add(animal_list);
 
@@ -237,7 +249,6 @@ void UI::initialize_animal_panel()
 {
 	// Create a scrollable panel
 	auto animal_panel_content = tgui::ScrollablePanel::create();
-	animal_panel_content->getRenderer()->setBackgroundColor(tgui::Color::Yellow);
 	animal_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
 	this->animal_panel->add(animal_panel_content);
 }
@@ -253,11 +264,19 @@ void UI::initialize_genes_panel()
 
 void UI::set_scalable_text_size(tgui::Widget::Ptr widget, unsigned int size)
 {
-	// Create a pair of widget and text size
-	std::pair <tgui::Widget::Ptr, unsigned int> pair(widget, size);
+	// Check if the widget already exists in the vector
+	for (auto& pair : this->widget_text_sizes)
+	{
+		if (pair.first == widget)
+		{
+			// Update the existing widget's text size
+			pair.second = size;
+			return; // Exit the function to avoid duplicate entries
+		}
+	}
 
-	// Add pair to the vector
-	this->widget_text_sizes.push_back(pair);
+	// If not found, add a new entry
+	this->widget_text_sizes.emplace_back(widget, size);
 }
 
 void UI::update_menu_bar_height()
@@ -285,13 +304,19 @@ void UI::update_scalable_text_size()
 	double average_ratio = (ratio_x + ratio_y) / 2.0;
 
 	// Adjust the text based on smallest axis
-	for (int i = 0; i < this->widget_text_sizes.size(); i++)
+	for (auto& pair : widget_text_sizes)
 	{
-		unsigned int reference_size = widget_text_sizes[i].second;
-		unsigned int new_size = int(double(reference_size) * average_ratio);
+		// Map the pair
+		tgui::Widget::Ptr widget = pair.first;
+		unsigned int reference_size = pair.second;
 
-		// Update the text size
-		widget_text_sizes[i].first->setTextSize(new_size);
+		// If widget is not visible avoid setting the text size
+		if (!widget->isVisible()) 
+			continue;
+
+		// Estimate new text size and update it
+		unsigned int new_size = int(double(reference_size) * average_ratio);
+		widget->setTextSize(new_size);
 	}
 }
 
