@@ -43,6 +43,7 @@ private:
 	const sf::Keyboard::Key MOVEMENT_DOWN_KEY = sf::Keyboard::A;
 	const sf::Keyboard::Key MOVEMENT_LEFT_KEY = sf::Keyboard::S;
 	const sf::Keyboard::Key MOVEMENT_RIGHT_KEY = sf::Keyboard::D;
+	const sf::Mouse::Button MOUSE_CELL_SELECT_KEY = sf::Mouse::Left;
 
 public:
 	/* Constructor */
@@ -68,5 +69,7 @@ private:
 	void update_grid_view();
 	void initialize_grid();
 	void center_grid();
+	void detect_clicked_cell();
+	bool is_mouse_in_viewport(sf::View view);
 	void handle_camera_zoom(sf::Event event);
 };

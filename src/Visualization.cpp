@@ -54,6 +54,10 @@ void Visualization::process_window_events()
 		{
 			handle_camera_zoom(event);
 		}
+		else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == this->MOUSE_CELL_SELECT_KEY)
+		{
+			detect_clicked_cell();
+		}
 	}
 }
 
@@ -175,6 +179,44 @@ void Visualization::center_grid()
 	grid_view.setCenter(center_x, center_y);
 }
 
+void Visualization::detect_clicked_cell()
+{
+	// Discard clicks outside the grid's viewport
+	if (!is_mouse_in_viewport(grid_view)) 
+		return;
+
+	// Convert screen position to world coordinates
+	sf::Vector2f world_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
+
+	// Convert world coordinates to grid indices
+	int cell_x = static_cast<int>(world_pos.x / cell_size);
+	int cell_y = static_cast<int>(world_pos.y / cell_size);
+
+	// Ensure the click is within valid grid bounds
+	if (cell_x >= 0 && cell_x < grid_width && cell_y >= 0 && cell_y < grid_height)
+	{
+		std::cout << "Clicked Cell: X=" << cell_x << " Y=" << cell_y << "\n";
+	}
+}
+
+bool Visualization::is_mouse_in_viewport(sf::View view)
+{
+	// Get view's viewport in pixels
+	sf::FloatRect viewport = view.getViewport();
+	float window_width = main_window.getSize().x;
+	float window_height = main_window.getSize().y;
+
+	sf::IntRect viewport_pixels(
+		viewport.left * window_width,
+		viewport.top * window_height,
+		viewport.width * window_width,
+		viewport.height * window_height
+	);
+
+	// Check if mouse click is inside grid view
+	sf::Vector2i mouse_pos = sf::Mouse::getPosition(main_window);
+	return viewport_pixels.contains(mouse_pos);
+}
 
 void Visualization::handle_camera_zoom(sf::Event event)
 {
@@ -208,13 +250,4 @@ void Visualization::handle_camera_movement(float delta_time)
 	// Apply delta time to offset and move the center of the grid
 	offset *= delta_time;
 	grid_view.move(offset);
-
-
-	// Debug the properties when position changes
-	if (offset != sf::Vector2f(0, 0))
-	{
-		std::cout << "----------------------------\n";
-		std::cout << "OX: " << offset.x << " OY: " << offset.y << "\n";
-		std::cout << "GX: " << grid_view.getCenter().x << " GY: " << grid_view.getCenter().y << "\n";
-	}
 }
