@@ -10,20 +10,8 @@ Visualization::Visualization(int window_width, int window_height, int grid_width
 	/* Set up UI widgets */
 	ui.initialize();
 
-	/* Create the UI view(fixed, covers the entire window) */
-	ui_view = main_window.getDefaultView();
-
-	/* Create the grid view(movable, takes only the grid area) */
-	// Get size and position properties
-	float top_offset = ui.get_menu_bar_vertical_size();
-	float available_height = window_height - top_offset;
-	float available_width = (1 - ui.get_right_panel_x_window_share()) * window_width;
-
-	// Create the view
-	grid_view = sf::View(sf::FloatRect(0, top_offset, available_width, available_height));
-
-	grid_view.setCenter(350.f, 250.f);
-	std::cout << "WARNING: Grid_view's center has been manually set in Visualization's constructor to: 350, 250!\n";
+	/* Set Up Cameras */
+	initialize_views();
 	
 	/* Initialize The Automaton Grid*/
 	initialize_grid();
@@ -54,6 +42,7 @@ void Visualization::process_window_events()
 		else if (event.type == sf::Event::Resized)
 		{
 			ui.update_on_resize();
+			update_grid_view();
 		}
 		else if (event.type == sf::Event::MouseWheelScrolled)
 		{
@@ -90,6 +79,43 @@ UI& Visualization::get_ui()
 }
 
 /* Private Methods */
+void Visualization::initialize_views()
+{
+	/* Create the UI view (fixed, covers the entire window) */
+	ui_view = main_window.getDefaultView();
+
+	/* Create the grid view (movable, takes only the non UI rectangle) */
+	grid_view = sf::View();
+
+	/* Set Grid View's properties */
+	update_grid_view();
+}
+
+void Visualization::update_grid_view()
+{
+	// Get size and position properties
+	float window_width = this->main_window.getSize().x;
+	float window_height = this->main_window.getSize().y;
+
+	float top_offset = ui.get_menu_bar_vertical_size();
+	float width_ratio = 1.f - ui.get_right_panel_x_window_share();
+	float height_ratio = (float)(window_height - top_offset) / window_height;
+
+	float pixel_width = window_width * width_ratio;
+	float pixel_height = window_height * height_ratio;
+
+	// Save view's center before reset
+	sf::Vector2f old_center = grid_view.getCenter();
+
+	// Create the view and set the viewport
+	grid_view.reset(sf::FloatRect(0, top_offset, pixel_width, pixel_height));
+	grid_view.setViewport(sf::FloatRect(0, 1 - height_ratio, width_ratio, height_ratio));
+
+	// Reassign properties prior to reset
+	grid_view.setCenter(old_center);
+	grid_view.zoom(this->zoom_factor);
+}
+
 void Visualization::initialize_grid()
 {
 	// Calculate the offset required to center the grid in the view
@@ -135,21 +161,20 @@ void Visualization::initialize_grid()
 
 void Visualization::handle_camera_zoom(sf::Event event)
 {
+	// Read inputs
+	float change = 0.f;
 	if (event.mouseWheelScroll.delta > 0) // Scroll up = Zoom in
 	{
-		zoom_factor *= 1.f - this->zoom_step; // Zoom in (reduce view size)
+		change = (1.f - this->zoom_step);
 	}
 	else if (event.mouseWheelScroll.delta < 0) // Scroll down = Zoom out
 	{
-		zoom_factor *= 1.f + this->zoom_step; // Zoom out (increase view size)
+		change = (1.f + this->zoom_step);
 	}
 
-	// Clamp zoom to prevent over-zooming
-	// Inefficient, use clamp instead
-	zoom_factor = Utils::clamp(zoom_factor, zoom_min, zoom_max);
-
-	// Apply zoom to the grid view
-	grid_view.setSize(main_window.getDefaultView().getSize() * zoom_factor);
+	// Save and apply the zoom value
+	this->zoom_factor *= change;
+	grid_view.zoom(change);
 }
 
 void Visualization::handle_camera_movement(float delta_time)
@@ -166,13 +191,4 @@ void Visualization::handle_camera_movement(float delta_time)
 	// Apply delta time to offset and move the center of the grid
 	offset *= delta_time;
 	grid_view.move(offset);
-
-	// Debug the properties when position changes
-	if (offset != sf::Vector2f(0, 0))
-	{
-		std::cout << "----------------------------\n";
-		std::cout << "OX: " << offset.x << " OY: " << offset.y << "\n";
-		std::cout << "GX: " << grid_view.getCenter().x << " GY: " << grid_view.getCenter().y << "\n";
-	}
-
 }

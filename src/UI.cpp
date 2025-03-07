@@ -427,7 +427,8 @@ bool UI::enable_auto_size(const tgui::Widget::Ptr& widget)
 /* Getters */
 float UI::get_menu_bar_vertical_size()
 {
-	return this->menu_bar_vertical_size.getValue();
+	auto menu_bar = get_widget_as<tgui::Panel>("menu_bar");
+	return menu_bar->getSize().y;
 }
 
 float UI::get_right_panel_x_window_share()

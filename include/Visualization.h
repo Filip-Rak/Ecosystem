@@ -63,6 +63,8 @@ public:
 
 private:
 	/* Private Methods */
+	void initialize_views();
+	void update_grid_view();
 	void initialize_grid();
 	void handle_camera_zoom(sf::Event event);
 };
