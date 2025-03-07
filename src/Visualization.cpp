@@ -13,11 +13,14 @@ Visualization::Visualization(int window_width, int window_height, int grid_width
 	/* Set up UI widgets */
 	ui.initialize();
 
-	/* Set Up Cameras */
+	/* Set up Cameras */
 	initialize_views();
 	
-	/* Initialize The Automaton Grid*/
+	/* Initialize the Automaton Grid*/
 	initialize_grid();
+
+	/* Center the Grid in the Middle of The Screen */
+	center_grid();
 }
 
 Visualization::~Visualization()
@@ -127,16 +130,6 @@ void Visualization::update_grid_view()
 
 void Visualization::initialize_grid()
 {
-	// Calculate the offset required to center the grid in the view
-	float grid_pixel_width = grid_width * cell_size;
-	float grid_pixel_height = grid_height * cell_size;
-
-	float grid_view_pixel_width = grid_view.getSize().x;
-	float grid_view_pixel_height = grid_view.getSize().y;
-
-	float offset_x = (grid_view_pixel_width - grid_pixel_width) / 2.f;
-	float offset_y = (grid_view_pixel_height - grid_pixel_height) / 2.f;
-
 	// Create the vertices of the grid
 	grid_vertices.setPrimitiveType(sf::Quads);
 	grid_vertices.resize(grid_width * grid_height * 4); // 4 vertices per cell
@@ -167,6 +160,21 @@ void Visualization::initialize_grid()
 		}
 	}
 }
+
+void Visualization::center_grid()
+{
+	// Calculate the world-space center of the grid
+	float grid_pixel_width = grid_width * cell_size;
+	float grid_pixel_height = grid_height * cell_size;
+
+	// The center is in the middle of the grid
+	float center_x = grid_pixel_width / 2.f;
+	float center_y = grid_pixel_height / 2.f;
+
+	// Set the view center to the grid center
+	grid_view.setCenter(center_x, center_y);
+}
+
 
 void Visualization::handle_camera_zoom(sf::Event event)
 {
@@ -200,4 +208,13 @@ void Visualization::handle_camera_movement(float delta_time)
 	// Apply delta time to offset and move the center of the grid
 	offset *= delta_time;
 	grid_view.move(offset);
+
+
+	// Debug the properties when position changes
+	if (offset != sf::Vector2f(0, 0))
+	{
+		std::cout << "----------------------------\n";
+		std::cout << "OX: " << offset.x << " OY: " << offset.y << "\n";
+		std::cout << "GX: " << grid_view.getCenter().x << " GY: " << grid_view.getCenter().y << "\n";
+	}
 }
