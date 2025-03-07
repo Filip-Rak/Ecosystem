@@ -21,6 +21,9 @@ Visualization::Visualization(int window_width, int window_height, int grid_width
 
 	// Create the view
 	grid_view = sf::View(sf::FloatRect(0, top_offset, available_width, available_height));
+
+	grid_view.setCenter(350.f, 250.f);
+	std::cout << "WARNING: Grid_view's center has been manually set in Visualization's constructor to: 350, 250!\n";
 	
 	/* Initialize The Automaton Grid*/
 	initialize_grid();
@@ -54,7 +57,7 @@ void Visualization::process_window_events()
 		}
 		else if (event.type == sf::Event::MouseWheelScrolled)
 		{
-			handle_zoom(event);
+			handle_camera_zoom(event);
 		}
 	}
 }
@@ -130,7 +133,7 @@ void Visualization::initialize_grid()
 	}
 }
 
-void Visualization::handle_zoom(sf::Event event)
+void Visualization::handle_camera_zoom(sf::Event event)
 {
 	if (event.mouseWheelScroll.delta > 0) // Scroll up = Zoom in
 	{
@@ -147,4 +150,29 @@ void Visualization::handle_zoom(sf::Event event)
 
 	// Apply zoom to the grid view
 	grid_view.setSize(main_window.getDefaultView().getSize() * zoom_factor);
+}
+
+void Visualization::handle_camera_movement(float delta_time)
+{
+	// Declare the offset in the movement
+	sf::Vector2f offset(0.f, 0.f);
+
+	// Read input from keyboard
+	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_UP_KEY)) offset.y += this->camera_movement_speed;
+	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_DOWN_KEY)) offset.x += this->camera_movement_speed;
+	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_LEFT_KEY)) offset.y -= this->camera_movement_speed;
+	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_RIGHT_KEY)) offset.x -= this->camera_movement_speed;
+
+	// Apply delta time to offset and move the center of the grid
+	offset *= delta_time;
+	grid_view.move(offset);
+
+	// Debug the properties when position changes
+	if (offset != sf::Vector2f(0, 0))
+	{
+		std::cout << "----------------------------\n";
+		std::cout << "OX: " << offset.x << " OY: " << offset.y << "\n";
+		std::cout << "GX: " << grid_view.getCenter().x << " GY: " << grid_view.getCenter().y << "\n";
+	}
+
 }

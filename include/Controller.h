@@ -16,6 +16,7 @@ private:
 	// FPS
 	sf::Clock fps_clock;
 	float fps_total_delta_time = 0.f;
+	float fps_delta_time = 0.f;
 	float fps_update_interval = 1.f;
 	int fps_frames_between_update = 0;
 

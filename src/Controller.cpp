@@ -30,13 +30,14 @@ void Controller::process_events()
 void Controller::update()
 {
 	update_fps();
+	visualization.handle_camera_movement(this->fps_delta_time);
 }
 
 void Controller::update_fps()
 {
 	// Accumulate frame time and number of frames
-	float delta_time = fps_clock.restart().asSeconds();
-	fps_total_delta_time += delta_time;
+	fps_delta_time = fps_clock.restart().asSeconds();
+	fps_total_delta_time += fps_delta_time;
 	fps_frames_between_update += 1;
 
 	// Calculate FPS every interval
