@@ -59,6 +59,7 @@ public:
 
 	/* Getters */
 	bool is_window_open() const;
+	bool is_window_in_focus() const;
 	UI& get_ui();
 
 private:

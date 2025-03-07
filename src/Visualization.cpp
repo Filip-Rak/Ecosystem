@@ -7,6 +7,7 @@ Visualization::Visualization(int window_width, int window_height, int grid_width
 	grid_width(grid_width),
 	grid_height(grid_height)
 {
+	// Window title is stored within the header file
 	main_window.setTitle(window_title);
 
 	/* Set up UI widgets */
@@ -70,9 +71,15 @@ void Visualization::display()
 	main_window.display();
 }
 
+/* Getters */
 bool Visualization::is_window_open() const
 {
 	return main_window.isOpen();
+}
+
+bool Visualization::is_window_in_focus() const
+{
+	return main_window.hasFocus();
 }
 
 UI& Visualization::get_ui()

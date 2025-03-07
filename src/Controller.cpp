@@ -29,8 +29,14 @@ void Controller::process_events()
 
 void Controller::update()
 {
+	// Update FPS related measurements and FPS label
 	update_fps();
-	visualization.handle_camera_movement(this->fps_delta_time);
+
+	// Update these properties only when window is in focus
+	if (visualization.is_window_in_focus())
+	{
+		visualization.handle_camera_movement(this->fps_delta_time);
+	}
 }
 
 void Controller::update_fps()
