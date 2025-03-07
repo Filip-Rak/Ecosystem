@@ -1,12 +1,14 @@
 #include "Visualization.h"
 
 Visualization::Visualization(int window_width, int window_height, int grid_width, int grid_height)
-	: main_window(sf::VideoMode(window_width, window_height), window_title),
+	: main_window(sf::VideoMode(window_width, window_height), ""),
 	gui(main_window), 
 	ui(gui),
 	grid_width(grid_width),
 	grid_height(grid_height)
 {
+	main_window.setTitle(window_title);
+
 	/* Set up UI widgets */
 	ui.initialize();
 
