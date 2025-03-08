@@ -38,6 +38,13 @@ void UI::update_iteration_label(int iteration)
 	update_widget_positioning();
 }
 
+void UI::update_speed_label(int speed)
+{
+	std::string new_text = "Speed: " + std::to_string(speed) + " UPS";
+	this->speed_label->setText(new_text);
+	update_widget_positioning();
+}
+
 /* Private Methods */
 void UI::initialize_menu_bar()
 {
@@ -73,7 +80,7 @@ void UI::initialize_menu_bar()
 	menu_bar->add(fps_label);	
 	
 	// Add Speed label
-	auto speed_label = tgui::Label::create("Speed: 120 UPS");
+	this->speed_label = tgui::Label::create("Speed: 120 UPS");
 	speed_label->setTextSize(this->widget_text_size_medium);
 	speed_label->setPosition(x_offset, this->widget_top_margin);
 

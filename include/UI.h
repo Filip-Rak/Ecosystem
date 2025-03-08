@@ -65,6 +65,7 @@ private:
 	// Commonly accessed references
 	tgui::Label::Ptr fps_label;
 	tgui::Label::Ptr iteration_label;
+	tgui::Label::Ptr speed_label;
 
 public:
 	/* Constructor & Destructor */
@@ -76,6 +77,7 @@ public:
 	void update_on_resize();
 	void update_fps_label(int fps);
 	void update_iteration_label(int iteration);
+	void update_speed_label(int speed);
 
 	/* Getters */
 	float get_menu_bar_vertical_size();
@@ -88,14 +90,14 @@ public:
 		auto it = widget_map.find(name);
 		if (it == widget_map.end())
 		{
-			std::cout << "std::shared_ptr<T> get_widget_as(const std::string& name): Widget not found!\n";
+			std::cout << "std::shared_ptr<T> get_widget_as(const std::string& name): Widget: " + name + " not found!\n";
 		}
 
 		// Attempt to cast the widget to the desired type
 		auto widget = std::dynamic_pointer_cast<T>(it->second);
 		if (!widget)
 		{
-			std::cout << "std::shared_ptr<T> get_widget_as(const std::string& name): Dynamic cast failed!\n";
+			std::cout << "std::shared_ptr<T> get_widget_as(const std::string& name): Dynamic cast failed with: " + name << "!\n";
 		}
 
 		return widget;

@@ -168,7 +168,6 @@ void Visualization::initialize_grid()
 
 	// Pick smaller of the two so the grid fits fully on both X and Y axis
 	this->cell_size = (max_cell_size_x < max_cell_size_y) ? max_cell_size_x : max_cell_size_y;
-	std::cout << "CS: " << this->cell_size << "\n";
 
 	/* Create the vertices of the grid */
 	grid_vertices.setPrimitiveType(sf::Quads);

@@ -29,13 +29,33 @@ void Controller::process_events()
 
 void Controller::update()
 {
-	// Update FPS related measurements and FPS label
+	/* Update FPS related measurements and FPS label */
 	update_fps();
 
-	// Update these properties only when window is in focus
+	/* Update these properties only when window is in focus */
 	if (visualization.is_window_in_focus())
 	{
 		visualization.handle_camera_movement(this->fps_delta_time);
+	}
+
+	/* Update based on Update Speed and Pause */
+	if (!sim_paused)
+	{
+		// Time since last update increases
+		this->since_last_update += this->fps_delta_time;
+
+		// Run automaton update if enough time has passed
+		if (this->since_last_update >= this->update_interval)
+		{
+			// (...) Debug update
+			
+			// Update the iteration number
+			this->iteration += 1;
+			ui_ptr->update_iteration_label(this->iteration);
+
+			// Reset timer to next update
+			this->since_last_update = 0.f;
+		}
 	}
 }
 
@@ -77,14 +97,63 @@ void Controller::render()
 	visualization.display();
 }
 
+void Controller::change_update_speed(int change)
+{
+	// Update speed and it's properties
+	int new_speed = this->updates_per_second + change;
+	new_speed = Utils::clamp<int>(new_speed, this->min_speed, this->max_speed);
+
+	this->updates_per_second = new_speed;
+	this->update_interval = 1.f / (float)updates_per_second;
+
+	// If user is slowing down, then reset timer to next update
+	if (new_speed < this->updates_per_second) 
+		this->since_last_update = 0.f;
+
+	// If user wants to speed up, grant immediate update
+	else 
+		this->since_last_update = update_interval;
+
+	// Update the speed label
+	ui_ptr->update_speed_label(this->updates_per_second);
+}
+
 void Controller::initialize_ui_events()
 {
 	/* Get Widget References */
 	auto speed_up_button = ui_ptr->get_widget_as<tgui::Button>("speed_up_button");
+	auto slow_down_button = ui_ptr->get_widget_as<tgui::Button>("slow_down_button");
+	auto pause_button = ui_ptr->get_widget_as<tgui::Button>("pause_resume_button");
+
+	/* Initialize Certain Widgets with Data from Controller */
+	this->ui_ptr->update_speed_label(this->updates_per_second);
 
 	/* Intialize Widget's events */
-	speed_up_button->onClick([]
+	speed_up_button->onClick([this]
 		{
-			std::cout << "Controller::initialize_ui_events()->speed_up_button->onclick()\n";
+			change_update_speed(+this->speed_change_on_input);
+		});	
+	
+	slow_down_button->onClick([this]
+		{
+			change_update_speed(-this->speed_change_on_input);
+		});
+
+	pause_button->onClick([this, pause_button]
+		{
+			// Toggle the pause
+			this->sim_paused = !this->sim_paused;
+
+			if (this->sim_paused)
+			{
+				pause_button->setText(">");
+			}
+			else 
+			{
+				pause_button->setText("||");
+
+				// If just unpaused, then skip the wait towards the first update
+				this->since_last_update = this->update_interval;
+			}
 		});
 }

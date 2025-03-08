@@ -1,9 +1,6 @@
 #include "Utils.h"
 
-float Utils::clamp(float value, float min, float max)
+void Utils::empty_func()
 {
-	if (value < min) return min;
-	if (value > max) return max;
-
-	return value;
+	return;
 }

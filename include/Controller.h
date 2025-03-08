@@ -2,6 +2,8 @@
 
 #include "Visualization.h"
 #include "Automaton.h"
+#include "Automaton.h"
+#include "Utils.h"
 
 // #include <iostream>
 
@@ -22,6 +24,13 @@ private:
 
 	// Simulation
 	int iteration = 0;
+	int updates_per_second = 30;
+	float update_interval = 1.f / (float)updates_per_second;
+	float since_last_update = 0.f;
+	int speed_change_on_input = 1;
+	int min_speed = 1;
+	int max_speed = 240;
+	bool sim_paused = true;
 
 public:
 	// Constructor
@@ -35,6 +44,7 @@ private:
 	void update();
 	void update_fps();
 	void render();
+	void change_update_speed(int new_ups);
 
 	void initialize_ui_events();
 };
