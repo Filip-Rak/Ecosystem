@@ -57,6 +57,7 @@ public:
 	void draw_ui();
 	void display();
 	void handle_camera_movement(float delta_time);
+	void fit_grid_to_view();
 
 	/* Getters */
 	bool is_window_open() const;

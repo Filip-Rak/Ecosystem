@@ -124,6 +124,15 @@ void UI::initialize_menu_bar()
 	map_widget(reset_button, "reset_button", reset_button->getSize().x);
 	menu_bar->add(reset_button);
 
+	// Fit grid button
+	auto fit_grid_button = tgui::Button::create("Fit Grid to View");
+	fit_grid_button->setTextSize(this->widget_text_size_small);
+	fit_grid_button->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += fit_grid_button->getSize().x + this->widget_horizontal_margin;
+	map_widget(fit_grid_button, "fit_grid_button", fit_grid_button->getSize().x);
+	menu_bar->add(fit_grid_button);
+
 	// Add to GUI
 	gui.add(menu_bar);
 

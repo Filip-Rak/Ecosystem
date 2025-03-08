@@ -124,6 +124,7 @@ void Controller::initialize_ui_events()
 	auto speed_up_button = ui_ptr->get_widget_as<tgui::Button>("speed_up_button");
 	auto slow_down_button = ui_ptr->get_widget_as<tgui::Button>("slow_down_button");
 	auto pause_button = ui_ptr->get_widget_as<tgui::Button>("pause_resume_button");
+	auto fit_grid_button = ui_ptr->get_widget_as<tgui::Button>("fit_grid_button");
 
 	/* Initialize Certain Widgets with Data from Controller */
 	this->ui_ptr->update_speed_label(this->updates_per_second);
@@ -155,5 +156,10 @@ void Controller::initialize_ui_events()
 				// If just unpaused, then skip the wait towards the first update
 				this->since_last_update = this->update_interval;
 			}
+		});
+
+	fit_grid_button->onClick([this] 
+		{
+			visualization.fit_grid_to_view();
 		});
 }

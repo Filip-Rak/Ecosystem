@@ -96,6 +96,17 @@ void Visualization::handle_camera_movement(float delta_time)
 	grid_view.move(offset);
 }
 
+void Visualization::fit_grid_to_view()
+{
+	// Reset the zoom effect
+	grid_view.zoom(1.0f / this->zoom_factor);
+	this->zoom_factor = 1.0f;
+
+	// Recalculate the size of the grid for the screen and center it
+	initialize_grid();
+	center_grid();
+}
+
 /* Getters */
 bool Visualization::is_window_open() const
 {
