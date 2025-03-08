@@ -1,5 +1,6 @@
 #include "Visualization.h"
 
+/* Constructor & Destructor */
 Visualization::Visualization(int window_width, int window_height, int grid_width, int grid_height)
 	: main_window(sf::VideoMode(window_width, window_height), ""),
 	gui(main_window), 
@@ -27,6 +28,7 @@ Visualization::~Visualization()
 {
 }
 
+/* Public Methods */
 void Visualization::clear()
 {
 	main_window.clear(sf::Color(50, 50, 150));
@@ -76,6 +78,22 @@ void Visualization::draw_ui()
 void Visualization::display()
 {
 	main_window.display();
+}
+
+void Visualization::handle_camera_movement(float delta_time)
+{
+	// Declare the offset in the movement
+	sf::Vector2f offset(0.f, 0.f);
+
+	// Read input from keyboard
+	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_UP_KEY)) offset.y += this->camera_movement_speed;
+	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_DOWN_KEY)) offset.x += this->camera_movement_speed;
+	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_LEFT_KEY)) offset.y -= this->camera_movement_speed;
+	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_RIGHT_KEY)) offset.x -= this->camera_movement_speed;
+
+	// Apply delta time to offset and move the center of the grid
+	offset *= delta_time;
+	grid_view.move(offset);
 }
 
 /* Getters */
@@ -134,7 +152,25 @@ void Visualization::update_grid_view()
 
 void Visualization::initialize_grid()
 {
-	// Create the vertices of the grid
+	/* Find the biggest cell_size allowing for full display of the grid within the grid's viewport */
+	float window_width = this->main_window.getSize().x;
+	float window_height = this->main_window.getSize().y;
+
+	float top_offset = ui.get_menu_bar_vertical_size();
+	float width_ratio = 1.f - ui.get_right_panel_x_window_share();
+	float height_ratio = (float)(window_height - top_offset) / window_height;
+
+	float pixel_width = window_width * width_ratio;
+	float pixel_height = window_height * height_ratio;
+
+	float max_cell_size_x = pixel_width / float(grid_width);
+	float max_cell_size_y = pixel_height / float(grid_height);
+
+	// Pick smaller of the two so the grid fits fully on both X and Y axis
+	this->cell_size = (max_cell_size_x < max_cell_size_y) ? max_cell_size_x : max_cell_size_y;
+	std::cout << "CS: " << this->cell_size << "\n";
+
+	/* Create the vertices of the grid */
 	grid_vertices.setPrimitiveType(sf::Quads);
 	grid_vertices.resize(grid_width * grid_height * 4); // 4 vertices per cell
 
@@ -234,20 +270,4 @@ void Visualization::handle_camera_zoom(sf::Event event)
 	// Save and apply the zoom value
 	this->zoom_factor *= change;
 	grid_view.zoom(change);
-}
-
-void Visualization::handle_camera_movement(float delta_time)
-{
-	// Declare the offset in the movement
-	sf::Vector2f offset(0.f, 0.f);
-
-	// Read input from keyboard
-	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_UP_KEY)) offset.y += this->camera_movement_speed;
-	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_DOWN_KEY)) offset.x += this->camera_movement_speed;
-	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_LEFT_KEY)) offset.y -= this->camera_movement_speed;
-	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_RIGHT_KEY)) offset.x -= this->camera_movement_speed;
-
-	// Apply delta time to offset and move the center of the grid
-	offset *= delta_time;
-	grid_view.move(offset);
 }

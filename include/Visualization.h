@@ -29,7 +29,7 @@ private:
 	int grid_width;	// These two variables might be useless and should be deleted
 	int grid_height;
 	sf::VertexArray grid_vertices;
-	int cell_size = 10;
+	float cell_size = 10;
 
 	// Movement
 	float zoom_factor = 1.0f;
