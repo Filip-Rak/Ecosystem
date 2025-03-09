@@ -58,13 +58,17 @@ void Visualization::process_window_events()
 		}
 		else if (event.type == sf::Event::MouseButtonPressed)
 		{
-			this->mouse_not_released = true;
-			this->last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
-			mouse_held_clock.restart();
+			// Drag only in viewport
+			if (is_mouse_in_viewport(grid_view))
+			{
+				this->is_dragging = true;
+				this->last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
+				mouse_held_clock.restart();
+			}
 		}		
 		else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == this->MOUSE_CELL_SELECT_BUTTON)
 		{
-			this->mouse_not_released = false;
+			this->is_dragging = false;
 
 			// Check how long was the mouse held. If too long, do not count the click
 			float time_held = mouse_held_clock.restart().asSeconds();
@@ -112,10 +116,7 @@ void Visualization::handle_camera_movement(float delta_time)
 
 void Visualization::handle_dragging()
 {
-	if (!mouse_not_released) return; // Only move if dragging is active
-
-	// Drag only in viewport
-	if (!is_mouse_in_viewport(grid_view)) return;
+	if (!is_dragging) return; // Only move if dragging is active
 
 	// Get the current mouse position in world coordinates
 	sf::Vector2f new_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);

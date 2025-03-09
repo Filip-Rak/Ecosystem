@@ -27,7 +27,7 @@ private:
 	sf::Vector2f last_mouse_pos;
 	sf::Clock mouse_held_clock;
 	float mouse_is_held_threshold = 0.15f;
-	bool mouse_not_released = false;
+	bool is_dragging = false;
 
 	// Grid
 	int grid_width;
