@@ -56,8 +56,14 @@ void Visualization::process_window_events()
 		{
 			handle_camera_zoom(event);
 		}
-		else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == this->MOUSE_CELL_SELECT_KEY)
+		else if (event.type == sf::Event::MouseButtonPressed)
 		{
+			this->mouse_is_held = true;
+			this->last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
+		}		
+		else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == this->MOUSE_CELL_SELECT_BUTTON)
+		{
+			this->mouse_is_held = false;
 			detect_clicked_cell();
 		}
 	}
@@ -95,6 +101,24 @@ void Visualization::handle_camera_movement(float delta_time)
 	offset *= delta_time;
 	grid_view.move(offset);
 }
+
+void Visualization::handle_dragging()
+{
+	if (!mouse_is_held) return; // Only move if dragging is active
+
+	// Get the current mouse position in world coordinates
+	sf::Vector2f new_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
+
+	// Calculate the difference (offset) between the last position and current position
+	sf::Vector2f delta = last_mouse_pos - new_mouse_pos;
+
+	// Move the grid view by the offset
+	grid_view.move(delta);
+
+	// Update the last mouse position
+	last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
+}
+
 
 void Visualization::fit_grid_to_view()
 {

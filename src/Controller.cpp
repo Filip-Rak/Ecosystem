@@ -36,6 +36,7 @@ void Controller::update()
 	if (visualization.is_window_in_focus())
 	{
 		visualization.handle_camera_movement(this->fps_delta_time);
+		visualization.handle_dragging();
 	}
 
 	/* Update based on Update Speed and Pause */

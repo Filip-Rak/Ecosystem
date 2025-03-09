@@ -24,12 +24,14 @@ private:
 
 	// Window
 	std::string window_title = "Ecosystem";
+	sf::Vector2f last_mouse_pos;
+	bool mouse_is_held = false;
 
 	// Grid
 	int grid_width;	// These two variables might be useless and should be deleted
 	int grid_height;
 	sf::VertexArray grid_vertices;
-	float cell_size = 10;
+	float cell_size;
 
 	// Movement
 	float zoom_factor = 1.0f;
@@ -43,7 +45,7 @@ private:
 	const sf::Keyboard::Key MOVEMENT_DOWN_KEY = sf::Keyboard::A;
 	const sf::Keyboard::Key MOVEMENT_LEFT_KEY = sf::Keyboard::S;
 	const sf::Keyboard::Key MOVEMENT_RIGHT_KEY = sf::Keyboard::D;
-	const sf::Mouse::Button MOUSE_CELL_SELECT_KEY = sf::Mouse::Left;
+	const sf::Mouse::Button MOUSE_CELL_SELECT_BUTTON = sf::Mouse::Left;
 
 public:
 	/* Constructor */
@@ -57,6 +59,7 @@ public:
 	void draw_ui();
 	void display();
 	void handle_camera_movement(float delta_time);
+	void handle_dragging();
 	void fit_grid_to_view();
 
 	/* Getters */
