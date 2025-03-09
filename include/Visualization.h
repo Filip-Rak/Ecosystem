@@ -25,10 +25,12 @@ private:
 	// Window
 	std::string window_title = "Ecosystem";
 	sf::Vector2f last_mouse_pos;
-	bool mouse_is_held = false;
+	sf::Clock mouse_held_clock;
+	float since_mouse_clicked = 0.f;
+	bool mouse_not_released = false;
 
 	// Grid
-	int grid_width;	// These two variables might be useless and should be deleted
+	int grid_width;
 	int grid_height;
 	sf::VertexArray grid_vertices;
 	float cell_size;

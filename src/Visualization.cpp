@@ -58,12 +58,13 @@ void Visualization::process_window_events()
 		}
 		else if (event.type == sf::Event::MouseButtonPressed)
 		{
-			this->mouse_is_held = true;
+			this->mouse_not_released = true;
 			this->last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
+
 		}		
 		else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == this->MOUSE_CELL_SELECT_BUTTON)
 		{
-			this->mouse_is_held = false;
+			this->mouse_not_released = false;
 			detect_clicked_cell();
 		}
 	}
@@ -104,7 +105,10 @@ void Visualization::handle_camera_movement(float delta_time)
 
 void Visualization::handle_dragging()
 {
-	if (!mouse_is_held) return; // Only move if dragging is active
+	if (!mouse_not_released) return; // Only move if dragging is active
+
+	// Drag only in viewport
+	if (!is_mouse_in_viewport(grid_view)) return;
 
 	// Get the current mouse position in world coordinates
 	sf::Vector2f new_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
@@ -118,7 +122,6 @@ void Visualization::handle_dragging()
 	// Update the last mouse position
 	last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
 }
-
 
 void Visualization::fit_grid_to_view()
 {
@@ -290,6 +293,9 @@ bool Visualization::is_mouse_in_viewport(sf::View view)
 
 void Visualization::handle_camera_zoom(sf::Event event)
 {
+	// Scroll only in viewport
+	if (!is_mouse_in_viewport(grid_view)) return;
+
 	// Read inputs
 	float change = 0.f;
 	if (event.mouseWheelScroll.delta > 0) // Scroll up = Zoom in
