@@ -60,12 +60,19 @@ void Visualization::process_window_events()
 		{
 			this->mouse_not_released = true;
 			this->last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
-
+			mouse_held_clock.restart();
 		}		
 		else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == this->MOUSE_CELL_SELECT_BUTTON)
 		{
 			this->mouse_not_released = false;
-			detect_clicked_cell();
+
+			// Check how long was the mouse held. If too long, do not count the click
+			float time_held = mouse_held_clock.restart().asSeconds();
+			if (time_held <= this->mouse_is_held_threshold)
+			{
+
+				detect_clicked_cell();
+			}
 		}
 	}
 }
@@ -255,8 +262,7 @@ void Visualization::center_grid()
 void Visualization::detect_clicked_cell()
 {
 	// Discard clicks outside the grid's viewport
-	if (!is_mouse_in_viewport(grid_view)) 
-		return;
+	if (!is_mouse_in_viewport(grid_view)) return;
 
 	// Convert screen position to world coordinates
 	sf::Vector2f world_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);

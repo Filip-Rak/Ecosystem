@@ -26,7 +26,7 @@ private:
 	std::string window_title = "Ecosystem";
 	sf::Vector2f last_mouse_pos;
 	sf::Clock mouse_held_clock;
-	float since_mouse_clicked = 0.f;
+	float mouse_is_held_threshold = 0.15f;
 	bool mouse_not_released = false;
 
 	// Grid
