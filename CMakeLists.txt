@@ -46,7 +46,7 @@ target_sources(ecosystem PRIVATE
 
 target_include_directories(ecosystem PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-	${tgui_SOURCE_DIR}/include
+    ${tgui_SOURCE_DIR}/include
 )
 
 target_link_libraries(ecosystem PRIVATE
