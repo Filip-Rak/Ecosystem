@@ -1,7 +1,23 @@
-Debug/
-Release/
-external/
-.vs/
+# Build directories
+/build/
+/CMakeFiles/
+/CMakeCache.txt
 Ecosystem/
+
+# Visual Studio files
 CMakeSettings.json
-out/
+*.vcxproj*
+*.sln
+*.user
+*.suo
+*.vcxproj.filters
+*.vs
+
+# Compiled object files
+*.o
+*.obj
+*.exe
+*.dll
+*.lib
+*.pdb
+
