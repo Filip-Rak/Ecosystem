@@ -3,3 +3,4 @@ Release/
 external/
 .vs/
 Ecosystem/
+CMakeSettings.json
