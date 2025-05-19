@@ -27,6 +27,10 @@ FetchContent_Declare(
 # Explicitly declare TGUI's backend 
 set(TGUI_BACKEND SFML_GRAPHICS CACHE STRING "" FORCE)
 
+# Minimize TGUI build
+set(TGUI_BUILD_GUI_BUILDER OFF CACHE BOOL "" FORCE)
+set(TGUI_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
 FetchContent_MakeAvailable(
 	SFML 
 	TGUI
