@@ -4,3 +4,6 @@ external/
 .vs/
 Ecosystem/
 CMakeSettings.json
+out/
+build/
+build/bin

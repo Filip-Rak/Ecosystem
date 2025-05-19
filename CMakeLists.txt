@@ -24,6 +24,8 @@ FetchContent_Declare(
 	GIT_TAG v1.6.1
 )
 
+set(TGUI_BACKEND SFML_GRAPHICS CACHE STRING "" FORCE)
+
 FetchContent_MakeAvailable(
 	SFML 
 	TGUI
@@ -40,12 +42,17 @@ add_executable(
 	${SOURCE_DIR}/Visualization.cpp
 )
 
-target_include_directories(ecosystem PRIVATE include)
+target_include_directories(
+	ecosystem 
+	PRIVATE 
+	include
+	${tgui_SOURCE_DIR}/include
+)
 
 target_link_libraries(ecosystem
     PRIVATE
     sfml-graphics
     sfml-window
     sfml-system
-    TGUI
+    tgui
 )
