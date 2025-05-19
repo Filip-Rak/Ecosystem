@@ -1,15 +1,15 @@
-# Project wide settings
+# ------------------ Project Wide Settings ------------------
 cmake_minimum_required(VERSION 3.16)
 project(Ecosystem LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Variables
+# ------------------ Variables ------------------
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(FETCHCONTENT_BASE_DIR ${CMAKE_BINARY_DIR}/external)
 set(SOURCE_DIR src)
 
-# Dependencies
+# ------------------ Dependencies ------------------
 include(FetchContent)
 
 FetchContent_Declare(
@@ -24,6 +24,7 @@ FetchContent_Declare(
 	GIT_TAG v1.6.1
 )
 
+# Explicitly declare TGUI's backend 
 set(TGUI_BACKEND SFML_GRAPHICS CACHE STRING "" FORCE)
 
 FetchContent_MakeAvailable(
@@ -31,26 +32,24 @@ FetchContent_MakeAvailable(
 	TGUI
 )
 
-# Main executable
-add_executable(
-	ecosystem
-	${SOURCE_DIR}/main.cpp
-	${SOURCE_DIR}/Automaton.cpp
-	${SOURCE_DIR}/Controller.cpp
-	${SOURCE_DIR}/UI.cpp
-	${SOURCE_DIR}/Utils.cpp
-	${SOURCE_DIR}/Visualization.cpp
+# ------------------ Executable ------------------
+add_executable(ecosystem)
+
+target_sources(ecosystem PRIVATE
+    ${SOURCE_DIR}/main.cpp
+    ${SOURCE_DIR}/Automaton.cpp
+    ${SOURCE_DIR}/Controller.cpp
+    ${SOURCE_DIR}/UI.cpp
+    ${SOURCE_DIR}/Utils.cpp
+    ${SOURCE_DIR}/Visualization.cpp
 )
 
-target_include_directories(
-	ecosystem 
-	PRIVATE 
-	include
+target_include_directories(ecosystem PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 	${tgui_SOURCE_DIR}/include
 )
 
-target_link_libraries(ecosystem
-    PRIVATE
+target_link_libraries(ecosystem PRIVATE
     sfml-graphics
     sfml-window
     sfml-system

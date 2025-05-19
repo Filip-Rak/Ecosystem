@@ -5,5 +5,3 @@ external/
 Ecosystem/
 CMakeSettings.json
 out/
-build/
-build/bin
