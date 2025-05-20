@@ -329,19 +329,14 @@ void UI::update_scalable_text_size()
 	double ratio_x = (double)gui.getWindow()->getSize().x / (double)this->reference_resolution.x;
 	double ratio_y = (double)gui.getWindow()->getSize().y / (double)this->reference_resolution.y;
 	
-	// Pick axis which accomodates the least text
-	// double lowest_ratio = (ratio_x < ratio_y) ? ratio_x : ratio_y;
+	// Use average scaling to adjust text size proportionally across dimensions
 	double average_ratio = (ratio_x + ratio_y) / 2.0;
 
-	// Adjust the text based on smallest axis
-	for (auto& pair : widget_text_sizes)
+	// Scale each widget's text size from its reference using the computed ratio
+	for (auto& [widget, reference_size] : widget_text_sizes)
 	{
-		// Map the pair
-		tgui::Widget::Ptr widget = pair.first;
-		unsigned int reference_size = pair.second;
-
 		// Estimate new text size and update it
-		unsigned int new_size = int(double(reference_size) * average_ratio);
+		auto new_size = static_cast<unsigned int>(reference_size * average_ratio);
 		widget->setTextSize(new_size);
 	}
 }
