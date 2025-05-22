@@ -62,24 +62,41 @@ void Visualization::process_window_events()
 		}
 		else if (event.type == sf::Event::MouseButtonPressed)
 		{
-			// Drag only in viewport
-			if (is_mouse_in_viewport(grid_view))
+			// Ignore mouse clicks outside viewport
+			if (!is_mouse_in_viewport(grid_view)) return;
+
+			// Start the grid drag
+			if (event.mouseButton.button == MOUSE_DRAG_BUTTON)
 			{
 				this->is_dragging = true;
 				this->last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
+			}
+
+			// Mouse cell selection
+			else if (event.mouseButton.button == MOUSE_CELL_SELECT_BUTTON)
+			{
+				// Start the clock for click -> hold
 				mouse_held_clock.restart();
 			}
 		}		
-		else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == this->MOUSE_CELL_SELECT_BUTTON)
+		else if (event.type == sf::Event::MouseButtonReleased)
 		{
-			this->is_dragging = false;
-
-			// Check how long was the mouse held. If too long, do not count the click
-			float time_held = mouse_held_clock.restart().asSeconds();
-			if (time_held <= this->mouse_is_held_threshold)
+			// End the grid drag 
+			if (event.mouseButton.button == MOUSE_DRAG_BUTTON)
 			{
+				this->is_dragging = false;
+			}
 
-				detect_clicked_cell();
+			// Recognize a click or a hold
+			else if (event.mouseButton.button == MOUSE_CELL_SELECT_BUTTON)
+			{
+				// Check how long was the mouse held. If too long, do not count the click
+				float time_held = mouse_held_clock.restart().asSeconds();
+
+				if (time_held <= this->mouse_is_held_threshold)
+				{
+					detect_clicked_cell();
+				}
 			}
 		}
 	}
@@ -93,7 +110,7 @@ void Visualization::update(const std::vector<bool>& cells)
 	for (int index = 0; index < cells.size(); index++)
 	{
 		// Modify the vertices
-		sf::Color new_color = (cells[index]) ? sf::Color::Green : sf::Color::Black;
+		sf::Color new_color = (cells[index]) ? sf::Color::Green : sf::Color(32, 32, 32);
 
 		int index_verts = index * verts;
 		for (int i = 0; i < verts; i++)

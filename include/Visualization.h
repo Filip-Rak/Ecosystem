@@ -50,6 +50,7 @@ private:
 	const sf::Keyboard::Key MOVEMENT_LEFT_KEY = sf::Keyboard::S;
 	const sf::Keyboard::Key MOVEMENT_RIGHT_KEY = sf::Keyboard::D;
 	const sf::Mouse::Button MOUSE_CELL_SELECT_BUTTON = sf::Mouse::Left;
+	const sf::Mouse::Button MOUSE_DRAG_BUTTON = sf::Mouse::Middle;
 
 public:
 	/* Constructor */
