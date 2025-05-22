@@ -4,6 +4,7 @@
 
 // Testing
 #include <iostream>
+#include <ctime>
 
 class Automaton
 {
@@ -13,6 +14,7 @@ private:
 
 	// Components
 	std::vector<bool> grid;
+	std::vector<bool> grid_buffer;
 
 public:
 	/* Constructor & Destructor */
@@ -30,4 +32,5 @@ public:
 private:
 	/* Private Methods */
 	void initialize_grid();
+	int active_neighbors(int x, int y);
 };
