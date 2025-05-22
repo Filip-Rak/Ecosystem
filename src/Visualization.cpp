@@ -36,6 +36,10 @@ void Visualization::clear()
 
 void Visualization::process_window_events()
 {
+	/* Reset Before the Check */
+	last_clicked_cords = { -1, -1 };
+
+	/* Check for Events */
 	sf::Event event;
 	while (main_window.pollEvent(event))
 	{
@@ -78,6 +82,22 @@ void Visualization::process_window_events()
 				detect_clicked_cell();
 			}
 		}
+	}
+}
+
+void Visualization::update(const std::vector<bool>& cells)
+{
+	const int verts = 4;
+
+	// Update the visualised grid based on the logical one
+	for (int index = 0; index < cells.size(); index++)
+	{
+		// Modify the vertices
+		sf::Color new_color = (cells[index]) ? sf::Color::Green : sf::Color::Black;
+
+		int index_verts = index * verts;
+		for (int i = 0; i < verts; i++)
+			grid_vertices[index_verts + i].color = new_color;
 	}
 }
 
@@ -151,6 +171,11 @@ bool Visualization::is_window_open() const
 bool Visualization::is_window_in_focus() const
 {
 	return main_window.hasFocus();
+}
+
+std::pair<int, int> Visualization::get_last_clicled_cords() const
+{
+	return last_clicked_cords;
 }
 
 UI& Visualization::get_ui()
@@ -276,10 +301,11 @@ void Visualization::detect_clicked_cell()
 	if (cell_x >= 0 && cell_x < grid_width && cell_y >= 0 && cell_y < grid_height)
 	{
 		std::cout << "Clicked Cell: X=" << cell_x << " Y=" << cell_y << "\n";
+		last_clicked_cords = { cell_x, cell_y };
 	}
 }
 
-bool Visualization::is_mouse_in_viewport(sf::View view)
+bool Visualization::is_mouse_in_viewport(sf::View view) const
 {
 	// Get view's viewport in pixels
 	sf::FloatRect viewport = view.getViewport();

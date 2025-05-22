@@ -1,7 +1,7 @@
 #include "Controller.h"
 
 Controller::Controller(int window_width, int window_height, int grid_width, int grid_height)
-	: visualization(window_width, window_height, grid_width, grid_height)
+	: visualization(window_width, window_height, grid_width, grid_height), automaton(grid_width, grid_height)
 {
 	ui_ptr = &visualization.get_ui();
 	initialize_ui_events();
@@ -29,8 +29,12 @@ void Controller::process_events()
 
 void Controller::update()
 {
-	/* Update FPS related measurements and FPS label */
+	/* Always Update */
+	// Update FPS measurememnts and label
 	update_fps();
+
+	// Transfer position: Visusalization -> Automaton
+	transfer_pos();
 
 	/* Update these properties only when window is in focus */
 	if (visualization.is_window_in_focus())
@@ -39,7 +43,7 @@ void Controller::update()
 		visualization.handle_dragging();
 	}
 
-	/* Update based on Update Speed and Pause */
+	/* Update only if not Paused */
 	if (!sim_paused)
 	{
 		// Time since last update increases
@@ -48,7 +52,11 @@ void Controller::update()
 		// Run automaton update if enough time has passed
 		if (this->since_last_update >= this->update_interval)
 		{
-			// (...) Debug update
+			// Update the automaton
+			automaton.update();
+
+			// Update the Visualization
+			visualization.update(automaton.get_grid());
 			
 			// Update the iteration number
 			this->iteration += 1;
@@ -83,6 +91,15 @@ void Controller::update_fps()
 	}
 }
 
+void Controller::transfer_pos()
+{
+	auto cords_pair = visualization.get_last_clicled_cords();
+	if (cords_pair.first == -1) return;
+
+	automaton.modify_cell(cords_pair.first, cords_pair.second);
+	visualization.update(automaton.get_grid());	// Should be repalced with a more efficient one cell update only
+}
+
 void Controller::render()
 {
 	// Clear the previous frame
@@ -98,10 +115,17 @@ void Controller::render()
 	visualization.display();
 }
 
-void Controller::change_update_speed(int change)
+void Controller::change_update_speed(int direction)
 {
+	// Modify the speed 
+	float change = this->speed_change_base;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+		change = this->speed_change_fast;
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+		change = this->speed_change_slow;
+
 	// Update speed and it's properties
-	int new_speed = this->updates_per_second + change;
+	int new_speed = this->updates_per_second + change * direction;
 	new_speed = Utils::clamp<int>(new_speed, this->min_speed, this->max_speed);
 
 	this->updates_per_second = new_speed;
@@ -133,12 +157,12 @@ void Controller::initialize_ui_events()
 	/* Intialize Widget's events */
 	speed_up_button->onClick([this]
 		{
-			change_update_speed(+this->speed_change_on_input);
+			change_update_speed(+1);
 		});	
 	
 	slow_down_button->onClick([this]
 		{
-			change_update_speed(-this->speed_change_on_input);
+			change_update_speed(-1);
 		});
 
 	pause_button->onClick([this, pause_button]

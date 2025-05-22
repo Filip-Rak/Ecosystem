@@ -13,7 +13,7 @@ private:
 	// Components
 	Visualization visualization;
 	UI* ui_ptr;
-	// Automaton automaton;
+	Automaton automaton;
 
 	// FPS
 	sf::Clock fps_clock;
@@ -27,10 +27,13 @@ private:
 	int updates_per_second = 30;
 	float update_interval = 1.f / (float)updates_per_second;
 	float since_last_update = 0.f;
-	int speed_change_on_input = 1;
 	int min_speed = 1;
 	int max_speed = 240;
 	bool sim_paused = true;
+	int speed_change_base = 5;
+	int speed_change_fast = 20;
+	int speed_change_slow = 1;
+
 
 public:
 	// Constructor
@@ -43,6 +46,7 @@ private:
 	void process_events();
 	void update();
 	void update_fps();
+	void transfer_pos();
 	void render();
 	void change_update_speed(int new_ups);
 

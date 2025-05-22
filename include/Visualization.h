@@ -2,6 +2,7 @@
 
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
+#include <vector>
 
 #include "UI.h"
 #include "Utils.h"
@@ -34,6 +35,7 @@ private:
 	int grid_height;
 	sf::VertexArray grid_vertices;
 	float cell_size;
+	std::pair<int, int> last_clicked_cords = { -1, -1 };
 
 	// Movement
 	float zoom_factor = 1.0f;
@@ -57,6 +59,7 @@ public:
 	/* Public Methods */
 	void clear();
 	void process_window_events();
+	void update(const std::vector<bool>& cells);
 	void draw_grid();
 	void draw_ui();
 	void display();
@@ -67,6 +70,7 @@ public:
 	/* Getters */
 	bool is_window_open() const;
 	bool is_window_in_focus() const;
+	std::pair<int, int> get_last_clicled_cords() const;
 	UI& get_ui();
 
 private:
@@ -76,6 +80,6 @@ private:
 	void initialize_grid();
 	void center_grid();
 	void detect_clicked_cell();
-	bool is_mouse_in_viewport(sf::View view);
+	bool is_mouse_in_viewport(sf::View view) const;
 	void handle_camera_zoom(sf::Event event);
 };
