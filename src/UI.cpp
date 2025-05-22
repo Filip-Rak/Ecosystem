@@ -75,15 +75,6 @@ void UI::initialize_top_bar()
 	map_widget(menu_bar, "menu_bar", menu_bar_fixed_size);
 	top_bar->add(menu_bar);
 
-	// Add iteration label
-	this->iteration_label = tgui::Label::create("Iteration: 1000");
-	iteration_label->setTextSize(this->widget_text_size_medium);
-	iteration_label->setPosition(x_offset, this->widget_top_margin);
-
-	x_offset += iteration_label->getSize().x + this->widget_horizontal_margin;
-	map_widget(iteration_label, "iteration_label", iteration_label->getSize().x);
-	top_bar->add(iteration_label);
-
 	// Add FPS label
 	this->fps_label = tgui::Label::create("FPS: 1000");
 	fps_label->setTextSize(this->widget_text_size_medium);
@@ -91,43 +82,16 @@ void UI::initialize_top_bar()
 
 	x_offset += fps_label->getSize().x + this->widget_horizontal_margin;
 	map_widget(fps_label, "fps_label", fps_label->getSize().x);
-	top_bar->add(fps_label);	
-	
-	// Add Speed label
-	this->speed_label = tgui::Label::create("Speed: 120 UPS");
-	speed_label->setTextSize(this->widget_text_size_medium);
-	speed_label->setPosition(x_offset, this->widget_top_margin);
+	top_bar->add(fps_label);
 
-	x_offset += speed_label->getSize().x + this->widget_horizontal_margin;
-	map_widget(speed_label, "speed_label", speed_label->getSize().x);
-	top_bar->add(speed_label);
+	// Fit grid button
+	auto fit_grid_button = tgui::Button::create("Fit Grid to View");
+	fit_grid_button->setTextSize(this->widget_text_size_small);
+	fit_grid_button->setPosition(x_offset, this->widget_top_margin);
 
-	// Slow down button
-	auto slow_down_button = tgui::Button::create("-");
-	slow_down_button->setTextSize(this->widget_text_size_small);
-	slow_down_button->setPosition(x_offset, this->widget_top_margin);
-
-	x_offset += slow_down_button->getSize().x + this->widget_horizontal_margin;
-	map_widget(slow_down_button, "slow_down_button", slow_down_button->getSize().x);
-	top_bar->add(slow_down_button);	
-	
-	// Pause / Resume button
-	auto pause_resume_button = tgui::Button::create(">");
-	pause_resume_button->setTextSize(this->widget_text_size_small);
-	pause_resume_button->setPosition(x_offset, this->widget_top_margin);
-
-	x_offset += pause_resume_button->getSize().x + this->widget_horizontal_margin;
-	map_widget(pause_resume_button, "pause_resume_button", pause_resume_button->getSize().x);
-	top_bar->add(pause_resume_button);	
-	
-	// Speed up button
-	auto speed_up_button = tgui::Button::create("+");
-	speed_up_button->setTextSize(this->widget_text_size_small);
-	speed_up_button->setPosition(x_offset, this->widget_top_margin);
-
-	x_offset += speed_up_button->getSize().x + this->widget_horizontal_margin;
-	map_widget(speed_up_button, "speed_up_button", speed_up_button->getSize().x);
-	top_bar->add(speed_up_button);
+	x_offset += fit_grid_button->getSize().x + this->widget_horizontal_margin;
+	map_widget(fit_grid_button, "fit_grid_button", fit_grid_button->getSize().x);
+	top_bar->add(fit_grid_button);
 
 	// Reset button
 	auto reset_button = tgui::Button::create("Reset");
@@ -138,14 +102,50 @@ void UI::initialize_top_bar()
 	map_widget(reset_button, "reset_button", reset_button->getSize().x);
 	top_bar->add(reset_button);
 
-	// Fit grid button
-	auto fit_grid_button = tgui::Button::create("Fit Grid to View");
-	fit_grid_button->setTextSize(this->widget_text_size_small);
-	fit_grid_button->setPosition(x_offset, this->widget_top_margin);
+	// Slow down button
+	auto slow_down_button = tgui::Button::create("-");
+	slow_down_button->setTextSize(this->widget_text_size_small);
+	slow_down_button->setPosition(x_offset, this->widget_top_margin);
 
-	x_offset += fit_grid_button->getSize().x + this->widget_horizontal_margin;
-	map_widget(fit_grid_button, "fit_grid_button", fit_grid_button->getSize().x);
-	top_bar->add(fit_grid_button);
+	x_offset += slow_down_button->getSize().x + this->widget_horizontal_margin;
+	map_widget(slow_down_button, "slow_down_button", slow_down_button->getSize().x);
+	top_bar->add(slow_down_button);
+
+	// Pause / Resume button
+	auto pause_resume_button = tgui::Button::create(">");
+	pause_resume_button->setTextSize(this->widget_text_size_small);
+	pause_resume_button->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += pause_resume_button->getSize().x + this->widget_horizontal_margin;
+	map_widget(pause_resume_button, "pause_resume_button", pause_resume_button->getSize().x);
+	top_bar->add(pause_resume_button);
+
+	// Speed up button
+	auto speed_up_button = tgui::Button::create("+");
+	speed_up_button->setTextSize(this->widget_text_size_small);
+	speed_up_button->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += speed_up_button->getSize().x + this->widget_horizontal_margin;
+	map_widget(speed_up_button, "speed_up_button", speed_up_button->getSize().x);
+	top_bar->add(speed_up_button);
+
+	// Add Speed label
+	this->speed_label = tgui::Label::create("Speed: 60 UPS");
+	speed_label->setTextSize(this->widget_text_size_medium);
+	speed_label->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += speed_label->getSize().x + this->widget_horizontal_margin;
+	map_widget(speed_label, "speed_label", speed_label->getSize().x);
+	top_bar->add(speed_label);
+
+	// Add iteration label
+	this->iteration_label = tgui::Label::create("Iteration: 1000");
+	iteration_label->setTextSize(this->widget_text_size_medium);
+	iteration_label->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += iteration_label->getSize().x + this->widget_horizontal_margin;
+	map_widget(iteration_label, "iteration_label", iteration_label->getSize().x);
+	top_bar->add(iteration_label);	
 
 	// Add to GUI
 	gui.add(top_bar);
