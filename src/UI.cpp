@@ -61,6 +61,20 @@ void UI::initialize_top_bar()
 	// Initial position
 	int x_offset = this->widget_horizontal_margin;
 
+	// Add menu bar
+	auto menu_bar = tgui::MenuBar::create();
+	menu_bar->setTextSize(this->widget_text_size_medium);
+	menu_bar->setSize(this->menu_bar_fixed_size, this->top_bar_vertical_size - 3);
+	menu_bar->getRenderer()->setSeparatorVerticalPadding(0);
+
+	menu_bar->addMenu("File");
+	menu_bar->addMenuItem("Save");	
+	menu_bar->addMenu("Edit");
+	menu_bar->addMenuItem("Undo");
+
+	map_widget(menu_bar, "menu_bar", menu_bar_fixed_size);
+	top_bar->add(menu_bar);
+
 	// Add iteration label
 	this->iteration_label = tgui::Label::create("Iteration: 1000");
 	iteration_label->setTextSize(this->widget_text_size_medium);
@@ -398,7 +412,7 @@ void UI::map_widget(tgui::Widget::Ptr widget, std::string identifier)
 
 void UI::update_widget_positioning()
 {
-	int x_offset = widget_horizontal_margin;
+	int x_offset = 0;
 	for (int i = 0; i < widget_position_update_vector.size(); i++)
 	{
 		// Tell widget to recalculate it's size 

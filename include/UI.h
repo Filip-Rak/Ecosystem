@@ -36,6 +36,7 @@ private:
 	tgui::Layout widget_vertical_size = 20;
 	tgui::Layout widget_top_margin = "10%";
 	tgui::Borders top_bar_borders = tgui::Borders(0.f, 0.0f, 0.0f, 1.f);
+	tgui::Layout menu_bar_fixed_size = 85;
 
 	// Right panel
 	enum ValueType 
