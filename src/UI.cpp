@@ -108,7 +108,7 @@ void UI::initialize_top_bar()
 	slow_down_button->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += slow_down_button->getSize().x + this->widget_horizontal_margin;
-	map_widget(slow_down_button, "slow_down_button", slow_down_button->getSize().x);
+	map_widget(slow_down_button, "aslow_down_button", slow_down_button->getSize().x);
 	top_bar->add(slow_down_button);	
 	
 	// Pause / Resume button
@@ -117,7 +117,7 @@ void UI::initialize_top_bar()
 	pause_resume_button->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += pause_resume_button->getSize().x + this->widget_horizontal_margin;
-	map_widget(pause_resume_button, "pause_resume_button", pause_resume_button->getSize().x);
+	map_widget(pause_resume_button, "apause_resume_button", pause_resume_button->getSize().x);
 	top_bar->add(pause_resume_button);	
 	
 	// Speed up button
@@ -126,7 +126,7 @@ void UI::initialize_top_bar()
 	speed_up_button->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += speed_up_button->getSize().x + this->widget_horizontal_margin;
-	map_widget(speed_up_button, "speed_up_button", speed_up_button->getSize().x);
+	map_widget(speed_up_button, "aspeed_up_button", speed_up_button->getSize().x);
 	top_bar->add(speed_up_button);
 
 	// Reset button
@@ -135,7 +135,7 @@ void UI::initialize_top_bar()
 	reset_button->setPosition(x_offset, this->widget_top_margin);
 
 	x_offset += reset_button->getSize().x + this->widget_horizontal_margin;
-	map_widget(reset_button, "reset_button", reset_button->getSize().x);
+	map_widget(reset_button, "areset_button", reset_button->getSize().x);
 	top_bar->add(reset_button);
 
 	// Fit grid button
@@ -175,12 +175,59 @@ void UI::initialize_right_panel()
 	right_panel->add(vertical_layout);
 
 	/* Fill Right Panel with Widgets */
+	// Add Horizontal layout for labels
+	auto hl1 = tgui::HorizontalLayout::create();
+	vertical_layout->add(hl1, 0.035f);
+
+	// Add the FPS counter on the left
+	this->fps_label = tgui::Label::create("FPS: 1000");
+	//fps_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
+	set_scalable_text_size(fps_label, this->widget_text_size_big);
+	hl1->add(fps_label, 0.5);
+	map_widget(fps_label, "fps_label");	
+	
+	// Add the iteration counter on the right
+	this->iteration_label = tgui::Label::create("Iteration:");
+	set_scalable_text_size(iteration_label, this->widget_text_size_big);
+	hl1->add(iteration_label);
+	map_widget(iteration_label, "iteration_label");
+
+	auto hl2 = tgui::HorizontalLayout::create();
+	vertical_layout->add(hl2, 0.035f);
+
+	// Add the speed_label to the left
+	this->speed_label = tgui::Label::create("Speed: 120 UPS");
+	speed_label->setOrigin(0, -0.1f);
+	set_scalable_text_size(speed_label, this->widget_text_size_big);
+	map_widget(speed_label, "speed_label");
+	hl2->add(speed_label, 3.f);
+
+	// Slow down button
+	auto slow_down_button = tgui::Button::create("-");
+	set_scalable_text_size(slow_down_button, this->widget_text_size_big);
+	map_widget(slow_down_button, "slow_down_button");
+	hl2->add(slow_down_button);
+
+	// Pause / Resume button
+	auto pause_resume_button = tgui::Button::create(">");
+	set_scalable_text_size(pause_resume_button, this->widget_text_size_big);
+	map_widget(pause_resume_button, "pause_resume_button");
+	hl2->add(pause_resume_button);
+
+	// Speed up button
+	auto speed_up_button = tgui::Button::create("+");
+	set_scalable_text_size(speed_up_button, this->widget_text_size_big);
+	map_widget(speed_up_button, "speed_up_button");
+	hl2->add(speed_up_button);
+
+	vertical_layout->addSpace(0.02f);
+
 	// Add a title label at the top of the right panel
 	auto title_label = tgui::Label::create(this->right_panel_title_text);
 	title_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	set_scalable_text_size(title_label, this->widget_text_size_huge);
 	title_label->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
-	vertical_layout->add(title_label, this->right_panel_title_ratio);
+	// vertical_layout->add(title_label, 0.045f);
 
 	/* Add Tab Container with Multiple Pages */
 	// Create a tab container for organizing different sections

@@ -50,9 +50,8 @@ private:
 	tgui::Padding data_panel_content_padding = { "3%", "1%", "3%", "1%" };
 	tgui::Borders right_panel_borders = tgui::Borders(1.f, 0.f, 1.f, 1.f);
 	tgui::Borders tab_container_content_borders = tgui::Borders(1.f, 0.f, 1.f, 1.f);
-	float right_panel_title_ratio = 0.06f;
 
-	tgui::String right_panel_title_text = "INSERT";
+	tgui::String right_panel_title_text = "MODIFY";
 	tgui::String cell_tab_name = "Cell";
 	tgui::String animal_tab_name = "Animal";
 	tgui::String genes_tab_name = "Genes";
