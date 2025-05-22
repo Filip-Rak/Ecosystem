@@ -55,22 +55,105 @@ void UI::initialize_top_bar()
 	top_bar->getRenderer()->setBorders(this->top_bar_borders);
 	
 	widget_map.emplace("top_bar", top_bar);
-	gui.add(top_bar);
 
 	/* Create Contents */
+
+	// Initial position
+	int x_offset = this->widget_horizontal_margin;
+
+	// Add menu bar
 	auto menu_bar = tgui::MenuBar::create();
-	menu_bar->setTextSize(16);
+	menu_bar->setTextSize(this->widget_text_size_medium);
+	menu_bar->setSize(this->menu_bar_fixed_size, this->top_bar_vertical_size - 3);
+	menu_bar->getRenderer()->setSeparatorVerticalPadding(0);
+
 	menu_bar->addMenu("File");
-	menu_bar->addMenuItem("Open");
 	menu_bar->addMenuItem("Save");	
 	menu_bar->addMenu("Edit");
-	menu_bar->addMenuItem("Redo");
-	menu_bar->addMenuItem("Undo");	
-	menu_bar->addMenu("View");
-	menu_bar->addMenuItem("Fit grid into view");
+	menu_bar->addMenuItem("Undo");
 
-	map_widget(menu_bar, "menu_bar");
+	map_widget(menu_bar, "menu_bar", menu_bar_fixed_size);
 	top_bar->add(menu_bar);
+
+	// Add iteration label
+	this->iteration_label = tgui::Label::create("Iteration: 1000");
+	iteration_label->setTextSize(this->widget_text_size_medium);
+	iteration_label->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += iteration_label->getSize().x + this->widget_horizontal_margin;
+	map_widget(iteration_label, "iteration_label", iteration_label->getSize().x);
+	top_bar->add(iteration_label);
+
+	// Add FPS label
+	this->fps_label = tgui::Label::create("FPS: 1000");
+	fps_label->setTextSize(this->widget_text_size_medium);
+	fps_label->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += fps_label->getSize().x + this->widget_horizontal_margin;
+	map_widget(fps_label, "fps_label", fps_label->getSize().x);
+	top_bar->add(fps_label);	
+	
+	// Add Speed label
+	this->speed_label = tgui::Label::create("Speed: 120 UPS");
+	speed_label->setTextSize(this->widget_text_size_medium);
+	speed_label->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += speed_label->getSize().x + this->widget_horizontal_margin;
+	map_widget(speed_label, "speed_label", speed_label->getSize().x);
+	top_bar->add(speed_label);
+
+	// Slow down button
+	auto slow_down_button = tgui::Button::create("-");
+	slow_down_button->setTextSize(this->widget_text_size_small);
+	slow_down_button->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += slow_down_button->getSize().x + this->widget_horizontal_margin;
+	map_widget(slow_down_button, "aslow_down_button", slow_down_button->getSize().x);
+	top_bar->add(slow_down_button);	
+	
+	// Pause / Resume button
+	auto pause_resume_button = tgui::Button::create(">");
+	pause_resume_button->setTextSize(this->widget_text_size_small);
+	pause_resume_button->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += pause_resume_button->getSize().x + this->widget_horizontal_margin;
+	map_widget(pause_resume_button, "apause_resume_button", pause_resume_button->getSize().x);
+	top_bar->add(pause_resume_button);	
+	
+	// Speed up button
+	auto speed_up_button = tgui::Button::create("+");
+	speed_up_button->setTextSize(this->widget_text_size_small);
+	speed_up_button->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += speed_up_button->getSize().x + this->widget_horizontal_margin;
+	map_widget(speed_up_button, "aspeed_up_button", speed_up_button->getSize().x);
+	top_bar->add(speed_up_button);
+
+	// Reset button
+	auto reset_button = tgui::Button::create("Reset");
+	reset_button->setTextSize(this->widget_text_size_small);
+	reset_button->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += reset_button->getSize().x + this->widget_horizontal_margin;
+	map_widget(reset_button, "areset_button", reset_button->getSize().x);
+	top_bar->add(reset_button);
+
+	// Fit grid button
+	auto fit_grid_button = tgui::Button::create("Fit Grid to View");
+	fit_grid_button->setTextSize(this->widget_text_size_small);
+	fit_grid_button->setPosition(x_offset, this->widget_top_margin);
+
+	x_offset += fit_grid_button->getSize().x + this->widget_horizontal_margin;
+	map_widget(fit_grid_button, "fit_grid_button", fit_grid_button->getSize().x);
+	top_bar->add(fit_grid_button);
+
+	// Add to GUI
+	gui.add(top_bar);
+
+	// Reset labels
+	iteration_label->setText("Iteration: 0");
+	fps_label->setText("FPS: 60");
+	update_widget_positioning();
 }
 
 void UI::initialize_right_panel()

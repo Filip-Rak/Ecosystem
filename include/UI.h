@@ -30,7 +30,7 @@ private:
 	unsigned int widget_text_size_huge = 24u;
 
 	// Top bar
-	tgui::Layout top_bar_vertical_size = 23;
+	tgui::Layout top_bar_vertical_size = 30;
 	tgui::Layout top_bar_vertical_size_with_scroll = 42;
 	tgui::Layout top_bar_horizontal_size = "100%";
 	tgui::Layout widget_vertical_size = 20;
