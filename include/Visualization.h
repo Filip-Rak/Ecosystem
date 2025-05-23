@@ -79,8 +79,9 @@ private:
 	/* Private Methods */
 	void initialize_views();
 	void update_grid_view();
-	void initialize_grid();
+	void compute_grid_positions();
 	float compute_cell_size();
+	void paint_grid_solid(sf::Color color);
 	void center_grid();
 	void detect_clicked_cell();
 	bool is_mouse_in_viewport(sf::View view) const;

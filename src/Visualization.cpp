@@ -18,7 +18,8 @@ Visualization::Visualization(int window_width, int window_height, int grid_width
 	initialize_views();
 	
 	/* Initialize the Automaton Grid*/
-	initialize_grid();
+	compute_grid_positions();
+	paint_grid_solid(sf::Color::Black);
 
 	/* Center the Grid in the Middle of The Screen */
 	center_grid();
@@ -175,7 +176,7 @@ void Visualization::fit_grid_to_view()
 	this->zoom_factor = 1.0f;
 
 	// Recalculate the size of the grid for the screen and center it
-	initialize_grid();
+	compute_grid_positions();
 	center_grid();
 }
 
@@ -238,7 +239,7 @@ void Visualization::update_grid_view()
 	grid_view.zoom(this->zoom_factor);
 }
 
-void Visualization::initialize_grid()
+void Visualization::compute_grid_positions()
 {
 	/* Find the biggest cell_size allowing for full display of the grid within the grid's viewport */
 	this->cell_size = compute_cell_size();
@@ -263,13 +264,6 @@ void Visualization::initialize_grid()
 			grid_vertices[index + 1].position = sf::Vector2f(right, top);
 			grid_vertices[index + 2].position = sf::Vector2f(right, bottom);
 			grid_vertices[index + 3].position = sf::Vector2f(left, bottom);
-
-			// Assign a checkerboard color pattern
-			/*sf::Color color = ((x + y) % 2 == 0) ? sf::Color(255, 255, 255) : sf::Color(0, 0, 0);
-			grid_vertices[index].color = color;
-			grid_vertices[index + 1].color = color;
-			grid_vertices[index + 2].color = color;
-			grid_vertices[index + 3].color = color;*/
 		}
 	}
 }
@@ -292,6 +286,23 @@ float Visualization::compute_cell_size()
 
 	// Pick smaller of the two so the grid fits fully on both X and Y axis
 	return std::min(max_cell_size_x, max_cell_size_y);
+}
+
+void Visualization::paint_grid_solid(sf::Color color)
+{
+	const int cell_num = grid_width * grid_height;
+	const int verts_per_cell = 4;
+
+	// For each cell
+	for (int cell_index = 0; cell_index < cell_num; cell_index++)
+	{
+		// Color each vertice
+		for (int vert_index = 0; vert_index < verts_per_cell; vert_index++)
+		{
+			int vertex_array_index = cell_index * verts_per_cell + vert_index;
+			grid_vertices[vertex_array_index].color = color;
+		}
+	}
 }
 
 void Visualization::center_grid()
