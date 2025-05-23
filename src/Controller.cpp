@@ -5,6 +5,9 @@ Controller::Controller(int window_width, int window_height, int grid_width, int 
 {
 	ui_ptr = &visualization.get_ui();
 	initialize_ui_events();
+
+	// Update the vis with initial automaton
+	visualization.update(automaton.get_grid());
 }
 
 void Controller::run()
