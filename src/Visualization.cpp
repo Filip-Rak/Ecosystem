@@ -105,17 +105,22 @@ void Visualization::process_window_events()
 
 void Visualization::update(const std::vector<bool>& cells)
 {
-	const int verts = 4;
+	const int vert_count = 4;
+	auto& vertices = grid_vertices;
 
 	// Update the visualised grid based on the logical one
+	// #pragma omp parallel for default(none) shared(cells, vert_count, vertices)
 	for (int index = 0; index < cells.size(); index++)
 	{
-		// Modify the vertices
+		// Picke the new color
 		sf::Color new_color = (cells[index]) ? sf::Color::Green : sf::Color(32, 32, 32);
 
-		int index_verts = index * verts;
-		for (int i = 0; i < verts; i++)
-			grid_vertices[index_verts + i].color = new_color;
+		// Assign the new color to verts
+		int index_verts = index * vert_count;
+		vertices[index_verts + 0].color = new_color;
+		vertices[index_verts + 1].color = new_color;
+		vertices[index_verts + 2].color = new_color;
+		vertices[index_verts + 3].color = new_color;
 	}
 }
 

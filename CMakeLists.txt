@@ -36,6 +36,8 @@ FetchContent_MakeAvailable(
 	TGUI
 )
 
+find_package(OpenMP REQUIRED)
+
 # ------------------ Executable ------------------
 add_executable(ecosystem)
 
@@ -58,4 +60,5 @@ target_link_libraries(ecosystem PRIVATE
     sfml-window
     sfml-system
     tgui
+    OpenMP::OpenMP_CXX
 )
