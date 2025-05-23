@@ -3,6 +3,7 @@
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <vector>
+#include <utility>
 
 #include "UI.h"
 #include "Utils.h"
@@ -33,8 +34,8 @@ private:
 	// Grid
 	int grid_width;
 	int grid_height;
-	sf::VertexArray grid_vertices;
 	float cell_size;
+	sf::VertexArray grid_vertices;
 	std::pair<int, int> last_clicked_cords = { -1, -1 };
 
 	// Movement
@@ -79,6 +80,7 @@ private:
 	void initialize_views();
 	void update_grid_view();
 	void initialize_grid();
+	float compute_cell_size();
 	void center_grid();
 	void detect_clicked_cell();
 	bool is_mouse_in_viewport(sf::View view) const;

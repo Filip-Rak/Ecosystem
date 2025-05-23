@@ -241,21 +241,7 @@ void Visualization::update_grid_view()
 void Visualization::initialize_grid()
 {
 	/* Find the biggest cell_size allowing for full display of the grid within the grid's viewport */
-	float window_width = this->main_window.getSize().x;
-	float window_height = this->main_window.getSize().y;
-
-	float top_offset = ui.get_menu_bar_vertical_size();
-	float width_ratio = 1.f - ui.get_right_panel_x_window_share();
-	float height_ratio = (float)(window_height - top_offset) / window_height;
-
-	float pixel_width = window_width * width_ratio;
-	float pixel_height = window_height * height_ratio;
-
-	float max_cell_size_x = pixel_width / float(grid_width);
-	float max_cell_size_y = pixel_height / float(grid_height);
-
-	// Pick smaller of the two so the grid fits fully on both X and Y axis
-	this->cell_size = (max_cell_size_x < max_cell_size_y) ? max_cell_size_x : max_cell_size_y;
+	this->cell_size = compute_cell_size();
 
 	/* Create the vertices of the grid */
 	grid_vertices.setPrimitiveType(sf::Quads);
@@ -279,13 +265,33 @@ void Visualization::initialize_grid()
 			grid_vertices[index + 3].position = sf::Vector2f(left, bottom);
 
 			// Assign a checkerboard color pattern
-			sf::Color color = ((x + y) % 2 == 0) ? sf::Color(255, 255, 255) : sf::Color(0, 0, 0);
+			/*sf::Color color = ((x + y) % 2 == 0) ? sf::Color(255, 255, 255) : sf::Color(0, 0, 0);
 			grid_vertices[index].color = color;
 			grid_vertices[index + 1].color = color;
 			grid_vertices[index + 2].color = color;
-			grid_vertices[index + 3].color = color;
+			grid_vertices[index + 3].color = color;*/
 		}
 	}
+}
+
+float Visualization::compute_cell_size()
+{
+	/* Find the biggest cell_size allowing for full display of the grid within the grid's viewport */
+	float window_width = this->main_window.getSize().x;
+	float window_height = this->main_window.getSize().y;
+
+	float top_offset = ui.get_menu_bar_vertical_size();
+	float width_ratio = 1.f - ui.get_right_panel_x_window_share();
+	float height_ratio = (float)(window_height - top_offset) / window_height;
+
+	float pixel_width = window_width * width_ratio;
+	float pixel_height = window_height * height_ratio;
+
+	float max_cell_size_x = pixel_width / float(grid_width);
+	float max_cell_size_y = pixel_height / float(grid_height);
+
+	// Pick smaller of the two so the grid fits fully on both X and Y axis
+	return std::min(max_cell_size_x, max_cell_size_y);
 }
 
 void Visualization::center_grid()
