@@ -112,7 +112,7 @@ void Visualization::update(const std::vector<bool>& cells)
 	// #pragma omp parallel for default(none) shared(cells, vert_count, vertices)
 	for (int index = 0; index < cells.size(); index++)
 	{
-		// Picke the new color
+		// Pick the new color
 		sf::Color new_color = (cells[index]) ? sf::Color::Green : sf::Color(32, 32, 32);
 
 		// Assign the new color to verts

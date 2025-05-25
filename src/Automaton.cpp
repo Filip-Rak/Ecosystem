@@ -39,7 +39,7 @@ void Automaton::update()
 
 void Automaton::modify_cell(int x, int y)
 {
-    std::cout << "Modify: " << x << " " << y << "\n";
+    std::cout << "Activate: " << x << " " << y << "\n";
 
     int index = y * width + x;
     grid[index] = true;

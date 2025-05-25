@@ -13,8 +13,8 @@ private:
 	int width, height;
 
 	// Components
-	std::vector<bool> grid;
-	std::vector<bool> grid_buffer;
+	std::vector<bool> grid;			// Row-major. The gir cells
+	std::vector<bool> grid_buffer;	// Row major. Buffer for next update
 
 public:
 	/* Constructor & Destructor */

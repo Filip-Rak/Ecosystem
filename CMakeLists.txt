@@ -48,6 +48,7 @@ target_sources(ecosystem PRIVATE
     ${SOURCE_DIR}/UI.cpp
     ${SOURCE_DIR}/Utils.cpp
     ${SOURCE_DIR}/Visualization.cpp
+    ${SOURCE_DIR}/Cell.cpp
 )
 
 target_include_directories(ecosystem PRIVATE 
