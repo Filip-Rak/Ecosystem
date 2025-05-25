@@ -2,9 +2,12 @@
 
 #include <vector>
 
+#include "Cell.h"
+
 // Testing
 #include <iostream>
 #include <ctime>
+#include <random>
 
 class Automaton
 {
@@ -13,8 +16,7 @@ private:
 	int width, height;
 
 	// Components
-	std::vector<bool> grid;			// Row-major. The gir cells
-	std::vector<bool> grid_buffer;	// Row major. Buffer for next update
+	std::vector<Cell> grid_cells;	// Row-major
 
 public:
 	/* Constructor & Destructor */
@@ -27,10 +29,9 @@ public:
 	void modify_cell(int x, int y);
 
 	/* Getters */
-	const std::vector<bool>& get_grid() const;
+	const std::vector<Cell>& get_grid() const;
 
 private:
 	/* Private Methods */
 	void initialize_grid();
-	int active_neighbors(int x, int y);
 };

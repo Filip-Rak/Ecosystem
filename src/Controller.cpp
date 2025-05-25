@@ -152,6 +152,7 @@ void Controller::initialize_ui_events()
 	auto speed_up_button = ui_ptr->get_widget_as<tgui::Button>("speed_up_button");
 	auto slow_down_button = ui_ptr->get_widget_as<tgui::Button>("slow_down_button");
 	auto pause_button = ui_ptr->get_widget_as<tgui::Button>("pause_resume_button");
+	auto reset_button = ui_ptr->get_widget_as<tgui::Button>("reset_button");
 	auto fit_grid_button = ui_ptr->get_widget_as<tgui::Button>("fit_grid_button");
 
 	/* Initialize Certain Widgets with Data from Controller */
@@ -189,5 +190,10 @@ void Controller::initialize_ui_events()
 	fit_grid_button->onClick([this] 
 		{
 			visualization.fit_grid_to_view();
+		});
+
+	reset_button->onClick([this]
+		{
+			automaton.reset();
 		});
 }

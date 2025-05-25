@@ -7,6 +7,7 @@
 
 #include "UI.h"
 #include "Utils.h"
+#include "Cell.h"
 
 // Testing
 #include <iostream>
@@ -61,7 +62,7 @@ public:
 	/* Public Methods */
 	void clear();
 	void process_window_events();
-	void update(const std::vector<bool>& cells);
+	void update(const std::vector<Cell>& cells);
 	void draw_grid();
 	void draw_ui();
 	void display();

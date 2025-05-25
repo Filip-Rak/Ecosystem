@@ -3,8 +3,7 @@
 Automaton::Automaton(int width, int height)
 	: width(width), height(height)
 {
-	grid.reserve(width * height);
-	grid_buffer.resize(width * height);
+	grid_cells.reserve(width * height);
     initialize_grid();
 }
 
@@ -14,72 +13,42 @@ Automaton::~Automaton()
 
 void Automaton::reset()
 {
+    std::cout << "Called Automaton::reset()\n";
 }
 
 void Automaton::update()
 {
-    for (int y = 0; y < height; y++)
+    for (int i = 0; i < grid_cells.size(); i++)
     {
-        for (int x = 0; x < width; x++)
-        {
-            int index = y * width + x;
-            bool alive = grid[index];
-            int neighbors = active_neighbors(x, y);
-
-            // Apply Game of Life rules
-            if (alive)
-                grid_buffer[index] = (neighbors == 2 || neighbors == 3);
-            else
-                grid_buffer[index] = (neighbors == 3);
-        }
+        grid_cells[i].process();
     }
-
-    std::swap(grid, grid_buffer);
 }
 
 void Automaton::modify_cell(int x, int y)
 {
-    std::cout << "Activate: " << x << " " << y << "\n";
-
-    int index = y * width + x;
-    grid[index] = true;
+    std::cout << "called Automaton::modify_cell(" << x << ", " << y << ")\n";
 }
 
-const std::vector<bool>& Automaton::get_grid() const
+const std::vector<Cell>& Automaton::get_grid() const
 {
-    return grid;
+    return grid_cells;
 }
 
 void Automaton::initialize_grid()
 {
-    srand(time(NULL));
-    for (std::size_t i = 0; i < width * height; ++i)
+    // Only basic intiialization for testing
+
+    std::mt19937 rng(std::random_device{}());
+    std::uniform_real_distribution<float> temp_dist(-30.0f, 50.0f);
+    std::uniform_real_distribution<float> humid_dist(0.0f, 1.0f);
+    std::uniform_real_distribution<float> elev_dist(0.0f, 3000.0f);
+
+    for (int i = 0; i < width * height; i++)
     {
-        if (rand() % 10 == 0)
-            grid.push_back(true);
-        else 
-            grid.push_back(false);
+        float temp = temp_dist(rng);
+        float humidity = humid_dist(rng);
+        float elevation = elev_dist(rng);
+
+        grid_cells.emplace_back(temp, humidity, elevation);
     }
-}
-
-int Automaton::active_neighbors(int x, int y)
-{
-    int count = 0;
-
-    for (int dy = -1; dy <= 1; ++dy)
-    {
-        for (int dx = -1; dx <= 1; ++dx)
-        {
-            if (dx == 0 && dy == 0)
-                continue; // skip the center cell
-
-            int nx = (x + dx + width) % width;
-            int ny = (y + dy + height) % height;
-
-            int neighbor_index = ny * width + nx;
-            count += grid[neighbor_index]; // true = 1, false = 0
-        }
-    }
-
-    return count;
 }

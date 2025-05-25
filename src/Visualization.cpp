@@ -103,7 +103,7 @@ void Visualization::process_window_events()
 	}
 }
 
-void Visualization::update(const std::vector<bool>& cells)
+void Visualization::update(const std::vector<Cell>& cells)
 {
 	const int vert_count = 4;
 	auto& vertices = grid_vertices;
@@ -112,8 +112,14 @@ void Visualization::update(const std::vector<bool>& cells)
 	// #pragma omp parallel for default(none) shared(cells, vert_count, vertices)
 	for (int index = 0; index < cells.size(); index++)
 	{
-		// Pick the new color
-		sf::Color new_color = (cells[index]) ? sf::Color::Green : sf::Color(32, 32, 32);
+		// Value between 0 and 100
+		float intensity = cells[index].get_vegetation();
+
+		// Clamp and scale intensity to 0-255 for green channel
+		uint8_t green_value = static_cast<uint8_t>(std::clamp(intensity, 0.f, 100.f) * 2.55f);
+
+		// Create the new color with varying green intensity
+		sf::Color new_color(0, green_value, 0);
 
 		// Assign the new color to verts
 		int index_verts = index * vert_count;
