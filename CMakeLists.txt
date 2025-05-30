@@ -53,6 +53,7 @@ target_sources(ecosystem PRIVATE
 
 target_include_directories(ecosystem PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/config
     ${tgui_SOURCE_DIR}/include
 )
 

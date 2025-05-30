@@ -8,6 +8,7 @@
 #include "UI.h"
 #include "Utils.h"
 #include "Cell.h"
+#include "CellConfig.h"
 
 // Testing
 #include <iostream>

@@ -34,7 +34,6 @@ private:
 	int speed_change_fast = 20;
 	int speed_change_slow = 1;
 
-
 public:
 	// Constructor
 	Controller(int window_width, int window_height, int grid_width, int grid_height);

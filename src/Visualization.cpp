@@ -112,11 +112,12 @@ void Visualization::update(const std::vector<Cell>& cells)
 	// #pragma omp parallel for default(none) shared(cells, vert_count, vertices)
 	for (int index = 0; index < cells.size(); index++)
 	{
-		// Value between 0 and 100
+		// Value between 0 and 1
 		float intensity = cells[index].get_vegetation();
 
 		// Clamp and scale intensity to 0-255 for green channel
-		uint8_t green_value = static_cast<uint8_t>(std::clamp(intensity, 0.f, 100.f) * 2.55f);
+		float color_multiplier = 255.f / CellConfig::VEG_BASE_GROWTH_MAX;
+		uint8_t green_value = static_cast<uint8_t>(intensity * color_multiplier);
 
 		// Create the new color with varying green intensity
 		sf::Color new_color(0, green_value, 0);
