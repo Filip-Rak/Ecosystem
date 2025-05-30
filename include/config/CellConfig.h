@@ -17,18 +17,18 @@ struct CellConfig
     inline static constexpr float MAX_ELEVATION = 1.0f;
 
     /* Vegetation & Growth */
-    inline static constexpr float VEG_BASE_GROWTH_FACTOR = 0.02f;
+    inline static constexpr float VEG_BASE_GROWTH_FACTOR = 0.005f;
     inline static constexpr float VEG_BASE_GROWTH_MAX = 1.0f;
 
     // Temperature
     inline static constexpr float VEG_TEMP_IDEAL = 0.5f;
-    inline static constexpr float VEG_TEMP_PENALTY = 2.0f;
+    inline static constexpr float VEG_TEMP_PENALTY = 3.0f;
 
     // Humidity
     inline static constexpr float VEG_HUMIDITY_IDEAL = 0.5f;
-    inline static constexpr float VEG_HUMIDITY_PENALTY = 2.f;    
+    inline static constexpr float VEG_HUMIDITY_PENALTY = 3.0f;    
     
     // Elevation
-    inline static constexpr float VEG_ELEVATION_MAX = 0.8f;
+    inline static constexpr float VEG_ELEVATION_MAX = 0.95f;
     inline static constexpr float VEG_ELEVATION_PENALTY = 6.f;
 };
