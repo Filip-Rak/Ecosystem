@@ -36,7 +36,7 @@ namespace VisModeConfig
                 return val;
         }
 
-        throw std::invalid_argument("VisModeConfig::to_string: Unknown VisMode value");
+        throw std::invalid_argument("VisModeConfig::to_string(VisMode) -> Unmapped VisMode value");
     }
 
     // Convert string to enum
@@ -48,6 +48,6 @@ namespace VisModeConfig
                 return key;
         }
 
-        throw std::invalid_argument("VisModeConfig::to_vis_mode: Unknown string \"" + str + "\"");
+        throw std::invalid_argument("VisModeConfig::to_vis_mode(const std::string&) -> Unmapped string: " + str);
     }
 }
