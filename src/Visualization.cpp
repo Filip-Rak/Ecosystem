@@ -9,7 +9,7 @@ Visualization::Visualization(int window_width, int window_height, int grid_width
 	grid_height(grid_height)
 {
 	// Window title is stored within the header file
-	main_window.setTitle(window_title);
+	main_window.setTitle(VisualizationConfig::WINDOW_TITLE);
 
 	/* Set up UI widgets */
 	ui.initialize();
@@ -67,14 +67,14 @@ void Visualization::process_window_events()
 			if (!is_mouse_in_viewport(grid_view)) return;
 
 			// Start the grid drag
-			if (event.mouseButton.button == MOUSE_DRAG_BUTTON)
+			if (event.mouseButton.button == VisualizationConfig::MOUSE_DRAG_BUTTON)
 			{
 				this->is_dragging = true;
 				this->last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
 			}
 
 			// Mouse cell selection
-			else if (event.mouseButton.button == MOUSE_CELL_SELECT_BUTTON)
+			else if (event.mouseButton.button == VisualizationConfig::MOUSE_CELL_SELECT_BUTTON)
 			{
 				// Start the clock for click -> hold
 				mouse_held_clock.restart();
@@ -83,18 +83,18 @@ void Visualization::process_window_events()
 		else if (event.type == sf::Event::MouseButtonReleased)
 		{
 			// End the grid drag 
-			if (event.mouseButton.button == MOUSE_DRAG_BUTTON)
+			if (event.mouseButton.button == VisualizationConfig::MOUSE_DRAG_BUTTON)
 			{
 				this->is_dragging = false;
 			}
 
 			// Recognize a click or a hold
-			else if (event.mouseButton.button == MOUSE_CELL_SELECT_BUTTON)
+			else if (event.mouseButton.button == VisualizationConfig::MOUSE_CELL_SELECT_BUTTON)
 			{
 				// Check how long was the mouse held. If too long, do not count the click
 				float time_held = mouse_held_clock.restart().asSeconds();
 
-				if (time_held <= this->mouse_is_held_threshold)
+				if (time_held <= VisualizationConfig::MOUSE_IS_HELD_THRESHOLD)
 				{
 					detect_clicked_cell();
 				}
@@ -154,10 +154,10 @@ void Visualization::handle_camera_movement(float delta_time)
 	sf::Vector2f offset(0.f, 0.f);
 
 	// Read input from keyboard
-	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_UP_KEY)) offset.y += this->camera_movement_speed;
-	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_DOWN_KEY)) offset.x += this->camera_movement_speed;
-	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_LEFT_KEY)) offset.y -= this->camera_movement_speed;
-	if (sf::Keyboard::isKeyPressed(this->MOVEMENT_RIGHT_KEY)) offset.x -= this->camera_movement_speed;
+	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_UP_KEY)) offset.y += VisualizationConfig::CAMERA_MOVEMENT_SPEED;
+	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_LEFT_KEY)) offset.x += VisualizationConfig::CAMERA_MOVEMENT_SPEED;
+	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_DOWN_KEY)) offset.y -= VisualizationConfig::CAMERA_MOVEMENT_SPEED;
+	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_RIGHT_KEY)) offset.x -= VisualizationConfig::CAMERA_MOVEMENT_SPEED;
 
 	// Apply delta time to offset and move the center of the grid
 	offset *= delta_time;
@@ -379,11 +379,11 @@ void Visualization::handle_camera_zoom(sf::Event event)
 	float change = 0.f;
 	if (event.mouseWheelScroll.delta > 0) // Scroll up = Zoom in
 	{
-		change = (1.f - this->zoom_step);
+		change = (1.f - VisualizationConfig::ZOOM_STEP);
 	}
 	else if (event.mouseWheelScroll.delta < 0) // Scroll down = Zoom out
 	{
-		change = (1.f + this->zoom_step);
+		change = (1.f + VisualizationConfig::ZOOM_STEP);
 	}
 
 	// Save and apply the zoom value

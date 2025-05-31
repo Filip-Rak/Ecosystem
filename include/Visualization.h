@@ -9,6 +9,7 @@
 #include "Utils.h"
 #include "Cell.h"
 #include "CellConfig.h"
+#include "VisualizationConfig.h"
 
 // Testing
 #include <iostream>
@@ -27,10 +28,8 @@ private:
 	sf::View ui_view;   // Static view for UI
 
 	// Window
-	std::string window_title = "Ecosystem";
 	sf::Vector2f last_mouse_pos;
 	sf::Clock mouse_held_clock;
-	float mouse_is_held_threshold = 0.15f;
 	bool is_dragging = false;
 
 	// Grid
@@ -42,18 +41,6 @@ private:
 
 	// Camera movement
 	float zoom_factor = 1.0f;
-	float zoom_step = 0.1f;
-	float zoom_min = 0.25f;
-	float zoom_max = 2.5f;
-	float camera_movement_speed = 50.f;
-
-	// Key bindings
-	const sf::Keyboard::Key MOVEMENT_UP_KEY = sf::Keyboard::W;
-	const sf::Keyboard::Key MOVEMENT_DOWN_KEY = sf::Keyboard::A;
-	const sf::Keyboard::Key MOVEMENT_LEFT_KEY = sf::Keyboard::S;
-	const sf::Keyboard::Key MOVEMENT_RIGHT_KEY = sf::Keyboard::D;
-	const sf::Mouse::Button MOUSE_CELL_SELECT_BUTTON = sf::Mouse::Left;
-	const sf::Mouse::Button MOUSE_DRAG_BUTTON = sf::Mouse::Middle;
 
 public:
 	/* Constructor */
