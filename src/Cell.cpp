@@ -8,8 +8,8 @@ Cell::Cell(float temperature, float humidity, float elevation, float vegetation)
 
 void Cell::process()
 {
-	vegetation += growth_factor;
-	if (vegetation > growth_limit) vegetation = growth_limit;
+	// Increase the vegetation
+	vegetation = std::min(vegetation + growth_factor, growth_limit);
 }
 
 void Cell::update_growth_parameters()

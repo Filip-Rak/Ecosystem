@@ -40,7 +40,7 @@ private:
 	sf::VertexArray grid_vertices;
 	std::pair<int, int> last_clicked_cords = { -1, -1 };
 
-	// Movement
+	// Camera movement
 	float zoom_factor = 1.0f;
 	float zoom_step = 0.1f;
 	float zoom_min = 0.25f;
