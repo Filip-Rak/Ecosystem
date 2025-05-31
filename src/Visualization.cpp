@@ -108,20 +108,49 @@ void Visualization::update(const std::vector<Cell>& cells)
 	switch (grid_vis_mode)
 	{
 		case VisualizationConfig::VisMode::Temperature:
-			draw_for_temperature(cells);
-			break;
+		{
+			auto property_getter = &Cell::get_temperature;
+			float min_val = CellConfig::MIN_TEMP;
+			float max_val = CellConfig::MAX_TEMP;
+			sf::Color low_end_color = sf::Color::Blue;
+			sf::Color high_end_color = sf::Color::Red;
 
+			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
+			break;
+		}
 		case VisualizationConfig::VisMode::Humidity:
-			draw_for_humidity(cells);
-			break;
+		{
+			auto property_getter = &Cell::get_humidity;
+			float min_val = CellConfig::MIN_HUMIDITY;
+			float max_val = CellConfig::MAX_HUMIDITY;
+			sf::Color low_end_color(139, 69, 19);
+			sf::Color high_end_color(0, 120, 255);
 
+			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
+			break;
+		}
 		case VisualizationConfig::VisMode::Elevation:
-			draw_for_elevation(cells);
-			break;
+		{
+			auto property_getter = &Cell::get_elevation;
+			float min_val = CellConfig::MIN_ELEVATION;
+			float max_val = CellConfig::MAX_ELEVATION;
+			sf::Color low_end_color(0, 255, 0);
+			sf::Color high_end_color(139, 69, 19);
 
-		case VisualizationConfig::VisMode::Vegetation:
-			draw_for_vegetation(cells);
+			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
 			break;
+		}
+		case VisualizationConfig::VisMode::Vegetation:
+		{
+			auto property_getter = &Cell::get_vegetation;
+			float min_val = 0;
+			float max_val = CellConfig::VEG_BASE_GROWTH_MAX;
+			sf::Color low_end_color(255, 255, 255);
+			sf::Color high_end_color(0, 255, 0);
+
+			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
+			break;
+		}
 	}
 }
 
@@ -398,94 +427,25 @@ sf::Color Visualization::lerp_colors(const sf::Color& start, const sf::Color& en
 	);
 }
 
-void Visualization::draw_for_temperature(const std::vector<Cell>& cells)
+void Visualization::draw_property_as_color(
+	const std::vector<Cell>& cells,
+	float (Cell::* property_getter)() const,
+	const float min_val,
+	const float max_val,
+	const sf::Color& low_color,
+	const sf::Color& high_color
+)
 {
-	const sf::Color cold_color = sf::Color::Blue;
-	const sf::Color hot_color = sf::Color::Red;
-
-	const float norm_offset = CellConfig::MIN_TEMP;
-	const float norm_multiplier = 1.0f / (CellConfig::MAX_TEMP - CellConfig::MIN_TEMP);
+	const float norm_multiplier = 1.0f / (max_val - min_val);
 
 	// Loop through each logical Cell
 	for (int index = 0; index < cells.size(); index++)
 	{
 		// Pick a color between two extremes
-		float normalized_temp = (cells[index].get_temperature() - norm_offset) * norm_multiplier;
-		sf::Color new_color = lerp_colors(cold_color, hot_color, normalized_temp);
+		float normalized_temp = (cells[index].get_temperature() - min_val) * norm_multiplier;
+		sf::Color new_color = lerp_colors(low_color, high_color, normalized_temp);
 
 		// Apply new color
-		int index_verts = index * VisualizationConfig::VERTS_PER_CELL;
-		grid_vertices[index_verts + 0].color = new_color;
-		grid_vertices[index_verts + 1].color = new_color;
-		grid_vertices[index_verts + 2].color = new_color;
-		grid_vertices[index_verts + 3].color = new_color;
-	}
-}
-
-void Visualization::draw_for_humidity(const std::vector<Cell>& cells)
-{
-	sf::Color dry_color(139, 69, 19);   // Saddle brown
-	sf::Color wet_color(0, 120, 255);   // Light blue
-
-	const float norm_offset = CellConfig::MIN_HUMIDITY;
-	const float norm_multiplier = 1.0f / (CellConfig::MAX_HUMIDITY - CellConfig::MIN_HUMIDITY);
-
-	// Loop through each logical Cell
-	for (int index = 0; index < cells.size(); index++)
-	{
-		// Pick a color between two extremes
-		float normalized_humidity = (cells[index].get_humidity() - norm_offset) * norm_multiplier;
-		sf::Color new_color = lerp_colors(dry_color, wet_color, normalized_humidity);
-
-		// Apply new color
-		int index_verts = index * VisualizationConfig::VERTS_PER_CELL;
-		grid_vertices[index_verts + 0].color = new_color;
-		grid_vertices[index_verts + 1].color = new_color;
-		grid_vertices[index_verts + 2].color = new_color;
-		grid_vertices[index_verts + 3].color = new_color;
-	}
-}
-
-void Visualization::draw_for_elevation(const std::vector<Cell>& cells)
-{
-	sf::Color lowland_color(0, 255, 0);		// Green
-	sf::Color highland_color(139, 69, 19);	// Saddle Brown
-
-	const float norm_offset = CellConfig::MIN_ELEVATION;
-	const float norm_multiplier = 1.0f / (CellConfig::MAX_ELEVATION - CellConfig::MIN_ELEVATION);
-
-	// Loop through each logical Cell
-	for (int index = 0; index < cells.size(); index++)
-	{
-		// Pick a color between two extremes
-		float normalized_elevation = (cells[index].get_elevation() - norm_offset) * norm_multiplier;
-		sf::Color new_color = lerp_colors(lowland_color, highland_color, normalized_elevation);
-
-		// Apply new color
-		int index_verts = index * VisualizationConfig::VERTS_PER_CELL;
-		grid_vertices[index_verts + 0].color = new_color;
-		grid_vertices[index_verts + 1].color = new_color;
-		grid_vertices[index_verts + 2].color = new_color;
-		grid_vertices[index_verts + 3].color = new_color;
-	}
-}
-
-void Visualization::draw_for_vegetation(const std::vector<Cell>& cells)
-{
-	// #pragma omp parallel for default(none) shared(cells, VisualizationConfig::VERTS_PER_CELL, grid_vertices)
-	for (int index = 0; index < cells.size(); index++)
-	{
-		// Value between 0 and 1
-		float intensity = cells[index].get_vegetation();
-
-		// Clamp and scale intensity to 0-255 for green channel
-		float color_multiplier = 255.f / CellConfig::VEG_BASE_GROWTH_MAX;
-		uint8_t green_value = static_cast<uint8_t>(intensity * color_multiplier);
-
-		// Create the new color with varying green intensity
-		sf::Color new_color(0, green_value, 0);
-
-		// Assign the new color to verts
 		int index_verts = index * VisualizationConfig::VERTS_PER_CELL;
 		grid_vertices[index_verts + 0].color = new_color;
 		grid_vertices[index_verts + 1].color = new_color;

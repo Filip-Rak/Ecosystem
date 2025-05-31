@@ -37,7 +37,7 @@ private:
 	int grid_height;
 	float cell_size;
 	sf::VertexArray grid_vertices;
-	VisualizationConfig::VisMode grid_vis_mode = VisualizationConfig::VisMode::Elevation;
+	VisualizationConfig::VisMode grid_vis_mode = VisualizationConfig::VisMode::Vegetation;
 	std::pair<int, int> last_clicked_cords = { -1, -1 };
 
 	// Camera movement
@@ -78,9 +78,13 @@ private:
 	void handle_camera_zoom(sf::Event event);
 	sf::Color lerp_colors(const sf::Color& start, const sf::Color& end, float t) const;
 
-	// Drawing functions for each VisMode
-	void draw_for_temperature(const std::vector<Cell>& cells);
-	void draw_for_humidity(const std::vector<Cell>& cells);
-	void draw_for_elevation(const std::vector<Cell>& cells);
-	void draw_for_vegetation(const std::vector<Cell>& cells);
+	// Drawing functions for VisModes
+	void draw_property_as_color(
+		const std::vector<Cell>& cells, 
+		float (Cell::* property_getter)() const, 
+		const float min_val,
+		const float max_val,
+		const sf::Color& low_color, 
+		const sf::Color& high_color
+	);
 };
