@@ -181,12 +181,12 @@ void UI::initialize_right_panel()
 	view_mode_label->setText("VIEW MODE");
 	view_mode_label->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
 	view_mode_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
-	set_scalable_text_size(view_mode_label, this->widget_text_size_big);
+	set_scalable_text_size(view_mode_label, this->widget_text_size_big - 1u);
 	vertical_layout->add(view_mode_label, 0.04f);
 
 	// Create view_mode_combo_box
 	auto view_mode_combo_box = tgui::ComboBox::create();
-	set_scalable_text_size(view_mode_combo_box, this->widget_text_size_medium);
+	set_scalable_text_size(view_mode_combo_box, this->widget_text_size_medium - 1u);
 	vertical_layout->add(view_mode_combo_box, 0.04f);
 	map_widget(view_mode_combo_box, "view_mode_combo_box");
 	vertical_layout->addSpace(0.02f);

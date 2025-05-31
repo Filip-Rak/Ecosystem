@@ -458,7 +458,8 @@ void Visualization::draw_property_as_color(
 	for (int index = 0; index < cells.size(); index++)
 	{
 		// Pick a color between two extremes
-		float normalized_temp = (cells[index].get_temperature() - min_val) * norm_multiplier;
+		float value = (cells[index].*property_getter)();
+		float normalized_temp = (value - min_val) * norm_multiplier;
 		sf::Color new_color = lerp_colors(low_color, high_color, normalized_temp);
 
 		// Apply new color
