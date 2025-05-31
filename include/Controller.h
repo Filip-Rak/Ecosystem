@@ -3,7 +3,6 @@
 #include "Visualization.h"
 #include "Automaton.h"
 #include "Automaton.h"
-#include "Utils.h"
 #include "ControllerConfig.h"
 
 // #include <iostream>

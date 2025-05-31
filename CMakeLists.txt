@@ -46,7 +46,6 @@ target_sources(ecosystem PRIVATE
     ${SOURCE_DIR}/Automaton.cpp
     ${SOURCE_DIR}/Controller.cpp
     ${SOURCE_DIR}/UI.cpp
-    ${SOURCE_DIR}/Utils.cpp
     ${SOURCE_DIR}/Visualization.cpp
     ${SOURCE_DIR}/Cell.cpp
 )

@@ -129,7 +129,7 @@ void Controller::change_update_speed(int direction)
 
 	// Update speed and it's properties
 	int new_speed = this->updates_per_second + change * direction;
-	new_speed = Utils::clamp<int>(new_speed, ControllerConfig::MIN_SIM_SPEED, ControllerConfig::MAX_SIM_SPEED);
+	new_speed = std::clamp(new_speed, ControllerConfig::MIN_SIM_SPEED, ControllerConfig::MAX_SIM_SPEED);
 
 	this->updates_per_second = new_speed;
 	this->update_interval = 1.f / (float)updates_per_second;
