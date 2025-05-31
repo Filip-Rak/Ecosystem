@@ -5,9 +5,10 @@
 #include <utility>
 #include <string>
 
+#include "VisModeConfig.h"
+
 // Testing
 #include <ctime>
-#include <iostream>
 
 class UI
 {

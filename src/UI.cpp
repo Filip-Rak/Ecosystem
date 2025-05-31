@@ -175,6 +175,39 @@ void UI::initialize_right_panel()
 	right_panel->add(vertical_layout);
 
 	/* Fill Right Panel with Widgets */
+
+	// Create View Mode label
+	auto view_mode_label = tgui::Label::create();
+	view_mode_label->setText("VIEW MODE");
+	view_mode_label->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+	view_mode_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
+	set_scalable_text_size(view_mode_label, this->widget_text_size_big);
+	vertical_layout->add(view_mode_label, 0.04f);
+
+	// Create view_mode_combo_box
+	auto view_mode_combo_box = tgui::ComboBox::create();
+	set_scalable_text_size(view_mode_combo_box, this->widget_text_size_medium);
+	vertical_layout->add(view_mode_combo_box, 0.04f);
+	map_widget(view_mode_combo_box, "view_mode_combo_box");
+	vertical_layout->addSpace(0.02f);
+
+	// Add entries to view mode combo box
+	for (const auto& [_, name] : VisModeConfig::vis_mode_pairs)
+	{
+		view_mode_combo_box->addItem(name);
+	}
+
+	try
+	{
+		tgui::String default_selection = VisModeConfig::to_string(VisModeConfig::DEFAULT_MODE);
+		view_mode_combo_box->setSelectedItem(default_selection);
+	}
+	catch (std::exception ex)
+	{
+		std::cerr << "Exception at UI::initialize_right_panel() -> " << ex.what() << "\n";
+		view_mode_combo_box->setSelectedItemByIndex(0);
+	}
+
 	// Add a title label at the top of the right panel
 	auto title_label = tgui::Label::create(this->right_panel_title_text);
 	title_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);

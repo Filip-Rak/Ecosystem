@@ -154,6 +154,7 @@ void Controller::initialize_ui_events()
 	auto pause_button = ui_ptr->get_widget_as<tgui::Button>("pause_resume_button");
 	auto reset_button = ui_ptr->get_widget_as<tgui::Button>("reset_button");
 	auto fit_grid_button = ui_ptr->get_widget_as<tgui::Button>("fit_grid_button");
+	auto view_mode_combo_box = ui_ptr->get_widget_as<tgui::ComboBox>("view_mode_combo_box");
 
 	/* Initialize Certain Widgets with Data from Controller */
 	this->ui_ptr->update_speed_label(this->updates_per_second);
@@ -195,5 +196,15 @@ void Controller::initialize_ui_events()
 	reset_button->onClick([this]
 		{
 			automaton.reset();
+		});
+
+	view_mode_combo_box->onItemSelect([this](const tgui::String& item)
+		{
+			// Set vis's view mode
+			visualization.set_view_mode(item.toStdString());
+
+			// Run manual update if paused
+			if (sim_paused) 
+				visualization.update(automaton.get_grid());
 		});
 }

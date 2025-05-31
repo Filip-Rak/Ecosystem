@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <stdexcept>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 
@@ -9,16 +10,8 @@ namespace VisualizationConfig
 	/* Window */
 	inline const std::string WINDOW_TITLE = "Ecosystem";
 
-	/* Vsiuals */
+	/* Visuals */
 	inline constexpr int VERTS_PER_CELL = 4;
-
-	enum class VisMode 
-	{
-		Temperature,
-		Humidity,
-		Elevation,
-		Vegetation
-	};
 
 	/* Controls */
 

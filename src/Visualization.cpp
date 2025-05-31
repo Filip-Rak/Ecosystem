@@ -105,9 +105,11 @@ void Visualization::process_window_events()
 
 void Visualization::update(const std::vector<Cell>& cells)
 {
+	// Update the grid based on the mode
 	switch (grid_vis_mode)
 	{
-		case VisualizationConfig::VisMode::Temperature:
+		// Trivial modes
+		case VisModeConfig::VisMode::Temperature:
 		{
 			auto property_getter = &Cell::get_temperature;
 			float min_val = CellConfig::MIN_TEMP;
@@ -118,7 +120,7 @@ void Visualization::update(const std::vector<Cell>& cells)
 			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
 			break;
 		}
-		case VisualizationConfig::VisMode::Humidity:
+		case VisModeConfig::VisMode::Humidity:
 		{
 			auto property_getter = &Cell::get_humidity;
 			float min_val = CellConfig::MIN_HUMIDITY;
@@ -129,7 +131,7 @@ void Visualization::update(const std::vector<Cell>& cells)
 			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
 			break;
 		}
-		case VisualizationConfig::VisMode::Elevation:
+		case VisModeConfig::VisMode::Elevation:
 		{
 			auto property_getter = &Cell::get_elevation;
 			float min_val = CellConfig::MIN_ELEVATION;
@@ -140,7 +142,7 @@ void Visualization::update(const std::vector<Cell>& cells)
 			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
 			break;
 		}
-		case VisualizationConfig::VisMode::Vegetation:
+		case VisModeConfig::VisMode::Vegetation:
 		{
 			auto property_getter = &Cell::get_vegetation;
 			float min_val = 0;
@@ -151,6 +153,8 @@ void Visualization::update(const std::vector<Cell>& cells)
 			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
 			break;
 		}
+
+		// Non-trivial modes
 	}
 }
 
@@ -213,6 +217,18 @@ void Visualization::fit_grid_to_view()
 	// Recalculate the size of the grid for the screen and center it
 	compute_grid_positions();
 	center_grid();
+}
+
+void Visualization::set_view_mode(std::string mode_name)
+{
+	try
+	{
+		grid_vis_mode =  VisModeConfig::to_vis_mode(mode_name);
+	}
+	catch (std::exception ex)
+	{
+		std::cerr << "Exception at Visualization::set_view_mode(std::string mode_name) -> " << ex.what() << "\n";
+	}
 }
 
 /* Getters */

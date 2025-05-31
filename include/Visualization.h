@@ -10,9 +10,7 @@
 #include "Cell.h"
 #include "CellConfig.h"
 #include "VisualizationConfig.h"
-
-// Testing
-#include <iostream>
+#include "VisModeConfig.h"
 
 class Visualization
 {
@@ -37,7 +35,7 @@ private:
 	int grid_height;
 	float cell_size;
 	sf::VertexArray grid_vertices;
-	VisualizationConfig::VisMode grid_vis_mode = VisualizationConfig::VisMode::Vegetation;
+	VisModeConfig::VisMode grid_vis_mode = VisModeConfig::DEFAULT_MODE;
 	std::pair<int, int> last_clicked_cords = { -1, -1 };
 
 	// Camera movement
@@ -58,6 +56,7 @@ public:
 	void handle_camera_movement(float delta_time);
 	void handle_dragging();
 	void fit_grid_to_view();
+	void set_view_mode(std::string mode_name);
 
 	/* Getters */
 	bool is_window_open() const;
