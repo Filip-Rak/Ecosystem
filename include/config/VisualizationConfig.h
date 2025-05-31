@@ -9,6 +9,17 @@ namespace VisualizationConfig
 	/* Window */
 	inline const std::string WINDOW_TITLE = "Ecosystem";
 
+	/* Vsiuals */
+	inline constexpr int VERTS_PER_CELL = 4;
+
+	enum class VisMode 
+	{
+		Temperature,
+		Humidity,
+		Elevation,
+		Vegetation
+	};
+
 	/* Controls */
 
 	// Mouse
@@ -25,6 +36,7 @@ namespace VisualizationConfig
 	inline constexpr sf::Keyboard::Key MOVEMENT_DOWN_KEY = sf::Keyboard::S;
 	inline constexpr sf::Keyboard::Key MOVEMENT_LEFT_KEY = sf::Keyboard::A;
 	inline constexpr sf::Keyboard::Key MOVEMENT_RIGHT_KEY = sf::Keyboard::D;
+
 	inline constexpr sf::Mouse::Button MOUSE_CELL_SELECT_BUTTON = sf::Mouse::Left;
 	inline constexpr sf::Mouse::Button MOUSE_DRAG_BUTTON = sf::Mouse::Middle;
 }

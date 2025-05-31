@@ -105,29 +105,23 @@ void Visualization::process_window_events()
 
 void Visualization::update(const std::vector<Cell>& cells)
 {
-	const int vert_count = 4;
-	auto& vertices = grid_vertices;
-
-	// Update the visualised grid based on the logical one
-	// #pragma omp parallel for default(none) shared(cells, vert_count, vertices)
-	for (int index = 0; index < cells.size(); index++)
+	switch (grid_vis_mode)
 	{
-		// Value between 0 and 1
-		float intensity = cells[index].get_vegetation();
+		case VisualizationConfig::VisMode::Temperature:
+			draw_for_temperature(cells);
+			break;
 
-		// Clamp and scale intensity to 0-255 for green channel
-		float color_multiplier = 255.f / CellConfig::VEG_BASE_GROWTH_MAX;
-		uint8_t green_value = static_cast<uint8_t>(intensity * color_multiplier);
+		case VisualizationConfig::VisMode::Humidity:
+			draw_for_humidity(cells);
+			break;
 
-		// Create the new color with varying green intensity
-		sf::Color new_color(0, green_value, 0);
+		case VisualizationConfig::VisMode::Elevation:
+			draw_for_elevation(cells);
+			break;
 
-		// Assign the new color to verts
-		int index_verts = index * vert_count;
-		vertices[index_verts + 0].color = new_color;
-		vertices[index_verts + 1].color = new_color;
-		vertices[index_verts + 2].color = new_color;
-		vertices[index_verts + 3].color = new_color;
+		case VisualizationConfig::VisMode::Vegetation:
+			draw_for_vegetation(cells);
+			break;
 	}
 }
 
@@ -389,4 +383,113 @@ void Visualization::handle_camera_zoom(sf::Event event)
 	// Save and apply the zoom value
 	this->zoom_factor *= change;
 	grid_view.zoom(change);
+}
+
+sf::Color Visualization::lerp_colors(const sf::Color& start, const sf::Color& end, float t) const
+{
+	// Clamp the values within the safe range
+	t = std::clamp(t, 0.0f, 1.0f);
+
+	// Return the interpolated color
+	return sf::Color(
+		static_cast<sf::Uint8>(start.r + t * (end.r - start.r)),
+		static_cast<sf::Uint8>(start.g + t * (end.g - start.g)),
+		static_cast<sf::Uint8>(start.b + t * (end.b - start.b))
+	);
+}
+
+void Visualization::draw_for_temperature(const std::vector<Cell>& cells)
+{
+	const sf::Color cold_color = sf::Color::Blue;
+	const sf::Color hot_color = sf::Color::Red;
+
+	const float norm_offset = CellConfig::MIN_TEMP;
+	const float norm_multiplier = 1.0f / (CellConfig::MAX_TEMP - CellConfig::MIN_TEMP);
+
+	// Loop through each logical Cell
+	for (int index = 0; index < cells.size(); index++)
+	{
+		// Pick a color between two extremes
+		float normalized_temp = (cells[index].get_temperature() - norm_offset) * norm_multiplier;
+		sf::Color new_color = lerp_colors(cold_color, hot_color, normalized_temp);
+
+		// Apply new color
+		int index_verts = index * VisualizationConfig::VERTS_PER_CELL;
+		grid_vertices[index_verts + 0].color = new_color;
+		grid_vertices[index_verts + 1].color = new_color;
+		grid_vertices[index_verts + 2].color = new_color;
+		grid_vertices[index_verts + 3].color = new_color;
+	}
+}
+
+void Visualization::draw_for_humidity(const std::vector<Cell>& cells)
+{
+	sf::Color dry_color(139, 69, 19);   // Saddle brown
+	sf::Color wet_color(0, 120, 255);   // Light blue
+
+	const float norm_offset = CellConfig::MIN_HUMIDITY;
+	const float norm_multiplier = 1.0f / (CellConfig::MAX_HUMIDITY - CellConfig::MIN_HUMIDITY);
+
+	// Loop through each logical Cell
+	for (int index = 0; index < cells.size(); index++)
+	{
+		// Pick a color between two extremes
+		float normalized_humidity = (cells[index].get_humidity() - norm_offset) * norm_multiplier;
+		sf::Color new_color = lerp_colors(dry_color, wet_color, normalized_humidity);
+
+		// Apply new color
+		int index_verts = index * VisualizationConfig::VERTS_PER_CELL;
+		grid_vertices[index_verts + 0].color = new_color;
+		grid_vertices[index_verts + 1].color = new_color;
+		grid_vertices[index_verts + 2].color = new_color;
+		grid_vertices[index_verts + 3].color = new_color;
+	}
+}
+
+void Visualization::draw_for_elevation(const std::vector<Cell>& cells)
+{
+	sf::Color lowland_color(0, 255, 0);		// Green
+	sf::Color highland_color(139, 69, 19);	// Saddle Brown
+
+	const float norm_offset = CellConfig::MIN_ELEVATION;
+	const float norm_multiplier = 1.0f / (CellConfig::MAX_ELEVATION - CellConfig::MIN_ELEVATION);
+
+	// Loop through each logical Cell
+	for (int index = 0; index < cells.size(); index++)
+	{
+		// Pick a color between two extremes
+		float normalized_elevation = (cells[index].get_elevation() - norm_offset) * norm_multiplier;
+		sf::Color new_color = lerp_colors(lowland_color, highland_color, normalized_elevation);
+
+		// Apply new color
+		int index_verts = index * VisualizationConfig::VERTS_PER_CELL;
+		grid_vertices[index_verts + 0].color = new_color;
+		grid_vertices[index_verts + 1].color = new_color;
+		grid_vertices[index_verts + 2].color = new_color;
+		grid_vertices[index_verts + 3].color = new_color;
+	}
+}
+
+void Visualization::draw_for_vegetation(const std::vector<Cell>& cells)
+{
+	// #pragma omp parallel for default(none) shared(cells, VisualizationConfig::VERTS_PER_CELL, grid_vertices)
+	for (int index = 0; index < cells.size(); index++)
+	{
+		// Value between 0 and 1
+		float intensity = cells[index].get_vegetation();
+
+		// Clamp and scale intensity to 0-255 for green channel
+		float color_multiplier = 255.f / CellConfig::VEG_BASE_GROWTH_MAX;
+		uint8_t green_value = static_cast<uint8_t>(intensity * color_multiplier);
+
+		// Create the new color with varying green intensity
+		sf::Color new_color(0, green_value, 0);
+
+		// Assign the new color to verts
+		int index_verts = index * VisualizationConfig::VERTS_PER_CELL;
+		grid_vertices[index_verts + 0].color = new_color;
+		grid_vertices[index_verts + 1].color = new_color;
+		grid_vertices[index_verts + 2].color = new_color;
+		grid_vertices[index_verts + 3].color = new_color;
+	}
 }
