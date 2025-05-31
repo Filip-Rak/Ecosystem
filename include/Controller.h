@@ -4,6 +4,7 @@
 #include "Automaton.h"
 #include "Automaton.h"
 #include "Utils.h"
+#include "ControllerConfig.h"
 
 // #include <iostream>
 
@@ -27,12 +28,7 @@ private:
 	int updates_per_second = 30;
 	float update_interval = 1.f / (float)updates_per_second;
 	float since_last_update = 0.f;
-	int min_speed = 1;
-	int max_speed = 240;
 	bool sim_paused = true;
-	int speed_change_base = 5;
-	int speed_change_fast = 20;
-	int speed_change_slow = 1;
 
 public:
 	// Constructor

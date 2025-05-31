@@ -121,15 +121,15 @@ void Controller::render()
 void Controller::change_update_speed(int direction)
 {
 	// Modify the speed 
-	float change = this->speed_change_base;
+	float change = ControllerConfig::SIM_SPEED_CHANGE_BASE;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-		change = this->speed_change_fast;
+		change = ControllerConfig::SIM_SPEED_CHANGE_FAST;
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
-		change = this->speed_change_slow;
+		change = ControllerConfig::SIM_SPEED_CHANGE_SLOW;
 
 	// Update speed and it's properties
 	int new_speed = this->updates_per_second + change * direction;
-	new_speed = Utils::clamp<int>(new_speed, this->min_speed, this->max_speed);
+	new_speed = Utils::clamp<int>(new_speed, ControllerConfig::MIN_SIM_SPEED, ControllerConfig::MAX_SIM_SPEED);
 
 	this->updates_per_second = new_speed;
 	this->update_interval = 1.f / (float)updates_per_second;
