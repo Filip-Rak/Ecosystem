@@ -6,6 +6,7 @@
 #include <string>
 
 #include "VisModeConfig.h"
+#include "Cell.h"
 
 // Testing
 #include <ctime>
@@ -83,14 +84,17 @@ public:
 	/* Public Methods */
 	void initialize();
 	void update_on_resize();
-	void update_fps_label(int fps);
-	void update_iteration_label(int iteration);
-	void update_speed_label(int speed);
-	void set_vis_mode(VisModeConfig::VisMode vis_mode);
 
 	/* Getters */
 	float get_menu_bar_vertical_size();
 	float get_right_panel_x_window_share();
+
+	/* Setters */
+	void update_fps_label(int fps);
+	void update_iteration_label(int iteration);
+	void update_speed_label(int speed);
+	void set_vis_mode(VisModeConfig::VisMode vis_mode);
+	void set_displayed_cell(const Cell& cell);
 
 	template<typename T>
 	std::shared_ptr<T> get_widget_as(const std::string& name)

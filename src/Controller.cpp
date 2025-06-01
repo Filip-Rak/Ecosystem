@@ -36,7 +36,7 @@ void Controller::update()
 	// Update FPS measurememnts and label
 	update_fps();
 
-	// Transfer position: Visusalization -> Automaton
+	// Transfer position: Visusalization -> Automaton / UI
 	transfer_pos();
 
 	/* Update these properties only when window is in focus */
@@ -99,8 +99,16 @@ void Controller::transfer_pos()
 	auto cords_pair = visualization.get_last_clicled_cords();
 	if (cords_pair.first == -1) return;
 
-	automaton.modify_cell(cords_pair.first, cords_pair.second);
-	visualization.update(automaton.get_grid());	// Should be repalced with a more efficient one cell update only
+	try
+	{
+		const Cell& cell = automaton.get_cell(cords_pair.first, cords_pair.second);
+		ui_ptr->set_displayed_cell(cell);
+	}
+	catch (std::exception ex)
+	{
+		std::cerr << "Exception at: void Controller::transfer_pos() -> " << ex.what() << "\n";
+		return;
+	}
 }
 
 void Controller::render()

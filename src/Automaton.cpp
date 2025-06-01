@@ -43,6 +43,19 @@ const std::vector<Cell>& Automaton::get_grid() const
     return grid_cells;
 }
 
+const Cell& Automaton::get_cell(int x, int y) const
+{
+    // Validate position
+    if (x >= width || y >= height || x < 0 || y < 0)
+        throw std::invalid_argument(
+            "Cell& Automaton::get_cell(int, int) -> invalid cell position (" +
+            std::to_string(x) + ", " + std::to_string(y) + ")"
+        );
+
+    std::size_t index = x + width * y;
+    return grid_cells[index];
+}
+
 void Automaton::initialize_grid()
 {
     // Only basic intiialization for testing

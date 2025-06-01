@@ -1,11 +1,13 @@
 #pragma once
 
 #include <vector>
+#include <string>
+#include <stdexcept>
+#include <iostream>
 
 #include "Cell.h"
 
 // Testing
-#include <iostream>
 #include <ctime>
 #include <random>
 
@@ -30,6 +32,7 @@ public:
 
 	/* Getters */
 	const std::vector<Cell>& get_grid() const;
+	const Cell& get_cell(int x, int y) const;
 
 private:
 	/* Private Methods */

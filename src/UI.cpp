@@ -28,31 +28,6 @@ void UI::update_on_resize()
 	update_trivial_legend(current_vis_mode);
 }
 
-void UI::update_fps_label(int fps)
-{
-	this->fps_label->setText("FPS: " + std::to_string(fps));
-	update_widget_positioning();
-}
-
-void UI::update_iteration_label(int iteration)
-{
-	this->iteration_label->setText("Iteration: " + std::to_string(iteration));
-	update_widget_positioning();
-}
-
-void UI::update_speed_label(int speed)
-{
-	std::string new_text = "Speed: " + std::to_string(speed) + " UPS";
-	this->speed_label->setText(new_text);
-	update_widget_positioning();
-}
-
-void UI::set_vis_mode(VisModeConfig::VisMode vis_mode)
-{
-	current_vis_mode = vis_mode;
-	update_trivial_legend(vis_mode);
-}
-
 /* Private Methods */
 void UI::initialize_top_bar()
 {
@@ -307,10 +282,10 @@ void UI::initialize_cell_panel()
 	tgui::Widget::Ptr hook = tgui::Panel::create();
 
 	// Create rows
-	hook = insert_key_value_row(cell_panel_content, hook, "ID: ", "cell_id_label", "N/A", ValueType::LABEL);
-	hook = insert_key_value_row(cell_panel_content, hook, "Vegetation: ");
-	hook = insert_key_value_row(cell_panel_content, hook, "Temperature: ");
-	hook = insert_key_value_row(cell_panel_content, hook, "Humidity: ");
+	hook = insert_key_value_row(cell_panel_content, hook, "Position: ", "cell_id_label", "N/A", ValueType::LABEL);
+	hook = insert_key_value_row(cell_panel_content, hook, "Vegetation: ", "cell_vegetation_label");
+	hook = insert_key_value_row(cell_panel_content, hook, "Temperature: ", "cell_temperature_label");
+	hook = insert_key_value_row(cell_panel_content, hook, "Humidity: ", "cell_humidity_label");
 
 	/* Add Animals list */
 
@@ -583,4 +558,43 @@ float UI::get_right_panel_x_window_share()
 	// Assume its a precentage value
 	double decimal_value = std::stod(value.substr(0, value.size() - 1)) / 100.0;
 	return decimal_value;
+}
+
+/* Setters */
+void UI::update_fps_label(int fps)
+{
+	this->fps_label->setText("FPS: " + std::to_string(fps));
+	update_widget_positioning();
+}
+
+void UI::update_iteration_label(int iteration)
+{
+	this->iteration_label->setText("Iteration: " + std::to_string(iteration));
+	update_widget_positioning();
+}
+
+void UI::update_speed_label(int speed)
+{
+	std::string new_text = "Speed: " + std::to_string(speed) + " UPS";
+	this->speed_label->setText(new_text);
+	update_widget_positioning();
+}
+
+void UI::set_vis_mode(VisModeConfig::VisMode vis_mode)
+{
+	current_vis_mode = vis_mode;
+	update_trivial_legend(vis_mode);
+}
+
+void UI::set_displayed_cell(const Cell& cell)
+{
+	auto cell_id_label = get_widget_as<tgui::Label>("cell_id_label");
+	auto cell_vegetation_label = get_widget_as<tgui::EditBox>("cell_vegetation_label");
+	auto cell_temperature_label = get_widget_as<tgui::EditBox>("cell_temperature_label");
+	auto cell_humidity_label = get_widget_as<tgui::EditBox>("cell_humidity_label");
+
+	cell_id_label->setText("Add this to cell");
+	cell_vegetation_label->setText(std::to_string(cell.get_vegetation()));
+	cell_temperature_label->setText(std::to_string(cell.get_temperature()));
+	cell_humidity_label->setText(std::to_string(cell.get_humidity()));
 }

@@ -5,6 +5,7 @@
 #include "Automaton.h"
 #include "ControllerConfig.h"
 #include "VisModeConfig.h"
+#include "Cell.h"
 
 #include <stdexcept>
 #include <iostream>
