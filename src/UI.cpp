@@ -283,10 +283,19 @@ void UI::initialize_cell_panel()
 
 	// Create rows
 	hook = insert_key_value_row(cell_panel_content, hook, "Position: ", "cell_id_label", "N/A", ValueType::LABEL);
+	inspection_data.cell_id_label = get_widget_as<tgui::Label>("cell_id_label");
+
 	hook = insert_key_value_row(cell_panel_content, hook, "Vegetation: ", "cell_vegetation_label");
+	inspection_data.cell_vegetation_label = get_widget_as<tgui::EditBox>("cell_vegetation_label");
+
 	hook = insert_key_value_row(cell_panel_content, hook, "Temperature: ", "cell_temperature_label");
+	inspection_data.cell_temperature_label = get_widget_as<tgui::EditBox>("cell_temperature_label");
+
 	hook = insert_key_value_row(cell_panel_content, hook, "Humidity: ", "cell_humidity_label");
+	inspection_data.cell_humidity_label = get_widget_as<tgui::EditBox>("cell_humidity_label");
+
 	hook = insert_key_value_row(cell_panel_content, hook, "Elevation: ", "cell_elevation_label");
+	inspection_data.cell_elevation_label = get_widget_as<tgui::EditBox>("cell_elevation_label");
 
 	/* Add Animals list */
 
@@ -589,24 +598,18 @@ void UI::set_vis_mode(VisModeConfig::VisMode vis_mode)
 
 void UI::set_displayed_cell(const Cell& cell)
 {
-	auto cell_id_label = get_widget_as<tgui::Label>("cell_id_label");
-	auto cell_vegetation_label = get_widget_as<tgui::EditBox>("cell_vegetation_label");
-	auto cell_temperature_label = get_widget_as<tgui::EditBox>("cell_temperature_label");
-	auto cell_humidity_label = get_widget_as<tgui::EditBox>("cell_humidity_label");
-	auto cell_elevation_label = get_widget_as<tgui::EditBox>("cell_elevation_label");
-
 	int x = cell.get_pos_x(), y = cell.get_pos_y();
-	cell_id_label->setText("(" + std::to_string(x) + ", " + std::to_string(y) + ")");
+	inspection_data.cell_id_label->setText("(" + std::to_string(x) + ", " + std::to_string(y) + ")");
 
 	int veg_int = static_cast<int>(std::ceil(cell.get_vegetation() * 100.f));
-	cell_vegetation_label->setText(std::to_string(veg_int));
+	inspection_data.cell_vegetation_label->setText(std::to_string(veg_int));
 
 	int temp_int = static_cast<int>(std::ceil(cell.get_temperature() * 100.f));
-	cell_temperature_label->setText(std::to_string(temp_int));
+	inspection_data.cell_temperature_label->setText(std::to_string(temp_int));
 
 	int hum_int = static_cast<int>(std::ceil(cell.get_humidity() * 100.f));
-	cell_humidity_label->setText(std::to_string(hum_int));
+	inspection_data.cell_humidity_label->setText(std::to_string(hum_int));
 
 	int elev_int = static_cast<int>(std::ceil(cell.get_elevation() * 100.f));
-	cell_elevation_label->setText(std::to_string(elev_int));
+	inspection_data.cell_elevation_label->setText(std::to_string(elev_int));
 }

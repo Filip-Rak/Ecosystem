@@ -76,6 +76,17 @@ private:
 	tgui::Label::Ptr left_legend_label;
 	tgui::Label::Ptr right_legend_label;
 
+	struct InspectionData
+	{
+		tgui::Label::Ptr cell_id_label;
+		tgui::EditBox::Ptr cell_vegetation_label;
+		tgui::EditBox::Ptr cell_temperature_label;
+		tgui::EditBox::Ptr cell_humidity_label;
+		tgui::EditBox::Ptr cell_elevation_label;
+	};
+
+	InspectionData inspection_data;
+
 public:
 	/* Constructor & Destructor */
 	UI(tgui::Gui& gui);
