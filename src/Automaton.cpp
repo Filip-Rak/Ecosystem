@@ -52,6 +52,7 @@ const Cell& Automaton::get_cell(int x, int y) const
             std::to_string(x) + ", " + std::to_string(y) + ")"
         );
 
+    // Return the cell
     std::size_t index = x + width * y;
     return grid_cells[index];
 }

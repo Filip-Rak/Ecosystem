@@ -286,6 +286,7 @@ void UI::initialize_cell_panel()
 	hook = insert_key_value_row(cell_panel_content, hook, "Vegetation: ", "cell_vegetation_label");
 	hook = insert_key_value_row(cell_panel_content, hook, "Temperature: ", "cell_temperature_label");
 	hook = insert_key_value_row(cell_panel_content, hook, "Humidity: ", "cell_humidity_label");
+	hook = insert_key_value_row(cell_panel_content, hook, "Elevation: ", "cell_elevation_label");
 
 	/* Add Animals list */
 
@@ -592,9 +593,19 @@ void UI::set_displayed_cell(const Cell& cell)
 	auto cell_vegetation_label = get_widget_as<tgui::EditBox>("cell_vegetation_label");
 	auto cell_temperature_label = get_widget_as<tgui::EditBox>("cell_temperature_label");
 	auto cell_humidity_label = get_widget_as<tgui::EditBox>("cell_humidity_label");
+	auto cell_elevation_label = get_widget_as<tgui::EditBox>("cell_elevation_label");
 
 	cell_id_label->setText("Add this to cell");
-	cell_vegetation_label->setText(std::to_string(cell.get_vegetation()));
-	cell_temperature_label->setText(std::to_string(cell.get_temperature()));
-	cell_humidity_label->setText(std::to_string(cell.get_humidity()));
+
+	int veg_int = static_cast<int>(std::ceil(cell.get_vegetation() * 100.f));
+	cell_vegetation_label->setText(std::to_string(veg_int));
+
+	int temp_int = static_cast<int>(std::ceil(cell.get_temperature() * 100.f));
+	cell_temperature_label->setText(std::to_string(temp_int));
+
+	int hum_int = static_cast<int>(std::ceil(cell.get_humidity() * 100.f));
+	cell_humidity_label->setText(std::to_string(hum_int));
+
+	int elev_int = static_cast<int>(std::ceil(cell.get_elevation() * 100.f));
+	cell_elevation_label->setText(std::to_string(elev_int));
 }

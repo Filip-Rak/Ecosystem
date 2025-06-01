@@ -17,7 +17,7 @@ namespace CellConfig
     inline constexpr float MAX_ELEVATION = 1.0f;
 
     /* Vegetation & Growth */
-    inline constexpr float VEG_BASE_GROWTH_FACTOR = 0.005f;
+    inline constexpr float VEG_BASE_GROWTH_FACTOR = 0.001f;
     inline constexpr float VEG_BASE_GROWTH_MAX = 1.0f;
 
     // Temperature
