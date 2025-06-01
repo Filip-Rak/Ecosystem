@@ -8,6 +8,9 @@
 class Cell
 {
 	/* Attributes */
+	const int pos_x;
+	const int pos_y;
+
 	float temperature;
 	float humidity;
 	float elevation;
@@ -19,12 +22,15 @@ class Cell
 
 public:
 	/* Constructor */
-	Cell(float temperature, float humidity, float elevation, float vegetation = 0.0f);
+	Cell(int pos_x, int pos_y, float temperature, float humidity, float elevation, float vegetation = 0.0f);
 
 	/* Public Methods */
 	void process();
 
 	/* Getters */
+	int get_pos_x() const;
+	int get_pos_y() const;
+
 	float get_temperature() const;
 	float get_humidity() const;
 	float get_elevation() const;
@@ -41,6 +47,9 @@ private:
 };
 
 /* Inlined Definitions */
+inline int Cell::get_pos_x() const { return pos_x; };
+inline int Cell::get_pos_y() const { return pos_y; };
+
 inline float Cell::get_temperature() const { return temperature; }
 inline float Cell::get_humidity() const { return humidity; }
 inline float Cell::get_elevation() const { return elevation; }

@@ -1,7 +1,7 @@
 #include "Cell.h"
 
-Cell::Cell(float temperature, float humidity, float elevation, float vegetation)
-	: temperature(temperature), humidity(humidity), elevation(elevation), vegetation(vegetation)
+Cell::Cell(int pos_x, int pos_y, float temperature, float humidity, float elevation, float vegetation)
+	: pos_x(pos_x), pos_y(pos_y), temperature(temperature), humidity(humidity), elevation(elevation), vegetation(vegetation)
 {
 	update_growth_parameters();
 }

@@ -595,7 +595,8 @@ void UI::set_displayed_cell(const Cell& cell)
 	auto cell_humidity_label = get_widget_as<tgui::EditBox>("cell_humidity_label");
 	auto cell_elevation_label = get_widget_as<tgui::EditBox>("cell_elevation_label");
 
-	cell_id_label->setText("Add this to cell");
+	int x = cell.get_pos_x(), y = cell.get_pos_y();
+	cell_id_label->setText("(" + std::to_string(x) + ", " + std::to_string(y) + ")");
 
 	int veg_int = static_cast<int>(std::ceil(cell.get_vegetation() * 100.f));
 	cell_vegetation_label->setText(std::to_string(veg_int));

@@ -72,6 +72,9 @@ void Automaton::initialize_grid()
         float humidity = humid_dist(rng);
         float elevation = elev_dist(rng);
 
-        grid_cells.emplace_back(temp, humidity, elevation);
+        int pos_x = i % height;
+        int pos_y = i / width;
+
+        grid_cells.emplace_back(pos_x, pos_y, temp, humidity, elevation);
     }
 }
