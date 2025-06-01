@@ -192,9 +192,9 @@ void UI::initialize_right_panel()
 	vertical_layout->addSpace(0.02f);
 
 	// Add entries to view mode combo box
-	for (const auto& [_, name] : VisModeConfig::vis_mode_pairs)
+	for (VisModeConfig::VisModeData data : VisModeConfig::vis_mode_data)
 	{
-		view_mode_combo_box->addItem(name);
+		view_mode_combo_box->addItem(data.name);
 	}
 
 	try
