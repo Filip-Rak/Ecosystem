@@ -216,7 +216,7 @@ void UI::initialize_right_panel()
 		view_mode_combo_box->setSelectedItemByIndex(0);
 	}
 
-	// Add mini vertical layout for the trivial legend of 
+	// Add mini vertical layout for the trivial legend
 	auto trivial_legend_vl = tgui::VerticalLayout::create();
 	vertical_layout->add(trivial_legend_vl, 0.08f);
 
@@ -232,12 +232,15 @@ void UI::initialize_right_panel()
 	auto trivial_legend_hl = tgui::HorizontalLayout::create();
 	trivial_legend_vl->add(trivial_legend_hl);
 
+	// Left label
 	this->left_legend_label = tgui::Label::create();
 	left_legend_label->setText("Left");
+	left_legend_label->setOrigin(0.01f, 0.f);	// This sucks as a fix but I can't figure out anything better
 	left_legend_label->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
 	set_scalable_text_size(left_legend_label, this->widget_text_size_medium);
 	trivial_legend_hl->add(left_legend_label);
 	
+	// Right labe;
 	this->right_legend_label = tgui::Label::create();
 	right_legend_label->setText("Right");
 	right_legend_label->setHorizontalAlignment(tgui::HorizontalAlignment::Right);
