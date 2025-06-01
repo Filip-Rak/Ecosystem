@@ -28,6 +28,12 @@ void UI::update_on_resize()
 	update_trivial_legend(current_vis_mode);
 }
 
+void UI::update()
+{
+	if (tracked_cell)
+		update_inspection(tracked_cell);
+}
+
 /* Private Methods */
 void UI::initialize_top_bar()
 {
@@ -309,7 +315,7 @@ void UI::initialize_cell_panel()
 	// Add list
 	auto animal_list = tgui::ListBox::create();
 	animal_list->setPosition(tgui::bindLeft(animal_list_label), tgui::bindBottom(animal_list_label));
-	set_scalable_text_size(animal_list, this->widget_text_size_big);
+	set_scalable_text_size(animal_list, this->widget_text_size_big - 1);
 	animal_list->setWidth("90%");
 	cell_panel_content->add(animal_list);
 
@@ -596,20 +602,25 @@ void UI::set_vis_mode(VisModeConfig::VisMode vis_mode)
 	update_trivial_legend(vis_mode);
 }
 
-void UI::set_displayed_cell(const Cell& cell)
+void UI::set_tracked_cell(const Cell& cell)
 {
-	int x = cell.get_pos_x(), y = cell.get_pos_y();
+	tracked_cell = &cell;
+}
+
+void UI::update_inspection(const Cell* cell)
+{
+	int x = cell->get_pos_x(), y = cell->get_pos_y();
 	inspection_data.cell_id_label->setText("(" + std::to_string(x) + ", " + std::to_string(y) + ")");
 
-	int veg_int = static_cast<int>(std::ceil(cell.get_vegetation() * 100.f));
+	int veg_int = static_cast<int>(std::ceil(cell->get_vegetation() * 100.f));
 	inspection_data.cell_vegetation_label->setText(std::to_string(veg_int));
 
-	int temp_int = static_cast<int>(std::ceil(cell.get_temperature() * 100.f));
+	int temp_int = static_cast<int>(std::ceil(cell->get_temperature() * 100.f));
 	inspection_data.cell_temperature_label->setText(std::to_string(temp_int));
 
-	int hum_int = static_cast<int>(std::ceil(cell.get_humidity() * 100.f));
+	int hum_int = static_cast<int>(std::ceil(cell->get_humidity() * 100.f));
 	inspection_data.cell_humidity_label->setText(std::to_string(hum_int));
 
-	int elev_int = static_cast<int>(std::ceil(cell.get_elevation() * 100.f));
+	int elev_int = static_cast<int>(std::ceil(cell->get_elevation() * 100.f));
 	inspection_data.cell_elevation_label->setText(std::to_string(elev_int));
 }

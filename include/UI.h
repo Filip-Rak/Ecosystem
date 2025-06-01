@@ -87,6 +87,9 @@ private:
 
 	InspectionData inspection_data;
 
+	// Tracked data
+	const Cell* tracked_cell = nullptr;
+
 public:
 	/* Constructor & Destructor */
 	UI(tgui::Gui& gui);
@@ -95,6 +98,7 @@ public:
 	/* Public Methods */
 	void initialize();
 	void update_on_resize();
+	void update();
 
 	/* Getters */
 	float get_menu_bar_vertical_size();
@@ -105,7 +109,7 @@ public:
 	void update_iteration_label(int iteration);
 	void update_speed_label(int speed);
 	void set_vis_mode(VisModeConfig::VisMode vis_mode);
-	void set_displayed_cell(const Cell& cell);
+	void set_tracked_cell(const Cell& cell);
 
 	template<typename T>
 	std::shared_ptr<T> get_widget_as(const std::string& name)
@@ -171,4 +175,7 @@ private:
 	// Mapping
 	void map_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_size);
 	void map_widget(tgui::Widget::Ptr widget, std::string identifier);
+
+	// Updating
+	void update_inspection(const Cell* cell);
 };

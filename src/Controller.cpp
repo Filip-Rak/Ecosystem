@@ -60,6 +60,9 @@ void Controller::update()
 
 			// Update the Visualization
 			visualization.update(automaton.get_grid());
+
+			// Update the UI component
+			ui_ptr->update();
 			
 			// Update the iteration number
 			this->iteration += 1;
@@ -102,7 +105,11 @@ void Controller::transfer_pos()
 	try
 	{
 		const Cell& cell = automaton.get_cell(cords_pair.first, cords_pair.second);
-		ui_ptr->set_displayed_cell(cell);
+		ui_ptr->set_tracked_cell(cell);
+
+		// Run manual update if paused
+		if (sim_paused)
+			ui_ptr->update();
 	}
 	catch (std::exception ex)
 	{
