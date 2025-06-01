@@ -72,6 +72,8 @@ private:
 	tgui::Label::Ptr iteration_label;
 	tgui::Label::Ptr speed_label;
 	tgui::CanvasSFML::Ptr gradient_canvas;
+	tgui::Label::Ptr left_legend_label;
+	tgui::Label::Ptr right_legend_label;
 
 public:
 	/* Constructor & Destructor */
@@ -149,7 +151,7 @@ private:
 	void update_scalable_text_size();
 	void update_widget_positioning();
 	bool enable_auto_size(const tgui::Widget::Ptr& widget);
-	void update_gradient_calc(VisModeConfig::VisMode vis_mode);
+	void update_trivial_legend(VisModeConfig::VisMode vis_mode);
 
 	// Mapping
 	void map_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_size);

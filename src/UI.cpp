@@ -18,14 +18,14 @@ void UI::initialize()
 	initialize_genes_panel();
 
 	update_scalable_text_size();
-	update_gradient_calc(current_vis_mode);
+	update_trivial_legend(current_vis_mode);
 }
 
 void UI::update_on_resize()
 {
 	update_top_bar_height();
 	update_scalable_text_size();
-	update_gradient_calc(current_vis_mode);
+	update_trivial_legend(current_vis_mode);
 }
 
 void UI::update_fps_label(int fps)
@@ -50,7 +50,7 @@ void UI::update_speed_label(int speed)
 void UI::set_vis_mode(VisModeConfig::VisMode vis_mode)
 {
 	current_vis_mode = vis_mode;
-	update_gradient_calc(vis_mode);
+	update_trivial_legend(vis_mode);
 }
 
 /* Private Methods */
@@ -221,10 +221,29 @@ void UI::initialize_right_panel()
 	vertical_layout->add(trivial_legend_vl, 0.08f);
 
 	// Add canvas
+	auto gradient_panel = tgui::Panel::create();
+	gradient_panel->getRenderer()->setBorders(tgui::Borders(1.f, 1.f, 1.f, 1.f));
+	trivial_legend_vl->add(gradient_panel);
+
 	this->gradient_canvas = tgui::CanvasSFML::create();
+	gradient_panel->add(gradient_canvas);
+
+	// Add legend's labels
+	auto trivial_legend_hl = tgui::HorizontalLayout::create();
+	trivial_legend_vl->add(trivial_legend_hl);
+
+	this->left_legend_label = tgui::Label::create();
+	left_legend_label->setText("Left");
+	left_legend_label->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
+	set_scalable_text_size(left_legend_label, this->widget_text_size_medium);
+	trivial_legend_hl->add(left_legend_label);
 	
-	// gradient_canvas->setSize({ "100%", "100%" });
-	trivial_legend_vl->add(gradient_canvas);
+	this->right_legend_label = tgui::Label::create();
+	right_legend_label->setText("Right");
+	right_legend_label->setHorizontalAlignment(tgui::HorizontalAlignment::Right);
+	set_scalable_text_size(right_legend_label, this->widget_text_size_medium);
+	trivial_legend_hl->add(right_legend_label);
+
 
 	// Add a title label at the top of the right panel
 	auto title_label = tgui::Label::create(this->right_panel_title_text);
@@ -499,22 +518,28 @@ bool UI::enable_auto_size(const tgui::Widget::Ptr& widget)
 	return false;
 }
 
-void UI::update_gradient_calc(VisModeConfig::VisMode vis_mode)
+void UI::update_trivial_legend(VisModeConfig::VisMode vis_mode)
 {
+	/* Retrieve vismode's data */
 	sf::Color low_end_color = sf::Color::Blue;
 	sf::Color high_end_color = sf::Color::Red;
+	std::string low_end_name = "Left";
+	std::string high_end_name = "Right";
 
 	try 
 	{
 		VisModeConfig::VisModeData vis_data = VisModeConfig::get_data(vis_mode);
 		low_end_color = vis_data.low_end_color;
 		high_end_color = vis_data.high_end_color;
+		low_end_name = vis_data.low_end_name;
+		high_end_name = vis_data.high_end_name;
 	}
 	catch (std::exception ex)
 	{
 		std::cerr << "Exception at: UI::update_gradient_calc(VisModeConfig::VisMode) -> " << ex.what() << "\n";
 	}
 
+	/* Update the gradient canvas */
 	const auto size = gradient_canvas->getSize();
 	const float width = size.x;
 	const float height = size.y;
@@ -534,6 +559,10 @@ void UI::update_gradient_calc(VisModeConfig::VisMode vis_mode)
 	gradient_canvas->clear(sf::Color::Transparent);
 	gradient_canvas->draw(gradient);
 	gradient_canvas->display();
+
+	/* Update legend labels */
+	left_legend_label->setText(low_end_name);
+	right_legend_label->setText(high_end_name);
 }
 
 /* Getters */
