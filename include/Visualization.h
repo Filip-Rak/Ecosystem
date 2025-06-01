@@ -4,6 +4,7 @@
 #include <TGUI/TGUI.hpp>
 #include <vector>
 #include <utility>
+#include <stdexcept>
 
 #include "UI.h"
 #include "Cell.h"
@@ -55,13 +56,15 @@ public:
 	void handle_camera_movement(float delta_time);
 	void handle_dragging();
 	void fit_grid_to_view();
-	void set_view_mode(std::string mode_name);
 
 	/* Getters */
 	bool is_window_open() const;
 	bool is_window_in_focus() const;
 	std::pair<int, int> get_last_clicled_cords() const;
 	UI& get_ui();
+
+	/* Setters */
+	void set_vis_mode(VisModeConfig::VisMode vis_mode);
 
 private:
 	/* Private Methods */

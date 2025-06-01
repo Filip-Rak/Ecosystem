@@ -46,6 +46,8 @@ private:
 		LABEL = 2,
 	};
 
+	VisModeConfig::VisMode current_vis_mode = VisModeConfig::DEFAULT_MODE;
+
 	tgui::Layout right_panel_x_window_share = "20%";
 	tgui::Padding outer_vertical_layout_padding = { "3%", "2%", "3%", "0.5%" };
 	tgui::Padding data_panel_content_padding = { "3%", "1%", "3%", "1%" };
@@ -69,6 +71,7 @@ private:
 	tgui::Label::Ptr fps_label;
 	tgui::Label::Ptr iteration_label;
 	tgui::Label::Ptr speed_label;
+	tgui::CanvasSFML::Ptr gradient_canvas;
 
 public:
 	/* Constructor & Destructor */
@@ -81,6 +84,7 @@ public:
 	void update_fps_label(int fps);
 	void update_iteration_label(int iteration);
 	void update_speed_label(int speed);
+	void set_vis_mode(VisModeConfig::VisMode vis_mode);
 
 	/* Getters */
 	float get_menu_bar_vertical_size();
@@ -145,6 +149,7 @@ private:
 	void update_scalable_text_size();
 	void update_widget_positioning();
 	bool enable_auto_size(const tgui::Widget::Ptr& widget);
+	void update_gradient_calc(VisModeConfig::VisMode vis_mode);
 
 	// Mapping
 	void map_widget(tgui::Widget::Ptr widget, std::string identifier, tgui::Layout minimal_size);

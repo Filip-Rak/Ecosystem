@@ -114,8 +114,20 @@ void Visualization::update(const std::vector<Cell>& cells)
 			auto property_getter = &Cell::get_temperature;
 			float min_val = CellConfig::MIN_TEMP;
 			float max_val = CellConfig::MAX_TEMP;
+
 			sf::Color low_end_color = sf::Color::Blue;
 			sf::Color high_end_color = sf::Color::Red;
+
+			try
+			{
+				VisModeConfig::VisModeData data = VisModeConfig::get_data(VisModeConfig::VisMode::Temperature);
+				low_end_color = data.low_end_color;
+				high_end_color = data.high_end_color;
+			}
+			catch (std::exception ex)
+			{
+				std::cerr << "Exception at Visualizaiton::update(const std::vector<Cell>&) -> " << ex.what() << "\n";
+			}
 
 			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
 			break;
@@ -125,8 +137,20 @@ void Visualization::update(const std::vector<Cell>& cells)
 			auto property_getter = &Cell::get_humidity;
 			float min_val = CellConfig::MIN_HUMIDITY;
 			float max_val = CellConfig::MAX_HUMIDITY;
-			sf::Color low_end_color(139, 69, 19);
-			sf::Color high_end_color(0, 120, 255);
+
+			sf::Color low_end_color = sf::Color::Blue;
+			sf::Color high_end_color = sf::Color::Red;
+
+			try
+			{
+				VisModeConfig::VisModeData data = VisModeConfig::get_data(VisModeConfig::VisMode::Humidity);
+				low_end_color = data.low_end_color;
+				high_end_color = data.high_end_color;
+			}
+			catch (std::exception ex)
+			{
+				std::cerr << "Exception at Visualizaiton::update(const std::vector<Cell>&) -> " << ex.what() << "\n";
+			}
 
 			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
 			break;
@@ -136,8 +160,20 @@ void Visualization::update(const std::vector<Cell>& cells)
 			auto property_getter = &Cell::get_elevation;
 			float min_val = CellConfig::MIN_ELEVATION;
 			float max_val = CellConfig::MAX_ELEVATION;
-			sf::Color low_end_color(0, 255, 0);
-			sf::Color high_end_color(139, 69, 19);
+
+			sf::Color low_end_color = sf::Color::Blue;
+			sf::Color high_end_color = sf::Color::Red;
+
+			try
+			{
+				VisModeConfig::VisModeData data = VisModeConfig::get_data(VisModeConfig::VisMode::Elevation);
+				low_end_color = data.low_end_color;
+				high_end_color = data.high_end_color;
+			}
+			catch (std::exception ex)
+			{
+				std::cerr << "Exception at Visualizaiton::update(const std::vector<Cell>&) -> " << ex.what() << "\n";
+			}
 
 			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
 			break;
@@ -147,8 +183,20 @@ void Visualization::update(const std::vector<Cell>& cells)
 			auto property_getter = &Cell::get_vegetation;
 			float min_val = 0;
 			float max_val = CellConfig::VEG_BASE_GROWTH_MAX;
-			sf::Color low_end_color(255, 255, 255);
-			sf::Color high_end_color(0, 255, 0);
+
+			sf::Color low_end_color = sf::Color::Blue;
+			sf::Color high_end_color = sf::Color::Red;
+
+			try
+			{
+				VisModeConfig::VisModeData data = VisModeConfig::get_data(VisModeConfig::VisMode::Vegetation);
+				low_end_color = data.low_end_color;
+				high_end_color = data.high_end_color;
+			}
+			catch (std::exception ex)
+			{
+				std::cerr << "Exception at Visualizaiton::update(const std::vector<Cell>&) -> " << ex.what() << "\n";
+			}
 
 			draw_property_as_color(cells, property_getter, min_val, max_val, low_end_color, high_end_color);
 			break;
@@ -219,18 +267,6 @@ void Visualization::fit_grid_to_view()
 	center_grid();
 }
 
-void Visualization::set_view_mode(std::string mode_name)
-{
-	try
-	{
-		grid_vis_mode =  VisModeConfig::to_vis_mode(mode_name);
-	}
-	catch (std::exception ex)
-	{
-		std::cerr << "Exception at Visualization::set_view_mode(std::string mode_name) -> " << ex.what() << "\n";
-	}
-}
-
 /* Getters */
 bool Visualization::is_window_open() const
 {
@@ -250,6 +286,12 @@ std::pair<int, int> Visualization::get_last_clicled_cords() const
 UI& Visualization::get_ui()
 {
 	return ui;
+}
+
+/* Setters */
+void Visualization::set_vis_mode(VisModeConfig::VisMode vis_mode)
+{
+	grid_vis_mode = vis_mode;
 }
 
 /* Private Methods */

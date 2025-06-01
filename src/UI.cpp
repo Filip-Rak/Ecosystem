@@ -18,12 +18,14 @@ void UI::initialize()
 	initialize_genes_panel();
 
 	update_scalable_text_size();
+	update_gradient_calc(current_vis_mode);
 }
 
 void UI::update_on_resize()
 {
 	update_top_bar_height();
 	update_scalable_text_size();
+	update_gradient_calc(current_vis_mode);
 }
 
 void UI::update_fps_label(int fps)
@@ -43,6 +45,12 @@ void UI::update_speed_label(int speed)
 	std::string new_text = "Speed: " + std::to_string(speed) + " UPS";
 	this->speed_label->setText(new_text);
 	update_widget_positioning();
+}
+
+void UI::set_vis_mode(VisModeConfig::VisMode vis_mode)
+{
+	current_vis_mode = vis_mode;
+	update_gradient_calc(vis_mode);
 }
 
 /* Private Methods */
@@ -207,6 +215,16 @@ void UI::initialize_right_panel()
 		std::cerr << "Exception at UI::initialize_right_panel() -> " << ex.what() << "\n";
 		view_mode_combo_box->setSelectedItemByIndex(0);
 	}
+
+	// Add mini vertical layout for the trivial legend of 
+	auto trivial_legend_vl = tgui::VerticalLayout::create();
+	vertical_layout->add(trivial_legend_vl, 0.08f);
+
+	// Add canvas
+	this->gradient_canvas = tgui::CanvasSFML::create();
+	
+	// gradient_canvas->setSize({ "100%", "100%" });
+	trivial_legend_vl->add(gradient_canvas);
 
 	// Add a title label at the top of the right panel
 	auto title_label = tgui::Label::create(this->right_panel_title_text);
@@ -479,6 +497,43 @@ bool UI::enable_auto_size(const tgui::Widget::Ptr& widget)
 	}
 
 	return false;
+}
+
+void UI::update_gradient_calc(VisModeConfig::VisMode vis_mode)
+{
+	sf::Color low_end_color = sf::Color::Blue;
+	sf::Color high_end_color = sf::Color::Red;
+
+	try 
+	{
+		VisModeConfig::VisModeData vis_data = VisModeConfig::get_data(vis_mode);
+		low_end_color = vis_data.low_end_color;
+		high_end_color = vis_data.high_end_color;
+	}
+	catch (std::exception ex)
+	{
+		std::cerr << "Exception at: UI::update_gradient_calc(VisModeConfig::VisMode) -> " << ex.what() << "\n";
+	}
+
+	const auto size = gradient_canvas->getSize();
+	const float width = size.x;
+	const float height = size.y;
+
+	// Prepare vertex array for vertical gradient
+	sf::VertexArray gradient(sf::Quads, 4);
+	gradient[0].position = { 0, 0 };
+	gradient[1].position = { width, 0 };
+	gradient[2].position = { width, height };
+	gradient[3].position = { 0, height };
+
+	gradient[0].color = low_end_color;
+	gradient[1].color = high_end_color;
+	gradient[2].color = high_end_color;
+	gradient[3].color = low_end_color;
+
+	gradient_canvas->clear(sf::Color::Transparent);
+	gradient_canvas->draw(gradient);
+	gradient_canvas->display();
 }
 
 /* Getters */

@@ -4,8 +4,10 @@
 #include "Automaton.h"
 #include "Automaton.h"
 #include "ControllerConfig.h"
+#include "VisModeConfig.h"
 
-// #include <iostream>
+#include <stdexcept>
+#include <iostream>
 
 class Controller
 {

@@ -200,11 +200,26 @@ void Controller::initialize_ui_events()
 
 	view_mode_combo_box->onItemSelect([this](const tgui::String& item)
 		{
-			// Set vis's view mode
-			visualization.set_view_mode(item.toStdString());
+			// Get the vis mode
+			VisModeConfig::VisMode vis_mode;
+			try 
+			{
+				vis_mode = VisModeConfig::to_vis_mode(item.toStdString());
+			}
+			catch (std::exception ex)
+			{
+				std::cerr << "Exception at: Controller::initialize_ui_events() -> " << ex.what() << "\n";
+				return;
+			}
 
-			// Run manual update if paused
+			// Set Visualization's vis mode
+			visualization.set_vis_mode(vis_mode);
+
+			// Run manual visualization update if paused
 			if (sim_paused) 
 				visualization.update(automaton.get_grid());
+
+			// Tell UI to update the vis mode section
+			ui_ptr->set_vis_mode(vis_mode);
 		});
 }
