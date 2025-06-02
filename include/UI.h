@@ -5,6 +5,7 @@
 #include <utility>
 #include <string>
 
+#include "UIConfig.h"
 #include "VisModeConfig.h"
 #include "Cell.h"
 
@@ -22,51 +23,13 @@ private:
 	std::vector<tgui::Widget::Ptr> widget_position_update_vector;
 	std::vector<tgui::Layout> minimal_lengths;
 	std::vector<std::pair<tgui::Widget::Ptr, unsigned int>> widget_text_sizes;
-
-	// Global properties
-	sf::Vector2u reference_resolution = sf::Vector2u(1920u, 1001u);	// Maximized window (not full screen)
-	unsigned int widget_horizontal_margin = 10u;
-	unsigned int widget_text_size_small = 14u;
-	unsigned int widget_text_size_medium = 18u;
-	unsigned int widget_text_size_big = 20u;
-	unsigned int widget_text_size_huge = 24u;
-
-	// Top bar
-	tgui::Layout top_bar_vertical_size = 30;
-	tgui::Layout top_bar_vertical_size_with_scroll = 42;
-	tgui::Layout top_bar_horizontal_size = "100%";
-	tgui::Layout widget_vertical_size = 20;
-	tgui::Layout widget_top_margin = "10%";
-	tgui::Borders top_bar_borders = tgui::Borders(0.f, 0.0f, 0.0f, 1.f);
-	tgui::Layout menu_bar_fixed_size = 105;
-
-	// Right panel
-	enum ValueType 
-	{
-		NUMERICAL_INPUT = 1,
-		LABEL = 2,
-	};
-
 	VisModeConfig::VisMode current_vis_mode = VisModeConfig::DEFAULT_MODE;
 
-	tgui::Layout right_panel_x_window_share = "20%";
-	tgui::Padding outer_vertical_layout_padding = { "3%", "2%", "3%", "0.5%" };
-	tgui::Padding data_panel_content_padding = { "3%", "1%", "3%", "1%" };
-	tgui::Borders right_panel_borders = tgui::Borders(1.f, 0.f, 1.f, 1.f);
-	tgui::Borders tab_container_content_borders = tgui::Borders(1.f, 0.f, 1.f, 1.f);
-	float right_panel_title_ratio = 0.06f;
-
-	tgui::String right_panel_title_text = "INSERT";
-	tgui::String cell_tab_name = "Cell";
-	tgui::String animal_tab_name = "Animal";
-	tgui::String genes_tab_name = "Genes";
+	// Right panel
 
 	tgui::Panel::Ptr cell_panel;
 	tgui::Panel::Ptr animal_panel;
 	tgui::Panel::Ptr genes_panel;
-
-	tgui::Layout default_data_panel_input_width = "25%";
-	tgui::Layout key_value_top_padding = "1%";
 
 	// Commonly accessed references
 	tgui::Label::Ptr fps_label;
@@ -156,7 +119,7 @@ private:
 		std::string key_label_text, 
 		std::string value_map_id = "-", 
 		std::string default_value = "1.2",
-		ValueType value_type = ValueType::NUMERICAL_INPUT
+		UIConfig::ValueType value_type = UIConfig::NUMERICAL_INPUT
 	);
 
 	// Scaling

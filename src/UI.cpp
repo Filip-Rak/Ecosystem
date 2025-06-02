@@ -39,21 +39,21 @@ void UI::initialize_top_bar()
 {
 	// Create scrollable Panel at the top of the screen
 	auto top_bar = tgui::ScrollablePanel::create();
-	top_bar->setSize(this->top_bar_horizontal_size, this->top_bar_vertical_size);
+	top_bar->setSize(UIConfig::top_bar_horizontal_size, UIConfig::top_bar_vertical_size);
 	top_bar->setAutoLayout(tgui::AutoLayout::Top);
-	top_bar->getRenderer()->setBorders(this->top_bar_borders);
+	top_bar->getRenderer()->setBorders(UIConfig::top_bar_borders);
 	
 	widget_map.emplace("top_bar", top_bar);
 
 	/* Create Contents */
 
 	// Initial position
-	int x_offset = this->widget_horizontal_margin;
+	int x_offset = UIConfig::widget_horizontal_margin;
 
 	// Add menu bar
 	auto menu_bar = tgui::MenuBar::create();
-	menu_bar->setTextSize(this->widget_text_size_medium);
-	menu_bar->setSize(this->menu_bar_fixed_size, this->top_bar_vertical_size - 3);
+	menu_bar->setTextSize(UIConfig::widget_text_size_medium);
+	menu_bar->setSize(UIConfig::menu_bar_fixed_size, UIConfig::top_bar_vertical_size - 3);
 	menu_bar->getRenderer()->setSeparatorVerticalPadding(0);
 
 	menu_bar->addMenu("File");
@@ -61,78 +61,78 @@ void UI::initialize_top_bar()
 	menu_bar->addMenu("Edit");
 	menu_bar->addMenuItem("Undo");
 
-	map_widget(menu_bar, "menu_bar", menu_bar_fixed_size);
+	map_widget(menu_bar, "menu_bar", UIConfig::menu_bar_fixed_size);
 	top_bar->add(menu_bar);
 
 	// Add FPS label
 	this->fps_label = tgui::Label::create("FPS: 1000");
-	fps_label->setTextSize(this->widget_text_size_medium);
-	fps_label->setPosition(x_offset, this->widget_top_margin);
+	fps_label->setTextSize(UIConfig::widget_text_size_medium);
+	fps_label->setPosition(x_offset, UIConfig::widget_top_margin);
 
-	x_offset += fps_label->getSize().x + this->widget_horizontal_margin;
+	x_offset += fps_label->getSize().x + UIConfig::widget_horizontal_margin;
 	map_widget(fps_label, "fps_label", fps_label->getSize().x);
 	top_bar->add(fps_label);
 
 	// Fit grid button
 	auto fit_grid_button = tgui::Button::create("Fit Grid to View");
-	fit_grid_button->setTextSize(this->widget_text_size_small);
-	fit_grid_button->setPosition(x_offset, this->widget_top_margin);
+	fit_grid_button->setTextSize(UIConfig::widget_text_size_small);
+	fit_grid_button->setPosition(x_offset, UIConfig::widget_top_margin);
 
-	x_offset += fit_grid_button->getSize().x + this->widget_horizontal_margin;
+	x_offset += fit_grid_button->getSize().x + UIConfig::widget_horizontal_margin;
 	map_widget(fit_grid_button, "fit_grid_button", fit_grid_button->getSize().x);
 	top_bar->add(fit_grid_button);
 
 	// Reset button
 	auto reset_button = tgui::Button::create("Reset");
-	reset_button->setTextSize(this->widget_text_size_small);
-	reset_button->setPosition(x_offset, this->widget_top_margin);
+	reset_button->setTextSize(UIConfig::widget_text_size_small);
+	reset_button->setPosition(x_offset, UIConfig::widget_top_margin);
 
-	x_offset += reset_button->getSize().x + this->widget_horizontal_margin;
+	x_offset += reset_button->getSize().x + UIConfig::widget_horizontal_margin;
 	map_widget(reset_button, "reset_button", reset_button->getSize().x);
 	top_bar->add(reset_button);
 
 	// Slow down button
 	auto slow_down_button = tgui::Button::create("-");
-	slow_down_button->setTextSize(this->widget_text_size_small);
-	slow_down_button->setPosition(x_offset, this->widget_top_margin);
+	slow_down_button->setTextSize(UIConfig::widget_text_size_small);
+	slow_down_button->setPosition(x_offset, UIConfig::widget_top_margin);
 
-	x_offset += slow_down_button->getSize().x + this->widget_horizontal_margin;
+	x_offset += slow_down_button->getSize().x + UIConfig::widget_horizontal_margin;
 	map_widget(slow_down_button, "slow_down_button", slow_down_button->getSize().x);
 	top_bar->add(slow_down_button);
 
 	// Pause / Resume button
 	auto pause_resume_button = tgui::Button::create(">");
-	pause_resume_button->setTextSize(this->widget_text_size_small);
-	pause_resume_button->setPosition(x_offset, this->widget_top_margin);
+	pause_resume_button->setTextSize(UIConfig::widget_text_size_small);
+	pause_resume_button->setPosition(x_offset, UIConfig::widget_top_margin);
 
-	x_offset += pause_resume_button->getSize().x + this->widget_horizontal_margin;
+	x_offset += pause_resume_button->getSize().x + UIConfig::widget_horizontal_margin;
 	map_widget(pause_resume_button, "pause_resume_button", pause_resume_button->getSize().x);
 	top_bar->add(pause_resume_button);
 
 	// Speed up button
 	auto speed_up_button = tgui::Button::create("+");
-	speed_up_button->setTextSize(this->widget_text_size_small);
-	speed_up_button->setPosition(x_offset, this->widget_top_margin);
+	speed_up_button->setTextSize(UIConfig::widget_text_size_small);
+	speed_up_button->setPosition(x_offset, UIConfig::widget_top_margin);
 
-	x_offset += speed_up_button->getSize().x + this->widget_horizontal_margin;
+	x_offset += speed_up_button->getSize().x + UIConfig::widget_horizontal_margin;
 	map_widget(speed_up_button, "speed_up_button", speed_up_button->getSize().x);
 	top_bar->add(speed_up_button);
 
 	// Add Speed label
 	this->speed_label = tgui::Label::create("Speed: 60 UPS");
-	speed_label->setTextSize(this->widget_text_size_medium);
-	speed_label->setPosition(x_offset, this->widget_top_margin);
+	speed_label->setTextSize(UIConfig::widget_text_size_medium);
+	speed_label->setPosition(x_offset, UIConfig::widget_top_margin);
 
-	x_offset += speed_label->getSize().x + this->widget_horizontal_margin;
+	x_offset += speed_label->getSize().x + UIConfig::widget_horizontal_margin;
 	map_widget(speed_label, "speed_label", speed_label->getSize().x);
 	top_bar->add(speed_label);
 
 	// Add iteration label
 	this->iteration_label = tgui::Label::create("Iteration: 1000");
-	iteration_label->setTextSize(this->widget_text_size_medium);
-	iteration_label->setPosition(x_offset, this->widget_top_margin);
+	iteration_label->setTextSize(UIConfig::widget_text_size_medium);
+	iteration_label->setPosition(x_offset, UIConfig::widget_top_margin);
 
-	x_offset += iteration_label->getSize().x + this->widget_horizontal_margin;
+	x_offset += iteration_label->getSize().x + UIConfig::widget_horizontal_margin;
 	map_widget(iteration_label, "iteration_label", iteration_label->getSize().x);
 	top_bar->add(iteration_label);	
 
@@ -153,14 +153,14 @@ void UI::initialize_right_panel()
 
 	// Create a right panel that spans the full height minus the top bar height
 	auto right_panel = tgui::Panel::create();
-	right_panel->setSize(this->right_panel_x_window_share, "100%" - tgui::bindHeight(top_bar));
+	right_panel->setSize(UIConfig::right_panel_x_window_share, "100%" - tgui::bindHeight(top_bar));
 	right_panel->setPosition("100% - width", tgui::bindBottom(top_bar));
-	right_panel->getRenderer()->setBorders(this->right_panel_borders);
+	right_panel->getRenderer()->setBorders(UIConfig::right_panel_borders);
 
 	/* Add a Layout for Organizing Widgets */
 	// Create a vertical layout to manage widgets inside the right panel
 	auto vertical_layout = tgui::VerticalLayout::create();
-	vertical_layout->getRenderer()->setPadding(this->outer_vertical_layout_padding);
+	vertical_layout->getRenderer()->setPadding(UIConfig::outer_vertical_layout_padding);
 	right_panel->add(vertical_layout);
 
 	/* Fill Right Panel with Widgets */
@@ -170,12 +170,12 @@ void UI::initialize_right_panel()
 	view_mode_label->setText("VIEW MODE");
 	view_mode_label->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
 	view_mode_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
-	set_scalable_text_size(view_mode_label, this->widget_text_size_big - 1u);
+	set_scalable_text_size(view_mode_label, UIConfig::widget_text_size_big - 1u);
 	vertical_layout->add(view_mode_label, 0.04f);
 
 	// Create view_mode_combo_box
 	auto view_mode_combo_box = tgui::ComboBox::create();
-	set_scalable_text_size(view_mode_combo_box, this->widget_text_size_medium - 1u);
+	set_scalable_text_size(view_mode_combo_box, UIConfig::widget_text_size_medium - 1u);
 	vertical_layout->add(view_mode_combo_box, 0.04f);
 	map_widget(view_mode_combo_box, "view_mode_combo_box");
 	vertical_layout->addSpace(0.02f);
@@ -218,34 +218,34 @@ void UI::initialize_right_panel()
 	left_legend_label->setText("Left");
 	left_legend_label->setOrigin(0.01f, 0.f);	// This sucks as a fix but I can't figure out anything better
 	left_legend_label->setHorizontalAlignment(tgui::HorizontalAlignment::Left);
-	set_scalable_text_size(left_legend_label, this->widget_text_size_medium);
+	set_scalable_text_size(left_legend_label, UIConfig::widget_text_size_medium);
 	trivial_legend_hl->add(left_legend_label);
 	
 	// Right labe;
 	this->right_legend_label = tgui::Label::create();
 	right_legend_label->setText("Right");
 	right_legend_label->setHorizontalAlignment(tgui::HorizontalAlignment::Right);
-	set_scalable_text_size(right_legend_label, this->widget_text_size_medium);
+	set_scalable_text_size(right_legend_label, UIConfig::widget_text_size_medium);
 	trivial_legend_hl->add(right_legend_label);
 
 
 	// Add a title label at the top of the right panel
-	auto title_label = tgui::Label::create(this->right_panel_title_text);
+	auto title_label = tgui::Label::create(UIConfig::right_panel_title_text);
 	title_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
-	set_scalable_text_size(title_label, this->widget_text_size_huge);
+	set_scalable_text_size(title_label, UIConfig::widget_text_size_huge);
 	title_label->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
-	vertical_layout->add(title_label, this->right_panel_title_ratio);
+	vertical_layout->add(title_label, UIConfig::right_panel_title_ratio);
 
 	/* Add Tab Container with Multiple Pages */
 	// Create a tab container for organizing different sections
 	auto tab_container = tgui::TabContainer::create();
-	set_scalable_text_size(tab_container->getTabs(), this->widget_text_size_small);
+	set_scalable_text_size(tab_container->getTabs(), UIConfig::widget_text_size_small);
 	vertical_layout->add(tab_container);
 
 	// Add tabs and retrieve the corresponding panels
-	this->cell_panel = tab_container->addTab(this->cell_tab_name);
-	this->animal_panel = tab_container->addTab(this->animal_tab_name);
-	this->genes_panel = tab_container->addTab(this->genes_tab_name);
+	this->cell_panel = tab_container->addTab(UIConfig::cell_tab_name);
+	this->animal_panel = tab_container->addTab(UIConfig::animal_tab_name);
+	this->genes_panel = tab_container->addTab(UIConfig::genes_tab_name);
 
 	// Set default open tab
 	tab_container->getTabs()->select(0);
@@ -257,13 +257,13 @@ void UI::initialize_right_panel()
 
 	// Add button1
 	auto ctrl_button1 = tgui::Button::create("BIND TO MOUSE");
-	set_scalable_text_size(ctrl_button1, this->widget_text_size_big - 1);
+	set_scalable_text_size(ctrl_button1, UIConfig::widget_text_size_big - 1);
 	ctrl_button1->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	vertical_layout->add(ctrl_button1, 0.05f);	
 	
 	// Add button2
 	auto ctrl_button2 = tgui::Button::create("REVERT CHANGES");
-	set_scalable_text_size(ctrl_button2, this->widget_text_size_big - 1);
+	set_scalable_text_size(ctrl_button2, UIConfig::widget_text_size_big - 1);
 	ctrl_button2->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	vertical_layout->add(ctrl_button2, 0.05f);
 	ctrl_button2->setVisible(false);
@@ -279,8 +279,8 @@ void UI::initialize_cell_panel()
 {
 	/* Create a scrollable panel */
 	auto cell_panel_content = tgui::ScrollablePanel::create();
-	cell_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
-	cell_panel_content->getRenderer()->setPadding(this->data_panel_content_padding);
+	cell_panel_content->getRenderer()->setBorders(UIConfig::tab_container_content_borders);
+	cell_panel_content->getRenderer()->setPadding(UIConfig::data_panel_content_padding);
 	this->cell_panel->add(cell_panel_content);
 	
 	/* Add Key Labels with numerical Values */
@@ -288,7 +288,7 @@ void UI::initialize_cell_panel()
 	tgui::Widget::Ptr hook = tgui::Panel::create();
 
 	// Create rows
-	hook = insert_key_value_row(cell_panel_content, hook, "Position: ", "cell_id_label", "N/A", ValueType::LABEL);
+	hook = insert_key_value_row(cell_panel_content, hook, "Position: ", "cell_id_label", "N/A", UIConfig::ValueType::LABEL);
 	inspection_data.cell_id_label = get_widget_as<tgui::Label>("cell_id_label");
 
 	hook = insert_key_value_row(cell_panel_content, hook, "Vegetation: ", "cell_vegetation_label");
@@ -308,14 +308,14 @@ void UI::initialize_cell_panel()
 	// Add label
 	auto animal_list_label = tgui::Label::create("Animals:");
 	animal_list_label->setPosition(tgui::bindLeft(hook), tgui::bindBottom(hook) + "4%");
-	set_scalable_text_size(animal_list_label, this->widget_text_size_big);
+	set_scalable_text_size(animal_list_label, UIConfig::widget_text_size_big);
 	animal_list_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	cell_panel_content->add(animal_list_label);
 
 	// Add list
 	auto animal_list = tgui::ListBox::create();
 	animal_list->setPosition(tgui::bindLeft(animal_list_label), tgui::bindBottom(animal_list_label));
-	set_scalable_text_size(animal_list, this->widget_text_size_big - 1);
+	set_scalable_text_size(animal_list, UIConfig::widget_text_size_big - 1);
 	animal_list->setWidth("90%");
 	cell_panel_content->add(animal_list);
 
@@ -334,15 +334,15 @@ void UI::initialize_animal_panel()
 {
 	// Create a scrollable panel
 	auto animal_panel_content = tgui::ScrollablePanel::create();
-	animal_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
-	animal_panel_content->getRenderer()->setPadding(this->data_panel_content_padding);
+	animal_panel_content->getRenderer()->setBorders(UIConfig::tab_container_content_borders);
+	animal_panel_content->getRenderer()->setPadding(UIConfig::data_panel_content_padding);
 	this->animal_panel->add(animal_panel_content);
 
 	/* Add Key Labels with Value Widgets */
 	// Add hook for elements
 	tgui::Widget::Ptr hook = tgui::Panel::create();
 
-	hook = insert_key_value_row(animal_panel_content, hook, "ID: ", "animal_id_label", "N/A", ValueType::LABEL);
+	hook = insert_key_value_row(animal_panel_content, hook, "ID: ", "animal_id_label", "N/A", UIConfig::ValueType::LABEL);
 	hook = insert_key_value_row(animal_panel_content, hook, "Energy: ", "energy_input");
 	hook = insert_key_value_row(animal_panel_content, hook, "Age: ");
 }
@@ -351,8 +351,8 @@ void UI::initialize_genes_panel()
 {
 	// Create a scrollable panel
 	auto genes_panel_content = tgui::ScrollablePanel::create();
-	genes_panel_content->getRenderer()->setBorders(this->tab_container_content_borders);
-	genes_panel_content->getRenderer()->setPadding(this->data_panel_content_padding);
+	genes_panel_content->getRenderer()->setBorders(UIConfig::tab_container_content_borders);
+	genes_panel_content->getRenderer()->setPadding(UIConfig::data_panel_content_padding);
 	this->genes_panel->add(genes_panel_content);
 
 	/* Add Key Labels with Value Widgets */
@@ -392,19 +392,19 @@ void UI::update_top_bar_height()
 	auto top_bar = get_widget_as<tgui::ScrollablePanel>("top_bar");
 	if (top_bar->getHorizontalScrollbar()->isShown())
 	{
-		top_bar->setSize(this->top_bar_horizontal_size, this->top_bar_vertical_size_with_scroll);
+		top_bar->setSize(UIConfig::top_bar_horizontal_size, UIConfig::top_bar_vertical_size_with_scroll);
 	}
 	else
 	{
-		top_bar->setSize(this->top_bar_horizontal_size, this->top_bar_vertical_size);
+		top_bar->setSize(UIConfig::top_bar_horizontal_size, UIConfig::top_bar_vertical_size);
 	}
 }
 
 void UI::update_scalable_text_size()
 {
 	// Estimate how much the resolution differs from the reference resolution
-	double ratio_x = (double)gui.getWindow()->getSize().x / (double)this->reference_resolution.x;
-	double ratio_y = (double)gui.getWindow()->getSize().y / (double)this->reference_resolution.y;
+	double ratio_x = (double)gui.getWindow()->getSize().x / (double)UIConfig::reference_resolution.x;
+	double ratio_y = (double)gui.getWindow()->getSize().y / (double)UIConfig::reference_resolution.y;
 	
 	// Use average scaling to adjust text size proportionally across dimensions
 	double average_ratio = (ratio_x + ratio_y) / 2.0;
@@ -418,20 +418,20 @@ void UI::update_scalable_text_size()
 	}
 }
 
-tgui::Widget::Ptr UI::insert_key_value_row(tgui::Panel::Ptr panel, tgui::Widget::Ptr widget_above, std::string key_label_text, std::string value_map_id, std::string default_value, ValueType value_type)
+tgui::Widget::Ptr UI::insert_key_value_row(tgui::Panel::Ptr panel, tgui::Widget::Ptr widget_above, std::string key_label_text, std::string value_map_id, std::string default_value, UIConfig::ValueType value_type)
 {
 	/* Create and add Key Label */
 	auto key_label = tgui::Label::create(key_label_text);
 	key_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
-	key_label->setPosition(tgui::bindLeft(widget_above), tgui::bindBottom(widget_above) + this->key_value_top_padding);
-	set_scalable_text_size(key_label, this->widget_text_size_big);
+	key_label->setPosition(tgui::bindLeft(widget_above), tgui::bindBottom(widget_above) + UIConfig::key_value_top_padding);
+	set_scalable_text_size(key_label, UIConfig::widget_text_size_big);
 	panel->add(key_label);
 
 	/* Create and add Value Widget */
 
 	// Create a widget and set values specific to it's type
 	tgui::Widget::Ptr value_widget;
-	if (value_type == ValueType::NUMERICAL_INPUT)
+	if (value_type == UIConfig::ValueType::NUMERICAL_INPUT)
 	{
 		auto edit_box_value = tgui::EditBox::create();
 		edit_box_value->setSize("20%", tgui::bindHeight(key_label));
@@ -440,7 +440,7 @@ tgui::Widget::Ptr UI::insert_key_value_row(tgui::Panel::Ptr panel, tgui::Widget:
 
 		value_widget = edit_box_value;
 	}
-	else if (value_type == ValueType::LABEL)
+	else if (value_type == UIConfig::ValueType::LABEL)
 	{
 		auto label_value = tgui::Label::create();
 		label_value->setText(default_value);
@@ -450,7 +450,7 @@ tgui::Widget::Ptr UI::insert_key_value_row(tgui::Panel::Ptr panel, tgui::Widget:
 
 	// Set non-type specific values
 	value_widget->setPosition(tgui::bindRight(key_label), tgui::bindTop(key_label));
-	set_scalable_text_size(value_widget, this->widget_text_size_big);
+	set_scalable_text_size(value_widget, UIConfig::widget_text_size_big);
 	panel->add(value_widget);
 
 	// Add value to widget map
@@ -496,7 +496,7 @@ void UI::update_widget_positioning()
 		widget_position_update_vector[i]->setPosition(x_offset, y_position);
 
 		// Update the offset
-		x_offset += widget_position_update_vector[i]->getSize().x + widget_horizontal_margin;
+		x_offset += widget_position_update_vector[i]->getSize().x + UIConfig::widget_horizontal_margin;
 	}
 }
 
@@ -569,7 +569,7 @@ float UI::get_menu_bar_vertical_size()
 float UI::get_right_panel_x_window_share()
 {
 	// Cast the value to a string
-	std::string value = this->right_panel_x_window_share.toString().toStdString();
+	std::string value = UIConfig::right_panel_x_window_share.toString().toStdString();
 	
 	// Assume its a precentage value
 	double decimal_value = std::stod(value.substr(0, value.size() - 1)) / 100.0;

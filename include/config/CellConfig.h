@@ -25,7 +25,7 @@ namespace CellConfig
     inline constexpr float VEG_TEMP_PENALTY = 3.0f;
 
     // Humidity
-    inline constexpr float VEG_HUMIDITY_IDEAL = 0.5f;
+    inline constexpr float VEG_HUMIDITY_IDEAL = 0.7f;
     inline constexpr float VEG_HUMIDITY_PENALTY = 3.0f;    
     
     // Elevation
