@@ -5,9 +5,8 @@
 namespace UIConfig
 {
 	/* Global Properties */
-	inline const sf::Vector2u reference_resolution(1920u, 1001u);	// Maximized window (not full screen)
+	inline const sf::Vector2u reference_resolution(1920u, 1001u);	// Maximized window on Windows -> not full screen
 
-	inline constexpr unsigned int widget_horizontal_margin = 10u;	// TODO: Verify if top bar exclusive
 	inline constexpr unsigned int widget_text_size_small = 14u;
 	inline constexpr unsigned int widget_text_size_medium = 18u;
 	inline constexpr unsigned int widget_text_size_big = 20u;
@@ -18,6 +17,7 @@ namespace UIConfig
 	inline const tgui::Layout top_bar_vertical_size_with_scroll = 42;
 	inline const tgui::Layout top_bar_horizontal_size = "100%";
 	inline const tgui::Layout widget_top_margin = "10%";
+	inline constexpr unsigned int widget_horizontal_margin = 10u;
 	inline const tgui::Borders top_bar_borders = tgui::Borders(0.f, 0.0f, 0.0f, 1.f);
 	inline const tgui::Layout menu_bar_fixed_size = 105;
 

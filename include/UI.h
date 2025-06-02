@@ -19,26 +19,9 @@ private:
 
 	// Components
 	tgui::Gui& gui;
-	std::unordered_map<std::string, tgui::Widget::Ptr> widget_map;
-	std::vector<tgui::Widget::Ptr> widget_position_update_vector;
-	std::vector<tgui::Layout> minimal_lengths;
-	std::vector<std::pair<tgui::Widget::Ptr, unsigned int>> widget_text_sizes;
-	VisModeConfig::VisMode current_vis_mode = VisModeConfig::DEFAULT_MODE;
 
-	// Right panel
-
-	tgui::Panel::Ptr cell_panel;
-	tgui::Panel::Ptr animal_panel;
-	tgui::Panel::Ptr genes_panel;
-
-	// Commonly accessed references
-	tgui::Label::Ptr fps_label;
-	tgui::Label::Ptr iteration_label;
-	tgui::Label::Ptr speed_label;
-	tgui::CanvasSFML::Ptr gradient_canvas;
-	tgui::Label::Ptr left_legend_label;
-	tgui::Label::Ptr right_legend_label;
-
+	/* Commonly accessed references */
+	// Right Panel
 	struct InspectionData
 	{
 		tgui::Label::Ptr cell_id_label;
@@ -49,9 +32,27 @@ private:
 	};
 
 	InspectionData inspection_data;
+	tgui::Panel::Ptr cell_panel;
+	tgui::Panel::Ptr animal_panel;
+	tgui::Panel::Ptr genes_panel;
 
-	// Tracked data
+	tgui::CanvasSFML::Ptr gradient_canvas;
+	tgui::Label::Ptr left_legend_label;
+	tgui::Label::Ptr right_legend_label;
+
+	// Top Bar
+	tgui::Label::Ptr fps_label;
+	tgui::Label::Ptr iteration_label;
+	tgui::Label::Ptr speed_label;
+
+	/* Tracked Data */
+	std::unordered_map<std::string, tgui::Widget::Ptr> widget_map;
+	std::vector<tgui::Widget::Ptr> widget_position_update_vector;
+	std::vector<tgui::Layout> minimal_lengths;
+	std::vector<std::pair<tgui::Widget::Ptr, unsigned int>> widget_text_sizes;
+
 	const Cell* tracked_cell = nullptr;
+	VisModeConfig::VisMode current_vis_mode = VisModeConfig::DEFAULT_MODE;
 
 public:
 	/* Constructor & Destructor */
