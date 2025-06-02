@@ -9,9 +9,6 @@
 #include "VisModeConfig.h"
 #include "Cell.h"
 
-// Testing
-#include <ctime>
-
 class UI
 {
 private:
@@ -68,13 +65,6 @@ public:
 	float get_menu_bar_vertical_size();
 	float get_right_panel_x_window_share();
 
-	/* Setters */
-	void update_fps_label(int fps);
-	void update_iteration_label(int iteration);
-	void update_speed_label(int speed);
-	void set_vis_mode(VisModeConfig::VisMode vis_mode);
-	void set_tracked_cell(const Cell& cell);
-
 	template<typename T>
 	std::shared_ptr<T> get_widget_as(const std::string& name)
 	{
@@ -94,6 +84,13 @@ public:
 
 		return widget;
 	}
+
+	/* Setters */
+	void update_fps_label(int fps);
+	void update_iteration_label(int iteration);
+	void update_speed_label(int speed);
+	void set_vis_mode(VisModeConfig::VisMode vis_mode);
+	void set_tracked_cell(const Cell& cell);
 
 private:
 	/* Private Methods */

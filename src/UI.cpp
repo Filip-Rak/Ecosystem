@@ -609,18 +609,19 @@ void UI::set_tracked_cell(const Cell& cell)
 
 void UI::update_inspection(const Cell* cell)
 {
-	int x = cell->get_pos_x(), y = cell->get_pos_y();
-	inspection_data.cell_id_label->setText("(" + std::to_string(x) + ", " + std::to_string(y) + ")");
+	int x = cell->get_pos_x();
+	int y = cell->get_pos_y();
 
-	int veg_int = static_cast<int>(std::ceil(cell->get_vegetation() * 100.f));
-	inspection_data.cell_vegetation_label->setText(std::to_string(veg_int));
+	std::ostringstream ss;
+	ss << '(' << x << ", " << y << ')';
+	inspection_data.cell_id_label->setText(ss.str());
 
-	int temp_int = static_cast<int>(std::ceil(cell->get_temperature() * 100.f));
-	inspection_data.cell_temperature_label->setText(std::to_string(temp_int));
+	auto format_percent = [](float val) -> std::string {
+		return std::to_string(std::lround(val * 100.f));
+		};
 
-	int hum_int = static_cast<int>(std::ceil(cell->get_humidity() * 100.f));
-	inspection_data.cell_humidity_label->setText(std::to_string(hum_int));
-
-	int elev_int = static_cast<int>(std::ceil(cell->get_elevation() * 100.f));
-	inspection_data.cell_elevation_label->setText(std::to_string(elev_int));
+	inspection_data.cell_vegetation_label->setText(format_percent(cell->get_vegetation()));
+	inspection_data.cell_temperature_label->setText(format_percent(cell->get_temperature()));
+	inspection_data.cell_humidity_label->setText(format_percent(cell->get_humidity()));
+	inspection_data.cell_elevation_label->setText(format_percent(cell->get_elevation()));
 }
