@@ -1,7 +1,13 @@
 #include "UI.h"
 
 /* Constructor & Destructor */
-UI::UI(tgui::Gui& gui): gui(gui) {}
+UI::UI(tgui::Gui& gui): gui(gui) 
+{
+	float cell_range = CellConfig::MAX_TEMP - CellConfig::MIN_TEMP;
+	float property_range = UIConfig::RIGHT_PANEL_PROPERTY_MAX - UIConfig::RIGHT_PANEL_PROPERTY_MIN;
+	property_translation_multiplier = property_range / cell_range;
+	property_translation_offset = CellConfig::MIN_TEMP;
+}
 
 UI::~UI()
 {
@@ -265,13 +271,6 @@ void UI::initialize_right_panel()
 	
 	vertical_layout->addSpace(0.002f);
 
-	// Add button2
-	this->ctrl_button2 = tgui::Button::create(UIConfig::right_panel_ctrl_button2_text);
-	set_scalable_text_size(ctrl_button2, UIConfig::widget_text_size_big - 1);
-	ctrl_button2->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
-	vertical_layout->add(ctrl_button2, 0.05f);
-	ctrl_button2->setEnabled(false);
-
 	// Add spacer
 	vertical_layout->addSpace(0.005f);
 
@@ -382,12 +381,6 @@ void UI::initialize_tgui_events()
 			else 
 				current_control_mode = UIConfig::ControlMode::INSERT;
 
-			update_for_control_mode();
-		});
-
-	ctrl_button2->onClick([this]
-		{
-			current_control_mode = UIConfig::ControlMode::FREE;
 			update_for_control_mode();
 		});
 }
@@ -625,7 +618,7 @@ void UI::set_vis_mode(VisModeConfig::VisMode vis_mode)
 	update_trivial_legend(vis_mode);
 }
 
-void UI::forward_clicked_cell(const Cell& cell)
+void UI::forward_clicked_cell(Cell& cell)
 {
 	/* Update the Cell */
 	tracked_cell = &cell;
@@ -637,13 +630,18 @@ void UI::forward_clicked_cell(const Cell& cell)
 	{
 		current_control_mode = UIConfig::ControlMode::INSPECT;
 		update_for_control_mode();
+
+		update_inspection(tracked_cell);
 	}
 
 	// If in INSERT replace the cell
 	else if (current_control_mode == UIConfig::ControlMode::INSERT)
 	{
 		std::cout << "Overwritten cell: " << tracked_cell->get_pos_x() << " " << tracked_cell->get_pos_y() << "\n";
+		set_tracked_cell_properties();
 	}
+	else 
+		update_inspection(tracked_cell);
 }
 
 void UI::update_inspection(const Cell* cell)
@@ -655,10 +653,11 @@ void UI::update_inspection(const Cell* cell)
 	ss << '(' << x << ", " << y << ')';
 	inspection_data.cell_id_label->setText(ss.str());
 
-	auto format_percent = [](float val) -> std::string {
-		return std::to_string(std::lround(val * 100.f));
+	auto format_percent = [this](float val) -> std::string 
+		{
+			return std::to_string(std::lround(property_translation_offset + val * property_translation_multiplier));
 		};
-
+	
 	inspection_data.cell_vegetation_label->setText(format_percent(cell->get_vegetation()));
 	inspection_data.cell_temperature_label->setText(format_percent(cell->get_temperature()));
 	inspection_data.cell_humidity_label->setText(format_percent(cell->get_humidity()));
@@ -674,7 +673,6 @@ void UI::update_for_control_mode()
 		{
 			title_label->setText(UIConfig::right_panel_title_text_free);
 			ctrl_button1->setText(UIConfig::right_panel_ctrl_button1_text_free);
-			ctrl_button2->setEnabled(false);
 			inspection_data.cell_id_label->setText(UIConfig::cell_id_label_free);
 			break;
 		}
@@ -682,18 +680,31 @@ void UI::update_for_control_mode()
 		{
 			title_label->setText(UIConfig::right_panel_title_text_insert);
 			ctrl_button1->setText(UIConfig::right_panel_ctrl_button1_text_insert);
-			ctrl_button2->setEnabled(false);
+			inspection_data.cell_id_label->setText(UIConfig::cell_id_label_free);
 			break;
 		}
 		case UIConfig::ControlMode::INSPECT:
 		{
 			title_label->setText(UIConfig::right_panel_title_text_inspect);
 			ctrl_button1->setText(UIConfig::right_panel_ctrl_button1_text_inspect);
-			ctrl_button2->setEnabled(true);
 			break;
 		}
 
 		default:
 			std::cerr << "Failure at: UI::initialize_right_panel() -> current control mode undefined\n";
 	}
+}
+
+void UI::set_tracked_cell_properties()
+{
+	auto format_property([this](tgui::EditBox::Ptr edit_box)
+		{
+			float val = edit_box->getText().toFloat();
+			return val / property_translation_multiplier - property_translation_offset;
+		});
+
+	tracked_cell->set_vegetation(format_property(inspection_data.cell_vegetation_label));
+	tracked_cell->set_temperature(format_property(inspection_data.cell_temperature_label), false);
+	tracked_cell->set_humidity(format_property(inspection_data.cell_humidity_label), false);
+	tracked_cell->set_elevation(format_property(inspection_data.cell_elevation_label), true);
 }

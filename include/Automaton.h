@@ -32,7 +32,7 @@ public:
 
 	/* Getters */
 	const std::vector<Cell>& get_grid() const;
-	const Cell& get_cell(int x, int y) const;
+	Cell& get_cell(int x, int y);
 
 private:
 	/* Private Methods */

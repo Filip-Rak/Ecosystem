@@ -39,7 +39,9 @@ private:
 
 	tgui::Label::Ptr title_label;
 	tgui::Button::Ptr ctrl_button1;
-	tgui::Button::Ptr ctrl_button2;
+
+	float property_translation_multiplier;
+	float property_translation_offset;
 
 	// Top Bar
 	tgui::Label::Ptr fps_label;
@@ -52,7 +54,7 @@ private:
 	std::vector<tgui::Layout> minimal_lengths;
 	std::vector<std::pair<tgui::Widget::Ptr, unsigned int>> widget_text_sizes;
 
-	const Cell* tracked_cell = nullptr;
+	Cell* tracked_cell = nullptr;
 	UIConfig::ControlMode current_control_mode = UIConfig::DEFAULT_CONTROL_MODE;
 	VisModeConfig::VisMode current_vis_mode = VisModeConfig::DEFAULT_MODE;
 
@@ -95,7 +97,7 @@ public:
 	void update_iteration_label(int iteration);
 	void update_speed_label(int speed);
 	void set_vis_mode(VisModeConfig::VisMode vis_mode);
-	void forward_clicked_cell(const Cell& cell);
+	void forward_clicked_cell(Cell& cell);
 
 private:
 	/* Private Methods */
@@ -146,4 +148,5 @@ private:
 	// Updating
 	void update_inspection(const Cell* cell);
 	void update_for_control_mode();
+	void set_tracked_cell_properties();
 };

@@ -49,12 +49,14 @@ namespace UIConfig
 
 	inline constexpr ControlMode DEFAULT_CONTROL_MODE = ControlMode::FREE;
 
-	inline const tgui::String right_panel_title_text_free = "COPY";
+	inline const tgui::String right_panel_title_text_free = "INSERT";
 	inline const tgui::String right_panel_title_text_insert = "INSERT";
 	inline const tgui::String right_panel_title_text_inspect = "INSPECT";
 	inline const tgui::String right_panel_ctrl_button1_text_free = "BIND";
 	inline const tgui::String right_panel_ctrl_button1_text_insert = "UNBIND";
-	inline const tgui::String right_panel_ctrl_button1_text_inspect = "BIND";	
-	inline const tgui::String right_panel_ctrl_button2_text = "COPY";
+	inline const tgui::String right_panel_ctrl_button1_text_inspect = "BIND";
 	inline const tgui::String cell_id_label_free = "N/A";
+
+	inline constexpr float RIGHT_PANEL_PROPERTY_MIN = 0;
+	inline constexpr float RIGHT_PANEL_PROPERTY_MAX = 100;
 }

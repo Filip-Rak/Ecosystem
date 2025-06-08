@@ -43,7 +43,7 @@ const std::vector<Cell>& Automaton::get_grid() const
     return grid_cells;
 }
 
-const Cell& Automaton::get_cell(int x, int y) const
+Cell& Automaton::get_cell(int x, int y)
 {
     // Validate position
     if (x >= width || y >= height || x < 0 || y < 0)

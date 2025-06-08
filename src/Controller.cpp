@@ -104,12 +104,16 @@ void Controller::transfer_pos()
 
 	try
 	{
-		const Cell& cell = automaton.get_cell(cords_pair.first, cords_pair.second);
+		Cell& cell = automaton.get_cell(cords_pair.first, cords_pair.second);
 		ui_ptr->forward_clicked_cell(cell);
 
 		// Run manual update if paused
 		if (sim_paused)
+		{
 			ui_ptr->update();
+			visualization.update(automaton.get_grid());	// Should be replaced with a single cell update
+			std::cout << "Controller::transfer_pos() -> Overwritten cell: x = " << cords_pair.first << " y = " << cords_pair.second << ". USED MAIN UPDATE!\n";
+		}
 	}
 	catch (std::exception ex)
 	{

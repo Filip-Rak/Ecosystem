@@ -40,9 +40,13 @@ public:
 	float get_growth_limit() const;
 
 	/* Setters */
+	void set_vegetation(float val);
+	void set_temperature(float val, bool immediate_update = true);
+	void set_humidity(float val, bool immediate_update = true);
+	void set_elevation(float val, bool immediate_update = true);
 
-private:
 	/* Private Methods */
+private:
 	void update_growth_parameters();
 };
 
