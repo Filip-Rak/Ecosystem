@@ -19,6 +19,8 @@ void UI::initialize()
 
 	update_scalable_text_size();
 	update_trivial_legend(current_vis_mode);
+	initialize_tgui_events();
+	update_for_control_mode();
 }
 
 void UI::update_on_resize()
@@ -30,7 +32,7 @@ void UI::update_on_resize()
 
 void UI::update()
 {
-	if (tracked_cell)
+	if (current_control_mode == UIConfig::ControlMode::INSPECT && tracked_cell)
 		update_inspection(tracked_cell);
 }
 
@@ -230,45 +232,12 @@ void UI::initialize_right_panel()
 
 
 	// Add a title label at the top of the right panel
-	auto title_label = tgui::Label::create(UIConfig::right_panel_title_text);
+	this->title_label = tgui::Label::create(UIConfig::right_panel_title_text_insert);
 	title_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	set_scalable_text_size(title_label, UIConfig::widget_text_size_huge);
 	title_label->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
 	vertical_layout->add(title_label, UIConfig::right_panel_title_ratio);
-
-	// Add labels & checkboxes
-	{
-		float size_mod = 0.8f;
-		float margin_mod = 0.01f;
-
-		auto checkbox_panel = tgui::Panel::create();
-		vertical_layout->add(checkbox_panel, 0.04f);
-
-		// Auto-save
-		auto auto_save_label = tgui::Label::create("Auto-Save");
-		auto_save_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
-		set_scalable_text_size(auto_save_label, UIConfig::widget_text_size_medium);
-		checkbox_panel->add(auto_save_label);
-
-		auto auto_save_checkbox = tgui::CheckBox::create();
-		auto_save_checkbox->setPosition(tgui::bindRight(auto_save_label) + tgui::bindWidth(checkbox_panel) * margin_mod, 0);
-		auto_save_checkbox->setSize(tgui::bindHeight(checkbox_panel) * size_mod, tgui::bindHeight(checkbox_panel) * size_mod);
-		checkbox_panel->add(auto_save_checkbox);
-
-		// Lock fields
-		auto lock_fields_checkbox = tgui::CheckBox::create();
-		lock_fields_checkbox->setSize(tgui::bindHeight(checkbox_panel) * size_mod, tgui::bindHeight(checkbox_panel) * size_mod);
-		lock_fields_checkbox->setPosition(tgui::bindRight(checkbox_panel) - "width" - tgui::bindWidth(checkbox_panel) * margin_mod, 0);
-		checkbox_panel->add(lock_fields_checkbox);
-
-		auto lock_fields_label = tgui::Label::create("Lock fields");
-		lock_fields_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
-		lock_fields_label->setPosition(tgui::bindLeft(lock_fields_checkbox) - "width" - tgui::bindWidth(checkbox_panel) * margin_mod, 0);
-		set_scalable_text_size(lock_fields_label, UIConfig::widget_text_size_medium);
-		checkbox_panel->add(lock_fields_label);
-	}
 	
-
 	/* Add Tab Container with Multiple Pages */
 	// Create a tab container for organizing different sections
 	auto tab_container = tgui::TabContainer::create();
@@ -289,17 +258,19 @@ void UI::initialize_right_panel()
 	vertical_layout->addSpace(0.005f);
 
 	// Add button1
-	auto ctrl_button1 = tgui::Button::create("BIND TO MOUSE");
+	this->ctrl_button1 = tgui::Button::create("BIND TO MOUSE");
 	set_scalable_text_size(ctrl_button1, UIConfig::widget_text_size_big - 1);
 	ctrl_button1->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	vertical_layout->add(ctrl_button1, 0.05f);	
 	
+	vertical_layout->addSpace(0.002f);
+
 	// Add button2
-	auto ctrl_button2 = tgui::Button::create("REVERT CHANGES");
+	this->ctrl_button2 = tgui::Button::create(UIConfig::right_panel_ctrl_button2_text);
 	set_scalable_text_size(ctrl_button2, UIConfig::widget_text_size_big - 1);
 	ctrl_button2->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
 	vertical_layout->add(ctrl_button2, 0.05f);
-	ctrl_button2->setVisible(false);
+	ctrl_button2->setEnabled(false);
 
 	// Add spacer
 	vertical_layout->addSpace(0.005f);
@@ -321,7 +292,7 @@ void UI::initialize_cell_panel()
 	tgui::Widget::Ptr hook = tgui::Panel::create();
 
 	// Create rows
-	hook = insert_key_value_row(cell_panel_content, hook, "Position: ", "cell_id_label", "N/A", UIConfig::ValueType::LABEL);
+	hook = insert_key_value_row(cell_panel_content, hook, "Position: ", "cell_id_label", UIConfig::cell_id_label_free.toStdString(), UIConfig::ValueType::LABEL);
 	inspection_data.cell_id_label = get_widget_as<tgui::Label>("cell_id_label");
 
 	hook = insert_key_value_row(cell_panel_content, hook, "Vegetation: ", "cell_vegetation_label");
@@ -400,6 +371,25 @@ void UI::initialize_genes_panel()
 	hook = insert_key_value_row(genes_panel_content, hook, "Food needs: ");
 	hook = insert_key_value_row(genes_panel_content, hook, "Max lifespan: ");
 	hook = insert_key_value_row(genes_panel_content, hook, "Maturity age: ");
+}
+
+void UI::initialize_tgui_events()
+{
+	ctrl_button1->onClick([this]
+		{
+			if (current_control_mode == UIConfig::ControlMode::INSERT)
+				current_control_mode = UIConfig::ControlMode::FREE;
+			else 
+				current_control_mode = UIConfig::ControlMode::INSERT;
+
+			update_for_control_mode();
+		});
+
+	ctrl_button2->onClick([this]
+		{
+			current_control_mode = UIConfig::ControlMode::FREE;
+			update_for_control_mode();
+		});
 }
 
 void UI::set_scalable_text_size(tgui::Widget::Ptr widget, unsigned int size)
@@ -635,9 +625,25 @@ void UI::set_vis_mode(VisModeConfig::VisMode vis_mode)
 	update_trivial_legend(vis_mode);
 }
 
-void UI::set_tracked_cell(const Cell& cell)
+void UI::forward_clicked_cell(const Cell& cell)
 {
+	/* Update the Cell */
 	tracked_cell = &cell;
+
+	/* Process Based on Control Mode */
+
+	// If in FREE switch to INSPECT
+	if (current_control_mode == UIConfig::ControlMode::FREE)
+	{
+		current_control_mode = UIConfig::ControlMode::INSPECT;
+		update_for_control_mode();
+	}
+
+	// If in INSERT replace the cell
+	else if (current_control_mode == UIConfig::ControlMode::INSERT)
+	{
+		std::cout << "Overwritten cell: " << tracked_cell->get_pos_x() << " " << tracked_cell->get_pos_y() << "\n";
+	}
 }
 
 void UI::update_inspection(const Cell* cell)
@@ -657,4 +663,37 @@ void UI::update_inspection(const Cell* cell)
 	inspection_data.cell_temperature_label->setText(format_percent(cell->get_temperature()));
 	inspection_data.cell_humidity_label->setText(format_percent(cell->get_humidity()));
 	inspection_data.cell_elevation_label->setText(format_percent(cell->get_elevation()));
+}
+
+void UI::update_for_control_mode()
+{
+	// Update the properties according to current mode
+	switch (current_control_mode)
+	{
+		case UIConfig::ControlMode::FREE:
+		{
+			title_label->setText(UIConfig::right_panel_title_text_free);
+			ctrl_button1->setText(UIConfig::right_panel_ctrl_button1_text_free);
+			ctrl_button2->setEnabled(false);
+			inspection_data.cell_id_label->setText(UIConfig::cell_id_label_free);
+			break;
+		}
+		case UIConfig::ControlMode::INSERT:
+		{
+			title_label->setText(UIConfig::right_panel_title_text_insert);
+			ctrl_button1->setText(UIConfig::right_panel_ctrl_button1_text_insert);
+			ctrl_button2->setEnabled(false);
+			break;
+		}
+		case UIConfig::ControlMode::INSPECT:
+		{
+			title_label->setText(UIConfig::right_panel_title_text_inspect);
+			ctrl_button1->setText(UIConfig::right_panel_ctrl_button1_text_inspect);
+			ctrl_button2->setEnabled(true);
+			break;
+		}
+
+		default:
+			std::cerr << "Failure at: UI::initialize_right_panel() -> current control mode undefined\n";
+	}
 }

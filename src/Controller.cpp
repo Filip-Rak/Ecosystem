@@ -105,7 +105,7 @@ void Controller::transfer_pos()
 	try
 	{
 		const Cell& cell = automaton.get_cell(cords_pair.first, cords_pair.second);
-		ui_ptr->set_tracked_cell(cell);
+		ui_ptr->forward_clicked_cell(cell);
 
 		// Run manual update if paused
 		if (sim_paused)

@@ -24,8 +24,8 @@ namespace UIConfig
 	/* Right Panel */
 	enum ValueType
 	{
-		NUMERICAL_INPUT = 1,
-		LABEL = 2,
+		NUMERICAL_INPUT = 0,
+		LABEL = 1,
 	};
 
 	inline const tgui::Layout right_panel_x_window_share = "20%";
@@ -36,8 +36,25 @@ namespace UIConfig
 	inline const tgui::Layout key_value_top_padding = "1%";
 	inline constexpr float right_panel_title_ratio = 0.06f;
 
-	inline const tgui::String right_panel_title_text = "INSERT";
 	inline const tgui::String cell_tab_name = "Cell";
 	inline const tgui::String animal_tab_name = "Animal";
 	inline const tgui::String genes_tab_name = "Genes";
+
+	enum ControlMode
+	{
+		FREE = 0,
+		INSERT = 1,
+		INSPECT = 2,
+	};
+
+	inline constexpr ControlMode DEFAULT_CONTROL_MODE = ControlMode::FREE;
+
+	inline const tgui::String right_panel_title_text_free = "COPY";
+	inline const tgui::String right_panel_title_text_insert = "INSERT";
+	inline const tgui::String right_panel_title_text_inspect = "INSPECT";
+	inline const tgui::String right_panel_ctrl_button1_text_free = "BIND";
+	inline const tgui::String right_panel_ctrl_button1_text_insert = "UNBIND";
+	inline const tgui::String right_panel_ctrl_button1_text_inspect = "BIND";	
+	inline const tgui::String right_panel_ctrl_button2_text = "COPY";
+	inline const tgui::String cell_id_label_free = "N/A";
 }
