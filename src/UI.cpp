@@ -653,11 +653,12 @@ void UI::update_inspection(const Cell* cell)
 	ss << '(' << x << ", " << y << ')';
 	inspection_data.cell_id_label->setText(ss.str());
 
-	auto format_percent = [this](float val) -> std::string 
+	// Inline lambda to format float as int with minimal overhead
+	auto format_percent = [this](float val) -> std::string
 		{
-			return std::to_string(std::lround(property_translation_offset + val * property_translation_multiplier));
+			return std::to_string(static_cast<int>(property_translation_offset + val * property_translation_multiplier + 0.5f));
 		};
-	
+
 	inspection_data.cell_vegetation_label->setText(format_percent(cell->get_vegetation()));
 	inspection_data.cell_temperature_label->setText(format_percent(cell->get_temperature()));
 	inspection_data.cell_humidity_label->setText(format_percent(cell->get_humidity()));
