@@ -60,6 +60,7 @@ namespace VisModeConfig
         throw std::invalid_argument("VisModeConfig::to_vis_mode(const std::string&) -> Unmapped string: " + str);
     }
 
+    // Return data of that mode
     inline const VisModeData& get_data(VisMode vis_mode)
     {
         for (const VisModeData& data : vis_mode_data)

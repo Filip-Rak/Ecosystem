@@ -221,7 +221,7 @@ void UI::initialize_right_panel()
 	set_scalable_text_size(left_legend_label, UIConfig::widget_text_size_medium);
 	trivial_legend_hl->add(left_legend_label);
 	
-	// Right labe;
+	// Right label
 	this->right_legend_label = tgui::Label::create();
 	right_legend_label->setText("Right");
 	right_legend_label->setHorizontalAlignment(tgui::HorizontalAlignment::Right);
@@ -235,6 +235,39 @@ void UI::initialize_right_panel()
 	set_scalable_text_size(title_label, UIConfig::widget_text_size_huge);
 	title_label->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
 	vertical_layout->add(title_label, UIConfig::right_panel_title_ratio);
+
+	// Add labels & checkboxes
+	{
+		float size_mod = 0.8f;
+		float margin_mod = 0.01f;
+
+		auto checkbox_panel = tgui::Panel::create();
+		vertical_layout->add(checkbox_panel, 0.04f);
+
+		// Auto-save
+		auto auto_save_label = tgui::Label::create("Auto-Save");
+		auto_save_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
+		set_scalable_text_size(auto_save_label, UIConfig::widget_text_size_medium);
+		checkbox_panel->add(auto_save_label);
+
+		auto auto_save_checkbox = tgui::CheckBox::create();
+		auto_save_checkbox->setPosition(tgui::bindRight(auto_save_label) + tgui::bindWidth(checkbox_panel) * margin_mod, 0);
+		auto_save_checkbox->setSize(tgui::bindHeight(checkbox_panel) * size_mod, tgui::bindHeight(checkbox_panel) * size_mod);
+		checkbox_panel->add(auto_save_checkbox);
+
+		// Lock fields
+		auto lock_fields_checkbox = tgui::CheckBox::create();
+		lock_fields_checkbox->setSize(tgui::bindHeight(checkbox_panel) * size_mod, tgui::bindHeight(checkbox_panel) * size_mod);
+		lock_fields_checkbox->setPosition(tgui::bindRight(checkbox_panel) - "width" - tgui::bindWidth(checkbox_panel) * margin_mod, 0);
+		checkbox_panel->add(lock_fields_checkbox);
+
+		auto lock_fields_label = tgui::Label::create("Lock fields");
+		lock_fields_label->getRenderer()->setTextStyle(tgui::TextStyle::Bold);
+		lock_fields_label->setPosition(tgui::bindLeft(lock_fields_checkbox) - "width" - tgui::bindWidth(checkbox_panel) * margin_mod, 0);
+		set_scalable_text_size(lock_fields_label, UIConfig::widget_text_size_medium);
+		checkbox_panel->add(lock_fields_label);
+	}
+	
 
 	/* Add Tab Container with Multiple Pages */
 	// Create a tab container for organizing different sections
