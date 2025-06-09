@@ -744,10 +744,10 @@ void UI::handle_input()
 
 void UI::set_tracked_cell_properties()
 {
-	auto format_property([this](tgui::SpinControl::Ptr edit_box)
+	auto format_property([this](tgui::SpinControl::Ptr edit_box) -> float
 		{
 			float val = edit_box->getValue();
-			return val / property_translation_multiplier - property_translation_offset;
+			return static_cast<int>(val / property_translation_multiplier - property_translation_offset);
 		});
 
 	tracked_cell->set_vegetation(format_property(inspection_data.cell_vegetation_label));
