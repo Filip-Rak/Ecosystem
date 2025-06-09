@@ -54,8 +54,7 @@ public:
 	void draw_grid();
 	void draw_ui();
 	void display();
-	void handle_camera_movement(float delta_time);
-	void handle_dragging();
+	void handle_frame(float delta_time);
 	void fit_grid_to_view();
 
 	/* Getters */
@@ -69,17 +68,24 @@ public:
 
 private:
 	/* Private Methods */
+
+	// Initialization
 	void initialize_views();
 	void update_grid_view();
 	void compute_grid_positions();
 	float compute_cell_size();
 	void paint_grid_solid(sf::Color color);
+
+	// Events
 	void center_grid();
 	void detect_clicked_cell();
-	bool is_mouse_in_viewport(sf::View view) const;
 	void handle_camera_zoom(sf::Event event);
-	sf::Color lerp_colors(const sf::Color& start, const sf::Color& end, float t) const;
 
+	// Updates
+	void handle_camera_movement(float delta_time);
+	void handle_dragging();
+
+	// Utility
 	// Drawing functions for VisModes
 	void draw_property_as_color(
 		const std::vector<Cell>& cells, 
@@ -89,4 +95,7 @@ private:
 		const sf::Color& low_color, 
 		const sf::Color& high_color
 	);
+
+	bool is_mouse_in_viewport(sf::View view) const;
+	sf::Color lerp_colors(const sf::Color& start, const sf::Color& end, float t) const;
 };

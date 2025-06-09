@@ -2,10 +2,11 @@
 
 #include "Visualization.h"
 #include "Automaton.h"
-#include "Automaton.h"
+#include "Cell.h"
+
 #include "ControllerConfig.h"
 #include "VisModeConfig.h"
-#include "Cell.h"
+#include "KeyBindConfig.h"
 
 #include <stdexcept>
 #include <iostream>
@@ -32,6 +33,9 @@ private:
 	float since_last_update = 0.f;
 	bool sim_paused = true;
 
+	// Input handling
+	std::unordered_map<sf::Keyboard::Key, bool> previous_key_state;
+
 public:
 	// Constructor
 	Controller(int window_width, int window_height, int grid_width, int grid_height);
@@ -43,6 +47,7 @@ private:
 	void process_events();
 	void update();
 	void update_fps();
+	void handle_inputs();
 	void transfer_pos();
 	void render();
 	void change_update_speed(int new_ups);

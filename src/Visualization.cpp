@@ -223,47 +223,10 @@ void Visualization::display()
 	main_window.display();
 }
 
-void Visualization::handle_camera_movement(float delta_time)
+void Visualization::handle_frame(float delta_time)
 {
-	// Pick speed based on input
-	float speed = (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_SPEED_UP_KEY))
-		? VisualizationConfig::CAMERA_MOVEMENT_SPEED_FAST 
-		: VisualizationConfig::CAMERA_MOVEMENT_SPEED_BASE;
-
-	// Modify the speed by zoom
-	speed *= zoom_factor;
-
-	// Apply delta time
-	speed *= delta_time;
-
-	// Declare the offset in the movement
-	sf::Vector2f offset(0.f, 0.f);
-
-	// Read input from keyboard
-	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_UP_KEY)) offset.y += speed;
-	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_LEFT_KEY)) offset.x += speed;
-	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_DOWN_KEY)) offset.y -= speed;
-	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_RIGHT_KEY)) offset.x -= speed;
-
-	// Move the center of the grid
-	grid_view.move(offset);
-}
-
-void Visualization::handle_dragging()
-{
-	if (!is_dragging) return; // Only move if dragging is active
-
-	// Get the current mouse position in world coordinates
-	sf::Vector2f new_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
-
-	// Calculate the difference (offset) between the last position and current position
-	sf::Vector2f delta = last_mouse_pos - new_mouse_pos;
-
-	// Move the grid view by the offset
-	grid_view.move(delta);
-
-	// Update the last mouse position
-	last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
+	handle_camera_movement(delta_time);
+	handle_dragging();
 }
 
 void Visualization::fit_grid_to_view()
@@ -442,25 +405,6 @@ void Visualization::detect_clicked_cell()
 	}
 }
 
-bool Visualization::is_mouse_in_viewport(sf::View view) const
-{
-	// Get view's viewport in pixels
-	sf::FloatRect viewport = view.getViewport();
-	float window_width = main_window.getSize().x;
-	float window_height = main_window.getSize().y;
-
-	sf::IntRect viewport_pixels(
-		viewport.left * window_width,
-		viewport.top * window_height,
-		viewport.width * window_width,
-		viewport.height * window_height
-	);
-
-	// Check if mouse click is inside grid view
-	sf::Vector2i mouse_pos = sf::Mouse::getPosition(main_window);
-	return viewport_pixels.contains(mouse_pos);
-}
-
 void Visualization::handle_camera_zoom(sf::Event event)
 {
 	// Scroll only in viewport
@@ -482,17 +426,47 @@ void Visualization::handle_camera_zoom(sf::Event event)
 	grid_view.zoom(change);
 }
 
-sf::Color Visualization::lerp_colors(const sf::Color& start, const sf::Color& end, float t) const
+void Visualization::handle_camera_movement(float delta_time)
 {
-	// Clamp the values within the safe range
-	t = std::clamp(t, 0.0f, 1.0f);
+	// Pick speed based on input
+	float speed = (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_SPEED_UP_KEY))
+		? VisualizationConfig::CAMERA_MOVEMENT_SPEED_FAST
+		: VisualizationConfig::CAMERA_MOVEMENT_SPEED_BASE;
 
-	// Return the interpolated color
-	return sf::Color(
-		static_cast<sf::Uint8>(start.r + t * (end.r - start.r)),
-		static_cast<sf::Uint8>(start.g + t * (end.g - start.g)),
-		static_cast<sf::Uint8>(start.b + t * (end.b - start.b))
-	);
+	// Modify the speed by zoom
+	speed *= zoom_factor;
+
+	// Apply delta time
+	speed *= delta_time;
+
+	// Declare the offset in the movement
+	sf::Vector2f offset(0.f, 0.f);
+
+	// Read input from keyboard
+	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_UP_KEY)) offset.y += speed;
+	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_LEFT_KEY)) offset.x += speed;
+	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_DOWN_KEY)) offset.y -= speed;
+	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_RIGHT_KEY)) offset.x -= speed;
+
+	// Move the center of the grid
+	grid_view.move(offset);
+}
+
+void Visualization::handle_dragging()
+{
+	if (!is_dragging) return; // Only move if dragging is active
+
+	// Get the current mouse position in world coordinates
+	sf::Vector2f new_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
+
+	// Calculate the difference (offset) between the last position and current position
+	sf::Vector2f delta = last_mouse_pos - new_mouse_pos;
+
+	// Move the grid view by the offset
+	grid_view.move(delta);
+
+	// Update the last mouse position
+	last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
 }
 
 void Visualization::draw_property_as_color(
@@ -521,4 +495,36 @@ void Visualization::draw_property_as_color(
 		grid_vertices[index_verts + 2].color = new_color;
 		grid_vertices[index_verts + 3].color = new_color;
 	}
+}
+
+bool Visualization::is_mouse_in_viewport(sf::View view) const
+{
+	// Get view's viewport in pixels
+	sf::FloatRect viewport = view.getViewport();
+	float window_width = main_window.getSize().x;
+	float window_height = main_window.getSize().y;
+
+	sf::IntRect viewport_pixels(
+		viewport.left * window_width,
+		viewport.top * window_height,
+		viewport.width * window_width,
+		viewport.height * window_height
+	);
+
+	// Check if mouse click is inside grid view
+	sf::Vector2i mouse_pos = sf::Mouse::getPosition(main_window);
+	return viewport_pixels.contains(mouse_pos);
+}
+
+sf::Color Visualization::lerp_colors(const sf::Color& start, const sf::Color& end, float t) const
+{
+	// Clamp the values within the safe range
+	t = std::clamp(t, 0.0f, 1.0f);
+
+	// Return the interpolated color
+	return sf::Color(
+		static_cast<sf::Uint8>(start.r + t * (end.r - start.r)),
+		static_cast<sf::Uint8>(start.g + t * (end.g - start.g)),
+		static_cast<sf::Uint8>(start.b + t * (end.b - start.b))
+	);
 }

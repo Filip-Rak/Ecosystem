@@ -7,6 +7,7 @@
 
 #include "UIConfig.h"
 #include "VisModeConfig.h"
+#include "KeyBindConfig.h"
 #include "Cell.h"
 
 class UI
@@ -47,6 +48,7 @@ private:
 	tgui::Label::Ptr fps_label;
 	tgui::Label::Ptr iteration_label;
 	tgui::Label::Ptr speed_label;
+	tgui::Button::Ptr pause_resume_button;
 
 	/* Tracked Data */
 	std::unordered_map<std::string, tgui::Widget::Ptr> widget_map;
@@ -58,6 +60,9 @@ private:
 	UIConfig::ControlMode current_control_mode = UIConfig::DEFAULT_CONTROL_MODE;
 	VisModeConfig::VisMode current_vis_mode = VisModeConfig::DEFAULT_MODE;
 
+	/* Input Handling */
+	std::unordered_map<sf::Keyboard::Key, bool> previous_key_state;
+
 public:
 	/* Constructor & Destructor */
 	UI(tgui::Gui& gui);
@@ -66,7 +71,8 @@ public:
 	/* Public Methods */
 	void initialize();
 	void update_on_resize();
-	void update();
+	void update(bool is_paused);
+	void update_inspection();
 
 	/* Getters */
 	float get_menu_bar_vertical_size();
@@ -96,6 +102,7 @@ public:
 	void update_fps_label(int fps);
 	void update_iteration_label(int iteration);
 	void update_speed_label(int speed);
+	void set_pause_button_state(bool paused);
 	void set_vis_mode(VisModeConfig::VisMode vis_mode);
 	void forward_clicked_cell(Cell& cell);
 
@@ -147,8 +154,8 @@ private:
 	void map_widget(tgui::Widget::Ptr widget, std::string identifier);
 
 	// Updating
-	void update_inspection(const Cell* cell);
 	void update_for_control_mode();
+	void handle_input();
 	void set_tracked_cell_properties();
 	float translate_property(float val) const;
 };

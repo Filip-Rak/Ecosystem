@@ -36,10 +36,33 @@ void UI::update_on_resize()
 	update_trivial_legend(current_vis_mode);
 }
 
-void UI::update()
+void UI::update(bool is_paused)
 {
-	if (current_control_mode == UIConfig::ControlMode::INSPECT && tracked_cell)
-		update_inspection(tracked_cell);
+	/* Always Update */
+	handle_input();
+
+	/* Update If Unpaused */
+	if (!is_paused)
+	{
+		if (current_control_mode == UIConfig::ControlMode::INSPECT && tracked_cell)
+			update_inspection();
+	}
+}
+
+void UI::update_inspection()
+{
+	int x = tracked_cell->get_pos_x();
+	int y = tracked_cell->get_pos_y();
+
+	char id_buf[32];
+	std::snprintf(id_buf, sizeof(id_buf), "(%d, %d)", x, y);
+	inspection_data.cell_id_label->setText(id_buf);
+
+	// Inline lambda to format float
+	inspection_data.cell_vegetation_label->setValue(translate_property(tracked_cell->get_vegetation()));
+	inspection_data.cell_temperature_label->setValue(translate_property(tracked_cell->get_temperature()));
+	inspection_data.cell_humidity_label->setValue(translate_property(tracked_cell->get_humidity()));
+	inspection_data.cell_elevation_label->setValue(translate_property(tracked_cell->get_elevation()));
 }
 
 /* Private Methods */
@@ -109,7 +132,7 @@ void UI::initialize_top_bar()
 	top_bar->add(slow_down_button);
 
 	// Pause / Resume button
-	auto pause_resume_button = tgui::Button::create(">");
+	this->pause_resume_button = tgui::Button::create(">");
 	pause_resume_button->setTextSize(UIConfig::widget_text_size_small);
 	pause_resume_button->setPosition(x_offset, UIConfig::widget_top_margin);
 
@@ -614,6 +637,14 @@ void UI::update_speed_label(int speed)
 	update_widget_positioning();
 }
 
+void UI::set_pause_button_state(bool paused)
+{
+	if (paused)
+		pause_resume_button->setText(">");
+	else
+		pause_resume_button->setText("||");
+}
+
 void UI::set_vis_mode(VisModeConfig::VisMode vis_mode)
 {
 	current_vis_mode = vis_mode;
@@ -633,7 +664,7 @@ void UI::forward_clicked_cell(Cell& cell)
 		current_control_mode = UIConfig::ControlMode::INSPECT;
 		update_for_control_mode();
 
-		update_inspection(tracked_cell);
+		update_inspection();
 	}
 
 	// If in INSERT replace the cell
@@ -643,23 +674,7 @@ void UI::forward_clicked_cell(Cell& cell)
 		set_tracked_cell_properties();
 	}
 	else 
-		update_inspection(tracked_cell);
-}
-
-void UI::update_inspection(const Cell* cell)
-{
-	int x = cell->get_pos_x();
-	int y = cell->get_pos_y();
-
-	char id_buf[32];
-	std::snprintf(id_buf, sizeof(id_buf), "(%d, %d)", x, y);
-	inspection_data.cell_id_label->setText(id_buf);
-
-	// Inline lambda to format float
-	inspection_data.cell_vegetation_label->setValue(translate_property(cell->get_vegetation()));
-	inspection_data.cell_temperature_label->setValue(translate_property(cell->get_temperature()));
-	inspection_data.cell_humidity_label->setValue(translate_property(cell->get_humidity()));
-	inspection_data.cell_elevation_label->setValue(translate_property(cell->get_elevation()));
+		update_inspection();
 }
 
 void UI::update_for_control_mode()
@@ -690,6 +705,39 @@ void UI::update_for_control_mode()
 
 		default:
 			std::cerr << "Failure at: UI::initialize_right_panel() -> current control mode undefined\n";
+	}
+}
+
+void UI::handle_input()
+{
+	// Bind
+	{
+		sf::Keyboard::Key key = KeyBindConfig::BIND_INSERTION_KEY;
+		bool is_down = sf::Keyboard::isKeyPressed(key);
+		bool was_down = previous_key_state[key];
+
+		if (is_down && !was_down)
+		{
+			current_control_mode = UIConfig::INSERT;
+			update_for_control_mode();
+		}
+
+		previous_key_state[key] = is_down;
+	}
+
+	// Unbind
+	{
+		sf::Keyboard::Key key = KeyBindConfig::UNBIND_INSERTION_KEY;
+		bool is_down = sf::Keyboard::isKeyPressed(key);
+		bool was_down = previous_key_state[key];
+
+		if (is_down && !was_down && current_control_mode == UIConfig::ControlMode::INSERT)
+		{
+			current_control_mode = UIConfig::FREE;
+			update_for_control_mode();
+		}
+
+		previous_key_state[key] = is_down;
 	}
 }
 

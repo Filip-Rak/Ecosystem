@@ -16,4 +16,9 @@ namespace KeyBindConfig
 	inline constexpr sf::Mouse::Button MOUSE_DRAG_BUTTON = sf::Mouse::Middle;
 
 	/* UI */
+	inline constexpr sf::Keyboard::Key BIND_INSERTION_KEY = sf::Keyboard::LControl;
+	inline constexpr sf::Keyboard::Key UNBIND_INSERTION_KEY = sf::Keyboard::Escape;
+
+	/* Controller */
+	inline constexpr sf::Keyboard::Key PAUSE_TOGGLE_KEY = sf::Keyboard::Space;
 }

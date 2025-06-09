@@ -36,14 +36,17 @@ void Controller::update()
 	// Update FPS measurememnts and label
 	update_fps();
 
+	// Handle key inputs meant for Controller
+	handle_inputs();
+
 	// Transfer position: Visusalization -> Automaton / UI
 	transfer_pos();
 
 	/* Update these properties only when window is in focus */
 	if (visualization.is_window_in_focus())
 	{
-		visualization.handle_camera_movement(this->fps_delta_time);
-		visualization.handle_dragging();
+		visualization.handle_frame(this->fps_delta_time);
+		ui_ptr->update(sim_paused);
 	}
 
 	/* Update only if not Paused */
@@ -60,9 +63,6 @@ void Controller::update()
 
 			// Update the Visualization
 			visualization.update(automaton.get_grid());
-
-			// Update the UI component
-			ui_ptr->update();
 			
 			// Update the iteration number
 			this->iteration += 1;
@@ -97,6 +97,24 @@ void Controller::update_fps()
 	}
 }
 
+void Controller::handle_inputs()
+{
+	// Toggle pause
+	{
+		sf::Keyboard::Key key = KeyBindConfig::PAUSE_TOGGLE_KEY;
+		bool is_down = sf::Keyboard::isKeyPressed(key);
+		bool was_down = previous_key_state[key];
+
+		if (is_down && !was_down) 
+		{
+			sim_paused = !sim_paused;
+			ui_ptr->set_pause_button_state(sim_paused);
+		}
+
+		previous_key_state[key] = is_down;
+	}
+}
+
 void Controller::transfer_pos()
 {
 	auto cords_pair = visualization.get_last_clicled_cords();
@@ -110,7 +128,7 @@ void Controller::transfer_pos()
 		// Run manual update if paused
 		if (sim_paused)
 		{
-			ui_ptr->update();
+			ui_ptr->update_inspection();
 			visualization.update(automaton.get_grid());	// Should be replaced with a single cell update
 			std::cout << "Controller::transfer_pos() -> Overwritten cell: x = " << cords_pair.first << " y = " << cords_pair.second << "\n";
 		}
@@ -194,15 +212,12 @@ void Controller::initialize_ui_events()
 			// Toggle the pause
 			this->sim_paused = !this->sim_paused;
 
-			if (this->sim_paused)
-			{
-				pause_button->setText(">");
-			}
-			else 
-			{
-				pause_button->setText("||");
+			// Update the button
+			ui_ptr->set_pause_button_state(sim_paused);
 
-				// If just unpaused, then skip the wait towards the first update
+			// If just unpaused, then skip the wait towards the first update
+			if (!this->sim_paused)
+			{
 				this->since_last_update = this->update_interval;
 			}
 		});
