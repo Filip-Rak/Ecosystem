@@ -291,20 +291,20 @@ void UI::initialize_cell_panel()
 	tgui::Widget::Ptr hook = tgui::Panel::create();
 
 	// Create rows
-	hook = insert_key_value_row(cell_panel_content, hook, "Position: ", "cell_id_label", UIConfig::cell_id_label_free.toStdString(), UIConfig::ValueType::LABEL);
+	hook = insert_key_value_row(cell_panel_content, hook, "Position: ", "cell_id_label", 0, UIConfig::ValueType::LABEL, UIConfig::cell_id_label_free.toStdString());
 	inspection_data.cell_id_label = get_widget_as<tgui::Label>("cell_id_label");
 
 	hook = insert_key_value_row(cell_panel_content, hook, "Vegetation: ", "cell_vegetation_label");
-	inspection_data.cell_vegetation_label = get_widget_as<tgui::EditBox>("cell_vegetation_label");
+	inspection_data.cell_vegetation_label = get_widget_as<tgui::SpinControl>("cell_vegetation_label");
 
 	hook = insert_key_value_row(cell_panel_content, hook, "Temperature: ", "cell_temperature_label");
-	inspection_data.cell_temperature_label = get_widget_as<tgui::EditBox>("cell_temperature_label");
+	inspection_data.cell_temperature_label = get_widget_as<tgui::SpinControl>("cell_temperature_label");
 
 	hook = insert_key_value_row(cell_panel_content, hook, "Humidity: ", "cell_humidity_label");
-	inspection_data.cell_humidity_label = get_widget_as<tgui::EditBox>("cell_humidity_label");
+	inspection_data.cell_humidity_label = get_widget_as<tgui::SpinControl>("cell_humidity_label");
 
 	hook = insert_key_value_row(cell_panel_content, hook, "Elevation: ", "cell_elevation_label");
-	inspection_data.cell_elevation_label = get_widget_as<tgui::EditBox>("cell_elevation_label");
+	inspection_data.cell_elevation_label = get_widget_as<tgui::SpinControl>("cell_elevation_label");
 
 	/* Add Animals list */
 
@@ -345,7 +345,7 @@ void UI::initialize_animal_panel()
 	// Add hook for elements
 	tgui::Widget::Ptr hook = tgui::Panel::create();
 
-	hook = insert_key_value_row(animal_panel_content, hook, "ID: ", "animal_id_label", "N/A", UIConfig::ValueType::LABEL);
+	hook = insert_key_value_row(animal_panel_content, hook, "ID: ", "animal_id_label", 0.f, UIConfig::ValueType::LABEL, UIConfig::cell_id_label_free.toStdString());
 	hook = insert_key_value_row(animal_panel_content, hook, "Energy: ", "energy_input");
 	hook = insert_key_value_row(animal_panel_content, hook, "Age: ");
 }
@@ -434,7 +434,7 @@ void UI::update_scalable_text_size()
 	}
 }
 
-tgui::Widget::Ptr UI::insert_key_value_row(tgui::Panel::Ptr panel, tgui::Widget::Ptr widget_above, std::string key_label_text, std::string value_map_id, std::string default_value, UIConfig::ValueType value_type)
+tgui::Widget::Ptr UI::insert_key_value_row(tgui::Panel::Ptr panel, tgui::Widget::Ptr widget_above, std::string key_label_text, std::string value_map_id, float default_value_spin, UIConfig::ValueType value_type, std::string default_value_label)
 {
 	/* Create and add Key Label */
 	auto key_label = tgui::Label::create(key_label_text);
@@ -449,17 +449,19 @@ tgui::Widget::Ptr UI::insert_key_value_row(tgui::Panel::Ptr panel, tgui::Widget:
 	tgui::Widget::Ptr value_widget;
 	if (value_type == UIConfig::ValueType::NUMERICAL_INPUT)
 	{
-		auto edit_box_value = tgui::EditBox::create();
+		auto edit_box_value = tgui::SpinControl::create();
+		edit_box_value->setMinimum(UIConfig::RIGHT_PANEL_PROPERTY_MIN);
+		edit_box_value->setMaximum(UIConfig::RIGHT_PANEL_PROPERTY_MAX);
+		edit_box_value->setDecimalPlaces(0);
 		edit_box_value->setSize("20%", tgui::bindHeight(key_label));
-		edit_box_value->setInputValidator("[+-]?[0-9]*\\.?[0-9]*");
-		edit_box_value->setText(default_value);
+		edit_box_value->setValue(default_value_spin);
 
 		value_widget = edit_box_value;
 	}
 	else if (value_type == UIConfig::ValueType::LABEL)
 	{
 		auto label_value = tgui::Label::create();
-		label_value->setText(default_value);
+		label_value->setText(default_value_label);
 
 		value_widget = label_value;
 	}
@@ -649,20 +651,15 @@ void UI::update_inspection(const Cell* cell)
 	int x = cell->get_pos_x();
 	int y = cell->get_pos_y();
 
-	std::ostringstream ss;
-	ss << '(' << x << ", " << y << ')';
-	inspection_data.cell_id_label->setText(ss.str());
+	char id_buf[32];
+	std::snprintf(id_buf, sizeof(id_buf), "(%d, %d)", x, y);
+	inspection_data.cell_id_label->setText(id_buf);
 
-	// Inline lambda to format float as int with minimal overhead
-	auto format_percent = [this](float val) -> std::string
-		{
-			return std::to_string(static_cast<int>(property_translation_offset + val * property_translation_multiplier + 0.5f));
-		};
-
-	inspection_data.cell_vegetation_label->setText(format_percent(cell->get_vegetation()));
-	inspection_data.cell_temperature_label->setText(format_percent(cell->get_temperature()));
-	inspection_data.cell_humidity_label->setText(format_percent(cell->get_humidity()));
-	inspection_data.cell_elevation_label->setText(format_percent(cell->get_elevation()));
+	// Inline lambda to format float
+	inspection_data.cell_vegetation_label->setValue(translate_property(cell->get_vegetation()));
+	inspection_data.cell_temperature_label->setValue(translate_property(cell->get_temperature()));
+	inspection_data.cell_humidity_label->setValue(translate_property(cell->get_humidity()));
+	inspection_data.cell_elevation_label->setValue(translate_property(cell->get_elevation()));
 }
 
 void UI::update_for_control_mode()
@@ -698,9 +695,9 @@ void UI::update_for_control_mode()
 
 void UI::set_tracked_cell_properties()
 {
-	auto format_property([this](tgui::EditBox::Ptr edit_box)
+	auto format_property([this](tgui::SpinControl::Ptr edit_box)
 		{
-			float val = edit_box->getText().toFloat();
+			float val = edit_box->getValue();
 			return val / property_translation_multiplier - property_translation_offset;
 		});
 
@@ -708,4 +705,9 @@ void UI::set_tracked_cell_properties()
 	tracked_cell->set_temperature(format_property(inspection_data.cell_temperature_label), false);
 	tracked_cell->set_humidity(format_property(inspection_data.cell_humidity_label), false);
 	tracked_cell->set_elevation(format_property(inspection_data.cell_elevation_label), true);
+}
+
+inline float UI::translate_property(float val) const
+{
+	return property_translation_offset + val * property_translation_multiplier + 0.5f;
 }

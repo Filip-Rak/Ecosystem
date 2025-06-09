@@ -22,10 +22,10 @@ private:
 	struct InspectionData
 	{
 		tgui::Label::Ptr cell_id_label;
-		tgui::EditBox::Ptr cell_vegetation_label;
-		tgui::EditBox::Ptr cell_temperature_label;
-		tgui::EditBox::Ptr cell_humidity_label;
-		tgui::EditBox::Ptr cell_elevation_label;
+		tgui::SpinControl::Ptr cell_vegetation_label;
+		tgui::SpinControl::Ptr cell_temperature_label;
+		tgui::SpinControl::Ptr cell_humidity_label;
+		tgui::SpinControl::Ptr cell_elevation_label;
 	};
 
 	InspectionData inspection_data;
@@ -124,8 +124,9 @@ private:
 		tgui::Widget::Ptr widget_above, 
 		std::string key_label_text, 
 		std::string value_map_id = "-", 
-		std::string default_value = "1.2",
-		UIConfig::ValueType value_type = UIConfig::NUMERICAL_INPUT
+		float default_value_spin = 2.1f,
+		UIConfig::ValueType value_type = UIConfig::NUMERICAL_INPUT,
+		std::string default_value_label = "1.2"
 	);
 
 	// Scaling
@@ -149,4 +150,5 @@ private:
 	void update_inspection(const Cell* cell);
 	void update_for_control_mode();
 	void set_tracked_cell_properties();
+	float translate_property(float val) const;
 };

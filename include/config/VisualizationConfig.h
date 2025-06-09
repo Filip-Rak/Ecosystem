@@ -25,10 +25,10 @@ namespace VisualizationConfig
 	inline constexpr float CAMERA_MOVEMENT_SPEED = 50.0f;
 
 	/* Key Bindings */
-	inline constexpr sf::Keyboard::Key MOVEMENT_UP_KEY = sf::Keyboard::W;
-	inline constexpr sf::Keyboard::Key MOVEMENT_DOWN_KEY = sf::Keyboard::S;
-	inline constexpr sf::Keyboard::Key MOVEMENT_LEFT_KEY = sf::Keyboard::A;
-	inline constexpr sf::Keyboard::Key MOVEMENT_RIGHT_KEY = sf::Keyboard::D;
+	inline constexpr sf::Keyboard::Key MOVEMENT_UP_KEY = sf::Keyboard::S;
+	inline constexpr sf::Keyboard::Key MOVEMENT_DOWN_KEY = sf::Keyboard::W;
+	inline constexpr sf::Keyboard::Key MOVEMENT_LEFT_KEY = sf::Keyboard::D;
+	inline constexpr sf::Keyboard::Key MOVEMENT_RIGHT_KEY = sf::Keyboard::A;
 
 	inline constexpr sf::Mouse::Button MOUSE_CELL_SELECT_BUTTON = sf::Mouse::Left;
 	inline constexpr sf::Mouse::Button MOUSE_DRAG_BUTTON = sf::Mouse::Middle;
