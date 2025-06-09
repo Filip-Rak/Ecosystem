@@ -36,16 +36,19 @@ void Controller::update()
 	// Update FPS measurememnts and label
 	update_fps();
 
-	// Handle key inputs meant for Controller
-	handle_inputs();
-
 	// Transfer position: Visusalization -> Automaton / UI
 	transfer_pos();
 
 	/* Update these properties only when window is in focus */
 	if (visualization.is_window_in_focus())
 	{
+		// Handle key inputs meant for Controller
+		handle_inputs();
+
+		// Let visualization handle it's frame
 		visualization.handle_frame(this->fps_delta_time);
+
+		// Update the UI
 		ui_ptr->update(sim_paused);
 	}
 
