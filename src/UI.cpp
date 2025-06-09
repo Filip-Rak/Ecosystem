@@ -40,17 +40,15 @@ void UI::update(bool is_paused)
 {
 	/* Always Update */
 	handle_input();
-
-	/* Update If Unpaused */
-	if (!is_paused)
-	{
-		if (current_control_mode == UIConfig::ControlMode::INSPECT && tracked_cell)
-			update_inspection();
-	}
 }
 
 void UI::update_inspection()
 {
+	/* Validate */
+	if (current_control_mode != UIConfig::ControlMode::INSPECT || !tracked_cell)
+		return;
+
+	/* Update the UI */
 	int x = tracked_cell->get_pos_x();
 	int y = tracked_cell->get_pos_y();
 
@@ -731,10 +729,13 @@ void UI::handle_input()
 		bool is_down = sf::Keyboard::isKeyPressed(key);
 		bool was_down = previous_key_state[key];
 
-		if (is_down && !was_down && current_control_mode == UIConfig::ControlMode::INSERT)
-		{
-			current_control_mode = UIConfig::FREE;
-			update_for_control_mode();
+		if (is_down && !was_down)
+		{	
+			if (current_control_mode == UIConfig::ControlMode::INSERT || current_control_mode == UIConfig::ControlMode::INSPECT)
+			{
+				current_control_mode = UIConfig::FREE;
+				update_for_control_mode();
+			}
 		}
 
 		previous_key_state[key] = is_down;

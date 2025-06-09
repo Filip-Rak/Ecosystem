@@ -66,6 +66,9 @@ void Controller::update()
 
 			// Update the Visualization
 			visualization.update(automaton.get_grid());
+
+			// Update the UI's cell description
+			ui_ptr->update_inspection();
 			
 			// Update the iteration number
 			this->iteration += 1;
