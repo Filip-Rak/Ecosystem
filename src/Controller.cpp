@@ -112,7 +112,7 @@ void Controller::transfer_pos()
 		{
 			ui_ptr->update();
 			visualization.update(automaton.get_grid());	// Should be replaced with a single cell update
-			std::cout << "Controller::transfer_pos() -> Overwritten cell: x = " << cords_pair.first << " y = " << cords_pair.second << ". USED MAIN UPDATE!\n";
+			std::cout << "Controller::transfer_pos() -> Overwritten cell: x = " << cords_pair.first << " y = " << cords_pair.second << "\n";
 		}
 	}
 	catch (std::exception ex)

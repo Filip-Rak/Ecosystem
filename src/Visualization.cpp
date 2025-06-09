@@ -225,17 +225,27 @@ void Visualization::display()
 
 void Visualization::handle_camera_movement(float delta_time)
 {
+	// Pick speed based on input
+	float speed = (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_SPEED_UP_KEY)) 
+		? VisualizationConfig::CAMERA_MOVEMENT_SPEED_FAST 
+		: VisualizationConfig::CAMERA_MOVEMENT_SPEED_BASE;
+
+	// Modify the speed by zoom
+	speed *= zoom_factor;
+
+	// Apply delta time
+	speed *= delta_time;
+
 	// Declare the offset in the movement
 	sf::Vector2f offset(0.f, 0.f);
 
 	// Read input from keyboard
-	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_UP_KEY)) offset.y += VisualizationConfig::CAMERA_MOVEMENT_SPEED;
-	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_LEFT_KEY)) offset.x += VisualizationConfig::CAMERA_MOVEMENT_SPEED;
-	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_DOWN_KEY)) offset.y -= VisualizationConfig::CAMERA_MOVEMENT_SPEED;
-	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_RIGHT_KEY)) offset.x -= VisualizationConfig::CAMERA_MOVEMENT_SPEED;
+	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_UP_KEY)) offset.y += speed;
+	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_LEFT_KEY)) offset.x += speed;
+	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_DOWN_KEY)) offset.y -= speed;
+	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_RIGHT_KEY)) offset.x -= speed;
 
-	// Apply delta time to offset and move the center of the grid
-	offset *= delta_time;
+	// Move the center of the grid
 	grid_view.move(offset);
 }
 
