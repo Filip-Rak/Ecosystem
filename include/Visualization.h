@@ -11,6 +11,7 @@
 #include "CellConfig.h"
 #include "VisualizationConfig.h"
 #include "VisModeConfig.h"
+#include "KeyBindConfig.h"
 
 class Visualization
 {

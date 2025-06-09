@@ -67,14 +67,14 @@ void Visualization::process_window_events()
 			if (!is_mouse_in_viewport(grid_view)) return;
 
 			// Start the grid drag
-			if (event.mouseButton.button == VisualizationConfig::MOUSE_DRAG_BUTTON)
+			if (event.mouseButton.button == KeyBindConfig::MOUSE_DRAG_BUTTON)
 			{
 				this->is_dragging = true;
 				this->last_mouse_pos = main_window.mapPixelToCoords(sf::Mouse::getPosition(main_window), grid_view);
 			}
 
 			// Mouse cell selection
-			else if (event.mouseButton.button == VisualizationConfig::MOUSE_CELL_SELECT_BUTTON)
+			else if (event.mouseButton.button == KeyBindConfig::MOUSE_CELL_SELECT_BUTTON)
 			{
 				// Start the clock for click -> hold
 				mouse_held_clock.restart();
@@ -83,13 +83,13 @@ void Visualization::process_window_events()
 		else if (event.type == sf::Event::MouseButtonReleased)
 		{
 			// End the grid drag 
-			if (event.mouseButton.button == VisualizationConfig::MOUSE_DRAG_BUTTON)
+			if (event.mouseButton.button == KeyBindConfig::MOUSE_DRAG_BUTTON)
 			{
 				this->is_dragging = false;
 			}
 
 			// Recognize a click or a hold
-			else if (event.mouseButton.button == VisualizationConfig::MOUSE_CELL_SELECT_BUTTON)
+			else if (event.mouseButton.button == KeyBindConfig::MOUSE_CELL_SELECT_BUTTON)
 			{
 				// Check how long was the mouse held. If too long, do not count the click
 				float time_held = mouse_held_clock.restart().asSeconds();
@@ -226,7 +226,7 @@ void Visualization::display()
 void Visualization::handle_camera_movement(float delta_time)
 {
 	// Pick speed based on input
-	float speed = (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_SPEED_UP_KEY)) 
+	float speed = (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_SPEED_UP_KEY))
 		? VisualizationConfig::CAMERA_MOVEMENT_SPEED_FAST 
 		: VisualizationConfig::CAMERA_MOVEMENT_SPEED_BASE;
 
@@ -240,10 +240,10 @@ void Visualization::handle_camera_movement(float delta_time)
 	sf::Vector2f offset(0.f, 0.f);
 
 	// Read input from keyboard
-	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_UP_KEY)) offset.y += speed;
-	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_LEFT_KEY)) offset.x += speed;
-	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_DOWN_KEY)) offset.y -= speed;
-	if (sf::Keyboard::isKeyPressed(VisualizationConfig::MOVEMENT_RIGHT_KEY)) offset.x -= speed;
+	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_UP_KEY)) offset.y += speed;
+	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_LEFT_KEY)) offset.x += speed;
+	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_DOWN_KEY)) offset.y -= speed;
+	if (sf::Keyboard::isKeyPressed(KeyBindConfig::MOVEMENT_RIGHT_KEY)) offset.x -= speed;
 
 	// Move the center of the grid
 	grid_view.move(offset);
